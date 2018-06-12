@@ -1,0 +1,13 @@
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\DV2.Net_Graphics_Application.exe.config
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\DV2.Net_Graphics_Application.exe
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\DV2.Net_Graphics_Application.pdb
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\obj\Debug\DV2.Net_Graphics_Application.csprojResolveAssemblyReference.cache
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\obj\Debug\DV2.Net_Graphics_Application.MainForm.resources
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\obj\Debug\DV2.Net_Graphics_Application.Properties.Resources.resources
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\obj\Debug\DV2.Net_Graphics_Application.csproj.GenerateResource.Cache
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\obj\Debug\DV2.Net_Graphics_Application.exe
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\obj\Debug\DV2.Net_Graphics_Application.pdb
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\Kgdcutil.dll
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\GViewUtil.dll
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\GDDev.dll
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\GDDev_ft.dll
