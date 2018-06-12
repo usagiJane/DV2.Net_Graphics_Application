@@ -10,16 +10,20 @@ namespace DV2.Net_Graphics_Application
     //class Graphic_CircleClass
     public partial class DV2_Drawing
     {
-        public void Draw_CircleMode(string ObjCommand, string ObjAnalysis)
+        //
+        public void Draw_CircleMode(string ObjCommand, string ObjAnalysis, MainForm mLog)
         {
-            //LogOutput("Draw_CircleMode");
-            //System.Windows.Forms.MessageBox.Show("Draw_CircleMode");
-            
+            if (mfLog == null)
+            {
+                mfLog = mLog;
+            }
+            LogOutput("Draw_CircleMode");
+
             string[] commData;
 
         }
         
-        public void Draw_CircleMode(Graphics graphObj, ref string[] commData, ref Pen picPen, float offset = pub_offSet)
+        private void Draw_CircleMode(Graphics graphObj, ref string[] commData, ref Pen picPen, float offset = pub_offSet)
         {
             //graphObj 
             //picPen

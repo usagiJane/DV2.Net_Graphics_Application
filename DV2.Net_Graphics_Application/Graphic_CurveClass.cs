@@ -9,10 +9,10 @@ namespace DV2.Net_Graphics_Application
     //class Graphic_CurveClass 曲線
     public partial class DV2_Drawing
     {
-        public void Draw_CurveMode(string ObjCommand, string ObjAnalysis)
+        public void Draw_CurveMode(string ObjCommand, string ObjAnalysis, MainForm mLog)
         {
-            //LogOutput("Draw_CurveMode");
-            System.Windows.Forms.MessageBox.Show("Draw_CurveMode");
+            PointerVerify(mLog);
+            LogOutput("Draw_CurveMode");
 
             string[] commData;
 

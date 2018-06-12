@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Threading;
 
 #region Appended
 using System.Collections;
@@ -41,7 +40,6 @@ namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm : Form
     {
-
         #region ObjStorage
         ArrayList ObjName = new ArrayList();
         ArrayList ObjCommand = new ArrayList();
@@ -106,16 +104,6 @@ namespace DV2.Net_Graphics_Application
             //紙を用意する
             graphObj = PreparePaper();
 
-            //ComboBox データ初期化
-            //String[] arr = new String[] { "ライン", "曲線", "円", "矢印" };
-            String[] typeArr = new String[] { "[;]", @"[\r\n]", @"[\n]" };
-            for (int i = 0; i < typeArr.Length; i++)
-            {
-                comboBox_codeType.Items.Add(typeArr[i]);
-            }
-
-            comboBox_codeType.SelectedIndex = 0;
-
             //イベントを宣言する
             this.textBox_Input.KeyDown += new KeyEventHandler(EnterKeyPress);
             this.tabControl_code.SelectedIndexChanged += new EventHandler(tabControl_code_SelectedIndexChanged);
@@ -153,20 +141,13 @@ namespace DV2.Net_Graphics_Application
 
         internal void LogOutput(Object log)
         {
-            //if (textBox_log.GetLineFromCharIndex(textBox_log.Text.Length) > 11)
-            //{
-            //    //line > 11 clean
-            //    textBox_log.Text = "";
-            //}
-            //textBox_log.AppendText(DateTime.Now.ToString("HH:mm") + " " + log + "\r\n");
-
             //FontSizeノーマルは"9"
             textBox_log.Font = new Font(textBox_log.Font.FontFamily, FontSize);
             textBox_log.AppendText(log + "\r\n");
             //textBox_log.ScrollToCaret(); 
         }
-        
-        public void codeOutput(Object log)
+
+        internal void codeOutput(Object log)
         {
             //FontSizeノーマルは"9"
             textBox_code.Font = new Font(textBox_code.Font.FontFamily, FontSize);
@@ -622,7 +603,7 @@ namespace DV2.Net_Graphics_Application
                     //Debug
                     LogOutput("switch GraphCmd Circle -- " + temp_ObjCom);
                     LogOutput("switch GraphCmd Circle -- " + temp_ObjAna);
-                    dv2Draw.Draw_CircleMode(temp_ObjCom, temp_ObjAna);
+                    dv2Draw.Draw_CircleMode(temp_ObjCom, temp_ObjAna, this);
                     break;
                 case "Arrow":
                     break;

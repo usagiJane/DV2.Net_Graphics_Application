@@ -37,14 +37,15 @@ namespace DV2.Net_Graphics_Application
 
         public void Draw_LineMode(string ObjCommand, string ObjAnalysis, MainForm mLog)
         {
-            LogOutput(mLog, "Draw_LineMode");
+            PointerVerify(mLog); 
+            LogOutput("Draw_LineMode"); 
 
             //System.Windows.Forms.MessageBox.Show("Draw_LineMode");
 
             string[] commData;
         }
 
-        public void Draw_LineMode(Graphics graphObj, ref string[] commData, ref Pen picPen, float offset = pub_offSet)
+        private void Draw_LineMode(Graphics graphObj, ref string[] commData, ref Pen picPen, float offset = pub_offSet)
         {
             //graphObj 
             //picPen
@@ -61,7 +62,7 @@ namespace DV2.Net_Graphics_Application
             graphObj.DrawLine(picPen, pointAx, pointAy, pointBx, pointBy);
         }
 
-        public void Draw_LineMode(Graphics graphObj, ref string[] commData, Pen picPen = null, float offset = pub_offSet )
+        private void Draw_LineMode(Graphics graphObj, ref string[] commData, Pen picPen = null, float offset = pub_offSet )
         {
             //graphObj 
             //picPen
@@ -105,17 +106,18 @@ namespace DV2.Net_Graphics_Application
             //graphObj.DrawLine(picPen, pointX1, pointY1, pointX2, pointY2);
         }
 
-        public void Draw_ArrowMode()
+        public void Draw_ArrowMode(string ObjCommand, string ObjAnalysis, MainForm mLog)
         {
-            //LogOutput("Draw_ArrowMode");
+            PointerVerify(mLog);
+            LogOutput("Draw_ArrowMode");
         }
 
-        public void Draw_ArrowMode(Graphics graphObj, ref string[] txtBoxSubdata, ref Pen picPen, float offset = pub_offSet)
+        private void Draw_ArrowMode(Graphics graphObj, ref string[] txtBoxSubdata, ref Pen picPen, float offset = pub_offSet)
         {
 
         }
 
-        public void Draw_ArrowMode(Graphics graphObj, ref string[] txtBoxSubdata, Pen picPen = null, float offset = pub_offSet)
+        private void Draw_ArrowMode(Graphics graphObj, ref string[] txtBoxSubdata, Pen picPen = null, float offset = pub_offSet)
         {
             //graphObj 
             //picPen

@@ -13,7 +13,8 @@ namespace DV2.Net_Graphics_Application
         MyDotView mdv;
         private const float pub_offSet = 35f;
         private readonly Pen pub_picPen = new Pen(Color.LightBlue, 2.7F);
-        MainForm mLog;
+        MainForm mfLog = null;
+        bool PointerVerify_flag = false;
 
         public void Dv2ConnectFunction(MainForm fm)
         {
@@ -64,9 +65,24 @@ namespace DV2.Net_Graphics_Application
         }
 
         #region LogOutput
+        private void PointerVerify(MainForm pv)
+        {
+            //Verify The MainForm Pointer
+            if (mfLog == null && mfLog != pv)
+            {
+                mfLog = pv;
+            }
+        }
         private void LogOutput(Object log)
         {
-            mLog.textBox_log.AppendText(log + "\r\n");
+            if (PointerVerify_flag)
+            { 
+                mfLog.textBox_log.AppendText(log + "\r\n");
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("这是一个警告的消息框！", "标题", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+            }
         }
         #endregion
     }
