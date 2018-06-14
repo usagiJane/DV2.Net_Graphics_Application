@@ -129,7 +129,7 @@ namespace DV2.Net_Graphics_Application
             textBox_Input.Text = "obj1=line(1,2,20.0,25.5)";
             
             //DV2_Debug
-            DV2_Drawing dv2d = new DV2_Drawing();
+            //DV2_Drawing dv2d = new DV2_Drawing();
             //dv2d.Dv2ConnectFunction(this);
             tabControl_Graphics.Visible = false;
             textBox_Input.Focus();
@@ -257,7 +257,7 @@ namespace DV2.Net_Graphics_Application
 
         private void EnterKeyPress(object sender, KeyEventArgs e)
         {
-            DV2_Drawing GraphicDraw = new DV2_Drawing();
+            //DV2_Drawing GraphicDraw = new DV2_Drawing();
 
             #region ToKen Analysis
             if (e.KeyCode == Keys.Enter)
@@ -288,14 +288,16 @@ namespace DV2.Net_Graphics_Application
             ToKen token;
             TknKind bef_tok_kind = TknKind.None;
             loopInfo = 0;
-            DV2_Drawing dv2d_FA = new DV2_Drawing();
+            //DV2_Drawing dv2d_FA = new DV2_Drawing();
             string objAnalysisData = "";
+            string objCommandData = "";
             string[] storageData;
             int dataGridView_index = 0;
 
             //Debug
-            LogOutput("Resources.Graph_line :>" + DV2.Net_Graphics_Application.Properties.Resources.Graph_line);
-            LogOutput("Settings.GraphicInstruction :>" + DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction);
+            LogOutput("Resources.Graph_line  :> " + DV2.Net_Graphics_Application.Properties.Resources.Graph_line);
+            LogOutput("Settings.GraphicInstruction  :> " + DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction);
+            LogOutput(dataStorage.Text.Length);
 
             if (dataStorage.Text.Length != 0)
             {
@@ -303,13 +305,13 @@ namespace DV2.Net_Graphics_Application
                 LogOutput(String.Format("{0, -15}", "Text") + String.Format("{0, -15}", "Kind") + String.Format("{0, -15}", "numVal"));
                 LogOutput("---------------------------------------------");
 
-                for (char txtChar = ' '; loopInfo < dataStorage.Text.Length - 1;)
+                for (char txtChar = ' '; loopInfo < dataStorage.Text.Length;)
                 {
 
                     txtChar = dataStorage.Text[loopInfo];
                     token = nextTkn(txtChar);
                     LogOutput(">>>token.kind iS -> " + String.Format("{0, -15}", token.kind));
-                    LogOutput(">>bef_tok_kind iS -> " + String.Format("{0, -15}", bef_tok_kind));
+                    //LogOutput(">>bef_tok_kind iS -> " + String.Format("{0, -15}", bef_tok_kind));
 
                     if (token.kind == TknKind.END_line)
                     { 
@@ -351,8 +353,8 @@ namespace DV2.Net_Graphics_Application
                             if (ObjName.BinarySearch(token.text) != -1)
                             {
                                 int index = ObjName.BinarySearch(token.text);
-                                LogOutput(ObjCommand[index]);
-                                LogOutput(ObjAnalysis[index]);
+                                //LogOutput(ObjCommand[index]);
+                                //LogOutput(ObjAnalysis[index]);
                                 //分析結果を転送する
                                 ParameterChecker(ObjAnalysis[index], index);
                             }
@@ -361,26 +363,27 @@ namespace DV2.Net_Graphics_Application
                     }
                     bef_tok_kind = token.kind;
                     objAnalysisData += token.kind + "|";
+                    objCommandData += token.text + "|";
                     //LogOutput(String.Format("{0, -15}", token.text) + String.Format("{0, -15}", token.kind) + String.Format("{0, -15}", token.dblVal));
                 }
 
-                if (ObjAnalysis.Count < ObjCommand.Count)
+                if (ObjAnalysis.Count < ObjName.Count)
                 {
-                    bool flag = false;
+                    bool assignFlag = false;
                     int loop_i;
                     //分析結果を保存する
                     //LogOutput(objAnalysisData);
-
+                    //正規表現関数
                     for (loop_i = 0; loop_i < Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Length; loop_i++)
                     {
                         if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[loop_i] == "Assign")
                         {
-                            flag = true;
+                            assignFlag = true;
                             break;
                         }
                     }
                    
-                    if (flag)
+                    if (assignFlag)
                     {
                         objAnalysisData = String.Join("|", Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Skip(loop_i + 1).ToArray());
                         ObjAnalysis.Add(objAnalysisData.Substring(0, objAnalysisData.Length - 1));
@@ -390,6 +393,12 @@ namespace DV2.Net_Graphics_Application
                     {
                         ObjAnalysis.Add(objAnalysisData.Substring(0, objAnalysisData.Length - 1));
                         this.dataGridView_monitor.Rows[dataGridView_index].Cells[2].Value = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                    }
+
+                    if(ObjCommand.Count == ObjName.Count)
+                    {
+                        ObjCommand.RemoveAt(ObjCommand.Count - 1);
+                        ObjCommand.Add(objCommandData);
                     }
                 }
             }
@@ -538,12 +547,19 @@ namespace DV2.Net_Graphics_Application
         public char nextCh()
         {
             char nextChar;
-            string textboxData = dataStorage.Text;
 
-            if (loopInfo < dataStorage.Text.Length - 1)
+            if (loopInfo < dataStorage.Text.Length)
             {
                 loopInfo += 1;
-                nextChar = dataStorage.Text[loopInfo];
+                if (loopInfo == dataStorage.Text.Length)
+                {
+                    return '\0';
+                }
+                else
+                {
+                    nextChar = dataStorage.Text[loopInfo];
+                }
+
                 return nextChar;
             }
             else
@@ -571,7 +587,7 @@ namespace DV2.Net_Graphics_Application
             LogOutput("\r\n" + "***ParameterChecker Strat!###");
             LogOutput("***object GraphIns is!###  " + GraphIns);
             //Define
-            DV2_Drawing dv2Draw = new DV2_Drawing();
+            //DV2_Drawing dv2Draw = new DV2_Drawing();
             var GraphicInstruction = DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction;
             string GraphCmd = Convert.ToString(GraphIns);
             string temp_ObjCom, temp_ObjAna;
@@ -593,7 +609,8 @@ namespace DV2.Net_Graphics_Application
                     //Debug
                     LogOutput("switch GraphCmd Line -- " + temp_ObjCom);
                     LogOutput("switch GraphCmd Line -- " + temp_ObjAna);
-                    dv2Draw.Draw_LineMode(temp_ObjCom, temp_ObjAna, this);
+                    //dv2Draw.Draw_LineMode(temp_ObjCom, temp_ObjAna, this);
+                    Draw_LineMode(temp_ObjCom, temp_ObjAna);
                     break;
                 case "Arc":
                     break;
@@ -603,7 +620,8 @@ namespace DV2.Net_Graphics_Application
                     //Debug
                     LogOutput("switch GraphCmd Circle -- " + temp_ObjCom);
                     LogOutput("switch GraphCmd Circle -- " + temp_ObjAna);
-                    dv2Draw.Draw_CircleMode(temp_ObjCom, temp_ObjAna, this);
+                    //dv2Draw.Draw_CircleMode(temp_ObjCom, temp_ObjAna, this);
+                    Draw_CircleMode(temp_ObjCom, temp_ObjAna);
                     break;
                 case "Arrow":
                     break;
@@ -735,6 +753,8 @@ namespace DV2.Net_Graphics_Application
             textBox_log.Font = new Font(textBox_log.Font.FontFamily, FontSize);
             textBox_log.AppendText("TEST" + "\r\n");
         }
+
+
     }
 
 }

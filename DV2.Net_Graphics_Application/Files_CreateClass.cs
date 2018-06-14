@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DV2.Net_Graphics_Application
 {
-    public partial class Files_CreateClass
+    public partial class MainForm
     {
         public void File_ex()
         {

@@ -8,15 +8,11 @@ using System.Drawing;
 namespace DV2.Net_Graphics_Application
 {
     //class Graphic_CircleClass
-    public partial class DV2_Drawing
+    public partial class MainForm
     {
         //
-        public void Draw_CircleMode(string ObjCommand, string ObjAnalysis, MainForm mLog)
+        public void Draw_CircleMode(string ObjCommand, string ObjAnalysis)
         {
-            if (mfLog == null)
-            {
-                mfLog = mLog;
-            }
             LogOutput("Draw_CircleMode");
 
             string[] commData;

@@ -5,14 +5,48 @@ using System.Text;
 
 namespace DV2.Net_Graphics_Application
 {
+    /// <summary>
+    /// All for BackUp the Programs, Just in Case.
+    /// </summary>
     public partial class Backup_Programs
     {
         #region LogOutput
         private void LogOutput(Object log)
         {
-            MainForm MFlog = new MainForm();
-            MFlog.LogOutput(log);
+            //Nothing!
         }
+        #endregion
+        #region LogOutput 
+        /*
+        //MainForm mfObj = null;
+        //bool PointerVerify_flag = false;
+        private void PointerVerify(MainForm pv)
+        {
+            //Verify The MainForm Pointer
+            if (mfObj == null && mfObj != pv)
+            {
+                mfObj = pv;
+                PointerVerify_flag = true;
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Error @DV2_Drawing.cs PointerVerify Function!" + "\r\n" + "There are something wrong with the MainForm Pointer!" + "\r\n" + "Please CHECK the Function!", "Notice @DV2_Drawing.cs", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                System.Environment.Exit(0);
+            }
+        }
+        private void LogOutput(Object log)
+        {
+            if (PointerVerify_flag)
+            {
+                mfObj.textBox_log.AppendText(log + "\r\n");
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Error @DV2_Drawing.cs LogOutput Function!" + "\r\n" + "We Lost the MainForm Pointer!" + "\r\n" + "Please CHECK the Function!", "Notice @DV2_Drawing.cs", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                System.Environment.Exit(0);
+            }
+        }
+        */
         #endregion
 
         /* DrawImgButton_Clicked
