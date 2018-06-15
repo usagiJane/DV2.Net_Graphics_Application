@@ -6,7 +6,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="GraphicInstruction" Type="System.String" Scope="User">
-      <Value Profile="(Default)">LineArcCircleArrowTriangleRectanglePoint</Value>
+      <Value Profile="(Default)">LineDashLineArcCircleArrowDashArrowTriangleRectanglePoint</Value>
     </Setting>
   </Settings>
 </SettingsFile>

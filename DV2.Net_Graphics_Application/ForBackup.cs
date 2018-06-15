@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace DV2.Net_Graphics_Application
@@ -262,6 +261,54 @@ namespace DV2.Net_Graphics_Application
                 LogOutput("命令認識できない");
                 tobeRead.Speak("命令認識できない");
             }
+        }
+        */
+        #endregion
+
+        #region Graphic_line
+        /*
+        private void drawLine(ref ArrayList commData, Pen picPen = null, float offset = pub_offSet)
+        {
+            //graphObj 
+            //picPen
+            picPen = picPen ?? pub_picPen;
+            //offset 変位量
+            //commData 命令文内容,可変パラメータ
+            float pointAx = 0, pointAy = 0, pointBx = 0, pointBy = 0;
+
+            if (commData.Count == 5)
+            {
+                //座標計算
+                pointAx = Convert.ToSingle(commData[1]) + offset;
+                pointAy = Convert.ToSingle(commData[2]) + offset;
+                pointBx = Convert.ToSingle(commData[3]) + offset;
+                pointBy = Convert.ToSingle(commData[4]) + offset;
+            }
+
+
+            graphObj.DrawLine(picPen, pointAx, pointAy, pointBx, pointBy);
+        }
+
+        public void drawArrow()
+        {
+            //LogOutput("矢印");
+            //int pointX1 = 0, pointY1 = 0, pointX2 = 0, pointY2 = 0;
+            //string point1, point2;
+            //string[] point11, point22;
+
+            //point1 = textBox2.Text;
+            //point2 = textBox3.Text;
+            //point11 = point1.Split(',');
+            //point22 = point2.Split(',');
+            //int.TryParse(point11[0], out pointX1);
+            //int.TryParse(point11[1], out pointY1);
+            //int.TryParse(point22[0], out pointX2);
+            //int.TryParse(point22[1], out pointY2);
+            ////picPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+            //picPen.EndCap = System.Drawing.Drawing2D.LineCap.Triangle;
+
+            ////矢印を書く
+            //graphObj.DrawLine(picPen, pointX1, pointY1, pointX2, pointY2);
         }
         */
         #endregion

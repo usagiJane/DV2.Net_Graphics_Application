@@ -4,10 +4,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 using System.Windows.Forms;
 
 #region Appended
+using System.Drawing;
 using System.Collections;
 using System.Text.RegularExpressions;
 
@@ -58,7 +58,7 @@ namespace DV2.Net_Graphics_Application
         {                             /* トークンの種類 */
             Lparen = '(', Rparen = ')', Lbracket = '[', Rbracket = ']', Plus = '+', Minus = '-',
             Multi = '*', Divi = '/', Mod = '%', Not = '!', Ifsub = '?', Assign = '=',
-            IntDivi = '\\', Comma = ',', DblQ = '"',
+            IntDivi = '\\', Comma = ',', DblQ = '"', Colon = ':',
             Func = 150, Var, If, Elif, Else, For, To, Step, While,
             End, Break, Return, Option, Print, Println, Input, Toint,
             Exit, Equal, NotEq, Less, LessEq, Great, GreatEq, And, Or,
@@ -66,11 +66,11 @@ namespace DV2.Net_Graphics_Application
             Ident, IntNum, DblNum, String, Letter, Doll, Digit,
             Gvar, Lvar, Fcall, EofProg, EofLine, Others, EofTkn, None, END_keylist, END_line,
             /* 図形命令 */
-            Line, Arc, Circle, Arrow, Triangle, Rectangle,
+            Line, DashLine, Arrow, DashArrow, Arc, Circle, Triangle, Rectangle, 
             /* 処理関数 */
             Slove, Get, Contact, Show, Clear,
             /* 特別関数 */
-            With, Point, 
+            With, Point, Set,
         }
 
         public struct ToKen
@@ -92,8 +92,9 @@ namespace DV2.Net_Graphics_Application
 
             public KeyWord(string keyname, TknKind tknkind) { keyName = keyname; keyKind = tknkind; }
         };
+
         /* ジャグ配列 */
-        KeyWord[] KeyWdTbl = new KeyWord[44];      //要約語と記号の種別対応表
+        KeyWord[] KeyWdTbl = new KeyWord[50];      //要約語と記号の種別対応表
         TknKind[] ctyp = new TknKind[256];         //文字種表定義
         private int loopInfo = 0;
         #endregion
@@ -118,16 +119,17 @@ namespace DV2.Net_Graphics_Application
             dataTable.Rows.Add(new String[] { "2", @"[\r\n]" });
             dataTable.Rows.Add(new String[] { "3", @"[\n]" });
 
-            //comboBox_pictype.DataSource = dataTable;
             //textBox1.Text = "this is text box 1"; be used to storage input data ->dataStorage
             //Debug
             //textBox2.Text = "this is text box 2";
             textBox3.Text = "this is text box 3";
 
-            //Debug Mode デフォルト値
+            //Debug Mode Default Value
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
-            textBox_Input.Text = "obj1=line(1,2,20.0,25.5)";
-            
+            //textBox_Input.Text = "obj1=line(1,2,20.0,25.5)";
+            //textBox_Input.Text = "obj1=circle(1,2,20.0)";
+            textBox_Input.Text = "obj1=circle(c,20.0)";
+
             //DV2_Debug
             //DV2_Drawing dv2d = new DV2_Drawing();
             //dv2d.Dv2ConnectFunction(this);
@@ -135,8 +137,11 @@ namespace DV2.Net_Graphics_Application
             textBox_Input.Focus();
             //this.dataGridView_monitor.Rows.Add();
             InitializationBaseDatas();
+            //
             DebugImshow();
-            //Delegate 
+            //Speaker
+            //tobeRead.SelectVoice("Microsoft Anna");
+            tobeRead.SpeakAsync("キーワードについて、大文字と小文字は区別されていません。");
         }
 
         internal void LogOutput(Object log)
@@ -181,7 +186,7 @@ namespace DV2.Net_Graphics_Application
             ctyp[','] = TknKind.Comma; ctyp['"'] = TknKind.DblQ;
             ctyp['%'] = TknKind.Mod; ctyp['$'] = TknKind.Doll;
             ctyp['!'] = TknKind.Not; ctyp['?'] = TknKind.Ifsub;
-            ctyp['\\'] = TknKind.IntDivi; //ctyp['\"'] = TknKind.DblQ;
+            ctyp['\\'] = TknKind.IntDivi; ctyp[':'] = TknKind.Colon;
 
             KeyWdTbl[0] = new KeyWord("if", TknKind.If);
             KeyWdTbl[1] = new KeyWord("else", TknKind.Else);
@@ -211,25 +216,29 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[24] = new KeyWord("&&", TknKind.And);
             KeyWdTbl[25] = new KeyWord("<-", TknKind.Assign);
             KeyWdTbl[26] = new KeyWord("to", TknKind.To);
-            KeyWdTbl[27] = new KeyWord("var", TknKind.Var);
             /* 図形命令 */
-            KeyWdTbl[28] = new KeyWord("line", TknKind.Line);
-            KeyWdTbl[29] = new KeyWord("arc", TknKind.Arc);
-            KeyWdTbl[30] = new KeyWord("circle", TknKind.Circle);
-            KeyWdTbl[31] = new KeyWord("arrow", TknKind.Arrow);
-            KeyWdTbl[32] = new KeyWord("triangle", TknKind.Triangle);
-            KeyWdTbl[33] = new KeyWord("rectangle", TknKind.Rectangle);
+            KeyWdTbl[27] = new KeyWord("line", TknKind.Line);
+            KeyWdTbl[28] = new KeyWord("arc", TknKind.Arc);
+            KeyWdTbl[29] = new KeyWord("circle", TknKind.Circle);
+            KeyWdTbl[30] = new KeyWord("arrow", TknKind.Arrow);
+            KeyWdTbl[31] = new KeyWord("triangle", TknKind.Triangle);
+            KeyWdTbl[32] = new KeyWord("rectangle", TknKind.Rectangle);
+            KeyWdTbl[33] = new KeyWord("dashline", TknKind.DashLine);
+            KeyWdTbl[34] = new KeyWord("dasharrow", TknKind.DashArrow);
             /* 処理関数 */
-            KeyWdTbl[34] = new KeyWord("slove", TknKind.Slove);
-            KeyWdTbl[35] = new KeyWord("get", TknKind.Get);
-            KeyWdTbl[36] = new KeyWord("contact", TknKind.Contact);
-            KeyWdTbl[37] = new KeyWord("show", TknKind.Show);
-            KeyWdTbl[38] = new KeyWord("clear", TknKind.Clear);
+            KeyWdTbl[35] = new KeyWord("slove", TknKind.Slove);
+            KeyWdTbl[36] = new KeyWord("get", TknKind.Get);
+            KeyWdTbl[37] = new KeyWord("contact", TknKind.Contact);
+            KeyWdTbl[38] = new KeyWord("show", TknKind.Show);
+            KeyWdTbl[39] = new KeyWord("clear", TknKind.Clear);
             /* 特別関数 */
-            KeyWdTbl[39] = new KeyWord("with", TknKind.With);
-            KeyWdTbl[40] = new KeyWord("point", TknKind.Point);
+            KeyWdTbl[40] = new KeyWord("var", TknKind.Var);
+            KeyWdTbl[41] = new KeyWord(":", TknKind.Colon);
+            KeyWdTbl[42] = new KeyWord("with", TknKind.With);
+            KeyWdTbl[43] = new KeyWord("point", TknKind.Point);
+            KeyWdTbl[44] = new KeyWord("set", TknKind.Set);
             //End of the Key Word Table List Mark
-            KeyWdTbl[41] = new KeyWord("", TknKind.END_keylist);
+            KeyWdTbl[45] = new KeyWord("", TknKind.END_keylist);
         }
 
         public void DebugImshow()
@@ -281,306 +290,6 @@ namespace DV2.Net_Graphics_Application
             #endregion
         }
 
-        #region ToKen Debug
-        public void FormulaAnalysis()
-        {
-            //Define Parameters 
-            ToKen token;
-            TknKind bef_tok_kind = TknKind.None;
-            loopInfo = 0;
-            //DV2_Drawing dv2d_FA = new DV2_Drawing();
-            string objAnalysisData = "";
-            string objCommandData = "";
-            string[] storageData;
-            int dataGridView_index = 0;
-
-            //Debug
-            LogOutput("Resources.Graph_line  :> " + DV2.Net_Graphics_Application.Properties.Resources.Graph_line);
-            LogOutput("Settings.GraphicInstruction  :> " + DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction);
-            LogOutput(dataStorage.Text.Length);
-
-            if (dataStorage.Text.Length != 0)
-            {
-                
-                LogOutput(String.Format("{0, -15}", "Text") + String.Format("{0, -15}", "Kind") + String.Format("{0, -15}", "numVal"));
-                LogOutput("---------------------------------------------");
-
-                for (char txtChar = ' '; loopInfo < dataStorage.Text.Length;)
-                {
-
-                    txtChar = dataStorage.Text[loopInfo];
-                    token = nextTkn(txtChar);
-                    LogOutput(">>>token.kind iS -> " + String.Format("{0, -15}", token.kind));
-                    //LogOutput(">>bef_tok_kind iS -> " + String.Format("{0, -15}", bef_tok_kind));
-
-                    if (token.kind == TknKind.END_line)
-                    { 
-                        break;
-                    }
-
-                    //例:赋值语句 obj1 = line(0,0,20,10)
-                    if (token.kind == TknKind.Assign)
-                    {
-                        if (bef_tok_kind == TknKind.Ident)
-                        {
-                            //dataStorage
-                            storageData = Regex.Split(dataStorage.Text, "=", RegexOptions.IgnoreCase);
-                            //LogOutput("TknKind.Ident+TknKind.Assign Length ->" + storageData.Length);
-                            //入力した命令を保存する
-                            if (storageData.Length == 2)
-                            {
-                                ObjName.Add(storageData[0].Replace(" ", ""));
-                                ObjCommand.Add(storageData[1].Replace(" ",""));
-                                //データ監視器
-                                dataGridView_index = this.dataGridView_monitor.Rows.Add();
-                                this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = storageData[0].Replace(" ", "");
-                                this.dataGridView_monitor.Rows[dataGridView_index].Cells[1].Value = storageData[1].Replace(" ", "");
-                            }
-                            else
-                            {
-                                codeOutput("Error @FormulaAnalysis @341");
-                                break;
-                            }
-                        }
-                    }
-
-                    else if (token.kind == TknKind.Ident)
-                    {
-                        //表示命令を判別する
-                        if (bef_tok_kind == TknKind.Show)
-                        {
-                            tabControl_Graphics.SelectTab(1);
-                            if (ObjName.BinarySearch(token.text) != -1)
-                            {
-                                int index = ObjName.BinarySearch(token.text);
-                                //LogOutput(ObjCommand[index]);
-                                //LogOutput(ObjAnalysis[index]);
-                                //分析結果を転送する
-                                ParameterChecker(ObjAnalysis[index], index);
-                            }
-                        }
-                        
-                    }
-                    bef_tok_kind = token.kind;
-                    objAnalysisData += token.kind + "|";
-                    objCommandData += token.text + "|";
-                    //LogOutput(String.Format("{0, -15}", token.text) + String.Format("{0, -15}", token.kind) + String.Format("{0, -15}", token.dblVal));
-                }
-
-                if (ObjAnalysis.Count < ObjName.Count)
-                {
-                    bool assignFlag = false;
-                    int loop_i;
-                    //分析結果を保存する
-                    //LogOutput(objAnalysisData);
-                    //正規表現関数
-                    for (loop_i = 0; loop_i < Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Length; loop_i++)
-                    {
-                        if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[loop_i] == "Assign")
-                        {
-                            assignFlag = true;
-                            break;
-                        }
-                    }
-                   
-                    if (assignFlag)
-                    {
-                        objAnalysisData = String.Join("|", Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Skip(loop_i + 1).ToArray());
-                        ObjAnalysis.Add(objAnalysisData.Substring(0, objAnalysisData.Length - 1));
-                        this.dataGridView_monitor.Rows[dataGridView_index].Cells[2].Value = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
-                    }
-                    else
-                    {
-                        ObjAnalysis.Add(objAnalysisData.Substring(0, objAnalysisData.Length - 1));
-                        this.dataGridView_monitor.Rows[dataGridView_index].Cells[2].Value = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
-                    }
-
-                    if(ObjCommand.Count == ObjName.Count)
-                    {
-                        ObjCommand.RemoveAt(ObjCommand.Count - 1);
-                        ObjCommand.Add(objCommandData);
-                    }
-                }
-            }
-            else
-            {
-                codeOutput("Error @FormulaAnalysis MSG: Please Input Data!");
-            }
-
-        }
-
-        ToKen nextTkn(char txtChar)                   /* トークン取得。漢字やエスケープ文字は非対応 */
-        {
-            TknKind kd;
-            int temp_ch = 0;
-            //double digitNum = 0;
-            string txtStr = "";
-            ToKen tokenInfo = new ToKen(TknKind.None, " ", 0.0);
-            
-            while (Char.IsWhiteSpace(txtChar))
-            {
-                txtChar = nextCh();                   /* 空白読み捨て */
-            }
-
-            //if (ch == EOF) return Token(EofTkn, txt);
-            if (txtChar == '\0' || txtChar == '\r' || txtChar == '\n')
-            {
-                //return ToKen(TknKind.EofTkn, txt);
-                tokenInfo.kind = TknKind.EofTkn;
-                tokenInfo.text = txtStr;
-
-                return tokenInfo;
-            }
-
-            switch (ctyp[txtChar])
-            {
-                case TknKind.Letter:                            /* 識別子 */
-                    for (; ctyp[txtChar] == TknKind.Letter || ctyp[txtChar] == TknKind.Digit; txtChar = nextCh())
-                    {
-                        txtStr += txtChar;
-                    }
-                    break;
-                case TknKind.Digit:                             /* 数字 */
-                    tokenInfo.kind = TknKind.IntNum;
-                    while (ctyp[txtChar] == TknKind.Digit)
-                    {
-                        txtStr += txtChar;
-                        txtChar = nextCh();
-                    }
-                    if (txtChar == '.')
-                    {
-                        tokenInfo.kind = TknKind.DblNum;
-                        txtStr += txtChar;
-                        txtChar = nextCh();
-                    }
-                    while (ctyp[txtChar] == TknKind.Digit)
-                    {
-                        txtStr += txtChar;
-                        txtChar = nextCh();
-                    }
-
-                    tokenInfo.text = txtStr;
-                    tokenInfo.dblVal = Convert.ToDouble(txtStr);
-                    return tokenInfo;
-                case TknKind.DblQ:                              /* 文字列定数 */
-                    for (txtChar = nextCh(); txtChar != '\0' && txtChar != '\n' && txtChar != '"'; txtChar = nextCh())
-                    {
-                        txtStr += txtChar;
-                    }
-                    if (txtChar != '"')
-                    {
-                        LogOutput("文字列リテラルが閉じていない");
-                        //exit(1);
-                    }
-                    txtChar = nextCh();
-                    tokenInfo.kind = TknKind.String;
-                    tokenInfo.text = txtStr;
-                    return tokenInfo;
-                case TknKind.Less:
-                    {
-                        txtStr += txtChar;
-                        temp_ch = txtChar;
-                        txtChar = nextCh();
-                        if (ctyp[txtChar] == TknKind.Minus && txtChar != '\0')
-                        {
-                            txtStr += txtChar;
-                            txtChar = nextCh();
-                        }
-                        else
-                        {
-                            if (is_ope2(temp_ch, txtChar))
-                            {
-                                txtStr += txtChar;
-                                txtChar = nextCh();
-                            }
-                            break;
-                        }
-                    }
-                    tokenInfo.kind = TknKind.Assign;
-                    tokenInfo.text = txtStr;
-                    return tokenInfo;
-                default :                                /* 記号 */
-                    {
-                        txtStr += txtChar;
-                        temp_ch = txtChar;
-                        txtChar = nextCh();
-                        if (is_ope2(temp_ch, txtChar))
-                        {
-                            txtStr += txtChar;
-                            txtChar = nextCh();
-                        }
-                        break;
-                    }
-            }
-            kd = get_kind(ref txtStr);                     /* 種別設定 */
-            if (kd == TknKind.Others)
-            {
-                LogOutput("不正なトークンです: " + txtStr);
-                tobeRead.Speak("不正なトークンが存在しています.");
-                //exit(1);
-            }
-            tokenInfo.kind = kd;
-            tokenInfo.text = txtStr;
-            return tokenInfo;
-        }
-        
-        public bool is_ope2(int charA, int charB)                /* 2文字演算子なら真 */
-        {
-            string ope2Str = " <= >= == != <- ";
-            string chkStr;
-
-            if (charA == '\0' || charB == '\0')
-            { 
-                return false;
-            }
-            chkStr = charA.ToString() + charB.ToString();
-            bool opFlag = ope2Str.Contains(chkStr.ToString());
-
-            if (opFlag)
-            {
-                return true;
-            }
-            else
-                return false;
-        }
-
-        public char nextCh()
-        {
-            char nextChar;
-
-            if (loopInfo < dataStorage.Text.Length)
-            {
-                loopInfo += 1;
-                if (loopInfo == dataStorage.Text.Length)
-                {
-                    return '\0';
-                }
-                else
-                {
-                    nextChar = dataStorage.Text[loopInfo];
-                }
-
-                return nextChar;
-            }
-            else
-            {
-                return '\0';
-            }
-            
-        }
-
-        TknKind get_kind(ref string s)
-        {
-	        for (int i = 0; KeyWdTbl[i].keyKind != TknKind.END_keylist; i++)
-            {
-		        if (s == KeyWdTbl[i].keyName) return KeyWdTbl[i].keyKind;
-	        }
-	        if (ctyp[s[0]] == TknKind.Letter) return TknKind.Ident;
-	        if (ctyp[s[0]] == TknKind.Digit)  return TknKind.IntNum;
-	        return TknKind.Others;
-        }
-        #endregion
-
         private void ParameterChecker(object GraphIns, int listIndex)
         {
             //Debug
@@ -609,7 +318,16 @@ namespace DV2.Net_Graphics_Application
                     //Debug
                     LogOutput("switch GraphCmd Line -- " + temp_ObjCom);
                     LogOutput("switch GraphCmd Line -- " + temp_ObjAna);
-                    //dv2Draw.Draw_LineMode(temp_ObjCom, temp_ObjAna, this);
+                    
+                    Draw_LineMode(temp_ObjCom, temp_ObjAna);
+                    break;
+                case "DashLine":
+                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                    temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                    //Debug
+                    LogOutput("switch GraphCmd DashLine -- " + temp_ObjCom);
+                    LogOutput("switch GraphCmd DashLine -- " + temp_ObjAna);
+                    
                     Draw_LineMode(temp_ObjCom, temp_ObjAna);
                     break;
                 case "Arc":
@@ -620,10 +338,26 @@ namespace DV2.Net_Graphics_Application
                     //Debug
                     LogOutput("switch GraphCmd Circle -- " + temp_ObjCom);
                     LogOutput("switch GraphCmd Circle -- " + temp_ObjAna);
-                    //dv2Draw.Draw_CircleMode(temp_ObjCom, temp_ObjAna, this);
+                    
                     Draw_CircleMode(temp_ObjCom, temp_ObjAna);
                     break;
                 case "Arrow":
+                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                    temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                    //Debug
+                    LogOutput("switch GraphCmd Arrow -- " + temp_ObjCom);
+                    LogOutput("switch GraphCmd Arrow -- " + temp_ObjAna);
+                    
+                    Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
+                    break;
+                case "DashArrow":
+                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                    temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                    //Debug
+                    LogOutput("switch GraphCmd DashArrow -- " + temp_ObjCom);
+                    LogOutput("switch GraphCmd DashArrow -- " + temp_ObjAna);
+                    
+                    Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
                     break;
                 case "Triangle":
                     break;
@@ -632,7 +366,7 @@ namespace DV2.Net_Graphics_Application
                 case "Point":
                     break;
                 default:
-                    codeOutput("Error @ParameterChecker");
+                    codeOutput("Error @ParameterChecker 644");
                     break;
             }
         }
@@ -754,7 +488,10 @@ namespace DV2.Net_Graphics_Application
             textBox_log.AppendText("TEST" + "\r\n");
         }
 
-
+        public void DuplicateChecking()
+        {
+            //未完成、この部分は対象名の重複データをチェックする
+        }
     }
 
 }

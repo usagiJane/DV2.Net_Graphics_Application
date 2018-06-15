@@ -37,13 +37,25 @@ namespace DV2.Net_Graphics_Application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LineArcCircleArrowTriangleRectanglePoint")]
+        [global::System.Configuration.DefaultSettingValueAttribute("LineDashLineArcCircleArrowDashArrowTriangleRectanglePoint")]
         public string GraphicInstruction {
             get {
                 return ((string)(this["GraphicInstruction"]));
             }
             set {
                 this["GraphicInstruction"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string setting {
+            get {
+                return ((string)(this["setting"]));
+            }
+            set {
+                this["setting"] = value;
             }
         }
     }
