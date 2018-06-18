@@ -85,6 +85,10 @@ namespace DV2.Net_Graphics_Application
                 }
                 else
                 {
+                    if (subPointData.Count != 2)
+                    {
+                        tobeRead.SpeakAsync("Error @Draw_CircleMode" + "座標点異常ある");
+                    }
                     tobeRead.SpeakAsync("Error @Draw_CircleMode");
                 }
 

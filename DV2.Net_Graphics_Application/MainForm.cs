@@ -15,27 +15,6 @@ using System.Speech.Recognition;
 using System.Speech.Synthesis;
 #endregion
 
-#region Description
-/********************************************************************************* 
-  *Copyright(C),Lab
-  *FileName:
-  *Author:
-  *Version:
-  *Date:
-  *Description:
-  * 
-  *Others:
-  *Function List:
-     1.………… 
-     2.………… 
-  *History:
-     1.Date: 
-       Author: 
-       Modification: 
-     2.………… 
-**********************************************************************************/
-#endregion
-
 namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm : Form
@@ -128,7 +107,9 @@ namespace DV2.Net_Graphics_Application
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
             //textBox_Input.Text = "obj1=line(1,2,20.0,25.5)";
             //textBox_Input.Text = "obj1=circle(1,2,20.0)";
-            textBox_Input.Text = "obj1=circle(c,20.0)";
+            //textBox_Input.Text = "obj1=circle(c,20.0)";
+            textBox_Input.Text = "var p : Point";
+
 
             //DV2_Debug
             //DV2_Drawing dv2d = new DV2_Drawing();

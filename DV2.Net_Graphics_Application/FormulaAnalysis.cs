@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
 #region Append
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -22,6 +21,7 @@ namespace DV2.Net_Graphics_Application
             string[] storageData;
             int dataGridView_index = 0;
             int objFinder_index = 0;
+            bool def_point = false;
 
             //Debug
             LogOutput("Resources.Graph_line  :> " + DV2.Net_Graphics_Application.Properties.Resources.Graph_line);
@@ -47,9 +47,10 @@ namespace DV2.Net_Graphics_Application
                         break;
                     }
 
-                    //例:赋值语句 obj1 = line(0,0,20,10)
+                    //Command "Assign" Route
                     if (token.kind == TknKind.Assign)
                     {
+                        //例:赋值语句 obj1 = line(0,0,20,10)
                         if (bef_tok_kind == TknKind.Ident)
                         {
                             //dataStorage
@@ -73,6 +74,7 @@ namespace DV2.Net_Graphics_Application
                         }
                     }
 
+                    //Command "Show" Route
                     else if (token.kind == TknKind.Ident)
                     {
                         //表示命令を判別する
@@ -104,6 +106,31 @@ namespace DV2.Net_Graphics_Application
                         }
 
                     }
+
+                    //"Point Define" Route
+                    else if (token.kind == TknKind.Point)
+                    {
+                        //変数ｐをPoint型として宣言
+                        if (bef_tok_kind == TknKind.Colon)
+                        {
+                            //Ex:"var p : Point" -> "p = Point(0,0)" 
+                            storageData = Regex.Split(dataStorage.Text, ":", RegexOptions.IgnoreCase);
+                            ObjName.Add(storageData[0]);
+                            ObjCommand.Add(storageData[1].Replace(" ", ""));
+                            //データ監視器
+                            dataGridView_index = this.dataGridView_monitor.Rows.Add();
+                            this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = storageData[0];
+                            this.dataGridView_monitor.Rows[dataGridView_index].Cells[1].Value = storageData[1].Replace(" ", "");
+                            def_point = true;
+                        }
+                    }
+
+                    //"Get P" Route
+                    else if (token.kind == TknKind.Get)
+                    {
+
+                    }
+
                     bef_tok_kind = token.kind;
                     objAnalysisData += token.kind + "|";
                     objCommandData += token.text + "|";
@@ -140,19 +167,49 @@ namespace DV2.Net_Graphics_Application
 
                     if (ObjCommand.Count == ObjName.Count)
                     {
+                        //Ex:"obj1|=|line|(|1|,|2|,|20.0|,|25.5|)|" -> "obj1|=|line|(|1|,|2|,|20.0|,|25.5|)"
                         ObjCommand.RemoveAt(ObjCommand.Count - 1);
                         ObjCommand.Add(objCommandData.Substring(0, objCommandData.Length - 1));
                     }
                 }
             }
+
             else
             {
                 codeOutput("Error @FormulaAnalysis MSG: Please Input Data!");
             }
+
             if (dataStorage.Text.Length != 0 && ObjName.Count != 0)
             {
                 //未完成、この部分は対象名の重複データをチェックする
                 DuplicateChecking();
+            }
+
+            if (def_point)
+            {
+                if(Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[0].ToLower() == "var")
+                {
+                    string[] temp = Regex.Split(ObjCommand[ObjCommand.Count - 1].ToString(), @"\|", RegexOptions.IgnoreCase);
+                    //Data Remove
+                    ObjName.RemoveAt(ObjName.Count - 1);
+                    ObjCommand.RemoveAt(ObjCommand.Count - 1);
+                    ObjAnalysis.RemoveAt(ObjAnalysis.Count - 1);
+
+                    //New Data Append
+                    ObjName.Add(temp[1]);
+                    ObjCommand.Add("point(0,0)");
+                    ObjAnalysis.Add("Point|Lparen|IntNum|Comma|IntNum|Rparen");
+                    //データ監視器 Rewirte
+                    this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = temp[1];
+                    this.dataGridView_monitor.Rows[dataGridView_index].Cells[1].Value = "point(0,0)";
+                    this.dataGridView_monitor.Rows[dataGridView_index].Cells[2].Value = "Point|Lparen|IntNum|Comma|IntNum|Rparen";
+                }
+            }
+
+            //get P
+            if (true)
+            {
+
             }
         }
 

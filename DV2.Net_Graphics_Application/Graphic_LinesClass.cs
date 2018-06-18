@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
 #region Append
 using System.Drawing;
 using System.Text.RegularExpressions;
