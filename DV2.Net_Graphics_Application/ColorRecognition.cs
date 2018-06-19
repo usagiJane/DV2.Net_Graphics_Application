@@ -10,6 +10,7 @@ namespace DV2.Net_Graphics_Application
 {
     class ColorRecognition
     {
+        //指先のマーカーを検出する
         public void FindColor(ref Mat srcImg, ref Mat dstImg)
         {
             Mat srcImg2HSV, hueImg;
@@ -36,7 +37,7 @@ namespace DV2.Net_Graphics_Application
                 {
                     CvScalar HchImgdata = Cv.Get2D(hueImg2Ipl, i, j);
                     CvScalar srcImgdata = Cv.Get2D(srcImg2HSV2Ipl, i, j);
-                    ////Hueの範囲，赤いから黄色までは0-60，黄色から緑までは60-120，緑から青いまでは120-180，
+                    //Hueの範囲，赤いから黄色までは0-60，黄色から緑までは60-120，緑から青いまでは120-180，
                     if ((45 <= HchImgdata.Val0 && HchImgdata.Val0 <= 90)) // || (175 <= data.Val0 && data.Val0 <= 180))
                     {
                         //RGBが違う値であるか

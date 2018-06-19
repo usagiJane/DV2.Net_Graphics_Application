@@ -21,7 +21,10 @@ namespace DV2.Net_Graphics_Application
             string[] storageData;
             int dataGridView_index = 0;
             int objFinder_index = 0;
+            #region Boolean Flags
             bool def_point = false;
+            bool get_point = false;
+            #endregion
 
             //Debug
             LogOutput("Resources.Graph_line  :> " + DV2.Net_Graphics_Application.Properties.Resources.Graph_line);
@@ -75,7 +78,7 @@ namespace DV2.Net_Graphics_Application
                     }
 
                     //Command "Show" Route
-                    else if (token.kind == TknKind.Ident)
+                    if (token.kind == TknKind.Ident)
                     {
                         //表示命令を判別する
                         if (bef_tok_kind == TknKind.Show)
@@ -108,7 +111,7 @@ namespace DV2.Net_Graphics_Application
                     }
 
                     //"Point Define" Route
-                    else if (token.kind == TknKind.Point)
+                    if (token.kind == TknKind.Point)
                     {
                         //変数ｐをPoint型として宣言
                         if (bef_tok_kind == TknKind.Colon)
@@ -126,8 +129,36 @@ namespace DV2.Net_Graphics_Application
                     }
 
                     //"Get P" Route
-                    else if (token.kind == TknKind.Get)
+                    if (token.kind == TknKind.Ident)
                     {
+                        //To get the finger point on the object
+                        //Ex:get p on obj1
+                        if (bef_tok_kind == TknKind.Get)
+                        {
+                            get_point = true;
+                        }
+                    }
+
+                    //"Slove" Route
+                    if (token.kind == TknKind.Slove)
+                    {
+                        //Slove the math program
+                    }
+
+                    //"Object Plus" Route
+                    if (token.kind == TknKind.Ident)
+                    {
+                        //obj3=obj1+obj2
+                        if (bef_tok_kind == TknKind.Plus)
+                        {
+
+                        }
+                    }
+
+                    //"Set" Route
+                    if (token.kind == TknKind.Set)
+                    {
+                        //Setting the parameters
 
                     }
 
@@ -187,7 +218,7 @@ namespace DV2.Net_Graphics_Application
 
             if (def_point)
             {
-                if(Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[0].ToLower() == "var")
+                if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[0].ToLower() == "var")
                 {
                     string[] temp = Regex.Split(ObjCommand[ObjCommand.Count - 1].ToString(), @"\|", RegexOptions.IgnoreCase);
                     //Data Remove
@@ -206,15 +237,24 @@ namespace DV2.Net_Graphics_Application
                 }
             }
 
-            //get P
-            if (true)
+            //get P on obj1
+            //objCommandData	"get|p|on|obj1|"
+            //objAnalysisData	"Get|Ident|Ident|Ident|"
+            if (get_point)
             {
+                LogOutput("For Debug");
+                objCommandData = objCommandData.Substring(0, objAnalysisData.Length - 1);
+                objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[0].ToLower() == "var")
+                {
 
+                }
             }
         }
 
         #region ToKen Analysis
-        ToKen nextTkn(char txtChar)                   /* トークン取得。漢字やエスケープ文字は非対応 */
+        /* トークン取得。漢字やエスケープ文字は非対応 */
+        ToKen nextTkn(char txtChar)
         {
             TknKind kd;
             int temp_ch = 0;
@@ -224,7 +264,8 @@ namespace DV2.Net_Graphics_Application
 
             while (Char.IsWhiteSpace(txtChar))
             {
-                txtChar = nextCh();                   /* 空白読み捨て */
+                /* 空白読み捨て */
+                txtChar = nextCh();
             }
 
             //if (ch == EOF) return Token(EofTkn, txt);
@@ -239,13 +280,15 @@ namespace DV2.Net_Graphics_Application
 
             switch (ctyp[txtChar])
             {
-                case TknKind.Letter:                            /* 識別子 */
+                /* 識別子 */
+                case TknKind.Letter:
                     for (; ctyp[txtChar] == TknKind.Letter || ctyp[txtChar] == TknKind.Digit; txtChar = nextCh())
                     {
                         txtStr += txtChar;
                     }
                     break;
-                case TknKind.Digit:                             /* 数字 */
+                /* 数字 */
+                case TknKind.Digit:
                     tokenInfo.kind = TknKind.IntNum;
                     while (ctyp[txtChar] == TknKind.Digit)
                     {
@@ -267,7 +310,8 @@ namespace DV2.Net_Graphics_Application
                     tokenInfo.text = txtStr;
                     tokenInfo.dblVal = Convert.ToDouble(txtStr);
                     return tokenInfo;
-                case TknKind.DblQ:                              /* 文字列定数 */
+                /* 文字列定数 */
+                case TknKind.DblQ:
                     for (txtChar = nextCh(); txtChar != '\0' && txtChar != '\n' && txtChar != '"'; txtChar = nextCh())
                     {
                         txtStr += txtChar;
@@ -304,7 +348,8 @@ namespace DV2.Net_Graphics_Application
                     tokenInfo.kind = TknKind.Assign;
                     tokenInfo.text = txtStr;
                     return tokenInfo;
-                default:                                /* 記号 */
+                /* 記号 */
+                default:
                     {
                         txtStr += txtChar;
                         temp_ch = txtChar;
@@ -317,7 +362,8 @@ namespace DV2.Net_Graphics_Application
                         break;
                     }
             }
-            kd = get_kind(ref txtStr);                     /* 種別設定 */
+            /* 種別設定 */
+            kd = get_kind(ref txtStr);
             if (kd == TknKind.Others)
             {
                 LogOutput("不正なトークンです: " + txtStr);
@@ -329,9 +375,10 @@ namespace DV2.Net_Graphics_Application
             return tokenInfo;
         }
 
-        public bool is_ope2(int charA, int charB)                /* 2文字演算子なら真 */
+        /* 2文字演算子なら真 */
+        public bool is_ope2(int charA, int charB)
         {
-            string ope2Str = " <= >= == != <- ";
+            string ope2Str = " <= >= == != ";
             string chkStr;
 
             if (charA == '\0' || charB == '\0')

@@ -53,6 +53,7 @@ namespace DV2.Net_Graphics_Application
                     blobs.RenderBlobs(srcImgbyCam2Ipl, renderImg2Ipl);
                     //緑最大面積を返す
                     CvBlob maxblob = blobs.LargestBlob();
+
                     if (maxblob != null)
                     {
                         double a = maxblob.Centroid.X;
@@ -77,7 +78,7 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
-        //新やり方
+        //Sample
         public void FindColor(ref Mat srcImg, ref Mat dstImg)
         {
             Mat srcImg2HSV, hueImg;
@@ -126,6 +127,11 @@ namespace DV2.Net_Graphics_Application
             Cv.ReleaseImage(dstImg2Ipl);
             Cv.ReleaseImage(srcImg2HSV2Ipl);
             Cv.ReleaseImage(hueImg2Ipl);
+        }
+
+        public void FingerFinder()
+        {
+
         }
     }
 }

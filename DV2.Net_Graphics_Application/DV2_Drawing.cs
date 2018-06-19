@@ -69,6 +69,7 @@ namespace DV2.Net_Graphics_Application
 
         public void AssignRemover(ref string ObjComm)
         {
+            //イコール記号までのデータを削除する
             //Define
             bool assignFlag = false;
             int loop_i;
@@ -99,6 +100,7 @@ namespace DV2.Net_Graphics_Application
 
         public int IdentFinder(ref string[] chkData)
         {
+            //Identデータ番号を探す
             for (int i = 0; i < chkData.Length; i++)
             {
                 if (chkData[i] == "Ident")
@@ -108,5 +110,11 @@ namespace DV2.Net_Graphics_Application
             }
             return 0;
         }
+
+        public void PointOnObject()
+        {
+
+        }
+
     }
 }

@@ -10,7 +10,7 @@ namespace DV2.Net_Graphics_Application
     //class Graphic_QuadrilateralClass　四角形
     public partial class MainForm
     {
-        public void Draw_QuadrilateralMode(string ObjCommand, string ObjAnalysis, MainForm mLog)
+        public void Draw_QuadrilateralMode(string ObjComm, string ObjAna)
         {
             LogOutput("Draw_QuadrilateralMode");
 

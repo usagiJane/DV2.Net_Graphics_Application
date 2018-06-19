@@ -108,8 +108,8 @@ namespace DV2.Net_Graphics_Application
             //textBox_Input.Text = "obj1=line(1,2,20.0,25.5)";
             //textBox_Input.Text = "obj1=circle(1,2,20.0)";
             //textBox_Input.Text = "obj1=circle(c,20.0)";
-            textBox_Input.Text = "var p : Point";
-
+            //textBox_Input.Text = "var p : Point";
+            textBox_Input.Text = "get p on obj1";
 
             //DV2_Debug
             //DV2_Drawing dv2d = new DV2_Drawing();
@@ -233,6 +233,7 @@ namespace DV2.Net_Graphics_Application
                 if (tabPage_camera.Parent != tabControl_Graphics)
                     tabPage_camera.Parent = tabControl_Graphics;
                 //カメラ出力処理
+                CameraStart();
             }
             else
             {
@@ -248,7 +249,6 @@ namespace DV2.Net_Graphics_Application
         private void EnterKeyPress(object sender, KeyEventArgs e)
         {
             //DV2_Drawing GraphicDraw = new DV2_Drawing();
-
             #region ToKen Analysis
             if (e.KeyCode == Keys.Enter)
             {
