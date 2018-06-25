@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#region Append
+
+#region Personal Addition
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Collections;
@@ -42,7 +43,15 @@ namespace DV2.Net_Graphics_Application
                 ArrayList subPointData = new ArrayList();
 
                 //Processing
+                //chkData   "["circle", "(", "c", ",", "5", ")"]"
                 index = IdentFinder(ref chkData);
+
+                if (index == -1)
+                {
+                    tobeRead.SpeakAsync("円定義の中にミスが存在している、もう一度確認してください。");
+                    return;
+                }
+
                 subIdent = commData[index];
                 index = 0;
 
@@ -53,6 +62,12 @@ namespace DV2.Net_Graphics_Application
                         break;
                     }
                     index += 1;
+                }
+
+                if (ObjName[index].ToString() != subIdent)
+                {
+                    tobeRead.SpeakAsync("中心座標点の定義が存在しない、もう一度確認してください。");
+                    return;
                 }
 
                 subComm = ObjCommand[index].ToString();

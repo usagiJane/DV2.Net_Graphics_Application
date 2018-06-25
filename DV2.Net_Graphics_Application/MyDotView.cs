@@ -5,18 +5,21 @@
  * DV2の多重接続禁止などを考慮してシングルトンで作成
  *
  * @author Shingo Morii
- * @Version 1.0
+ * @author Chou Hou
+ * @Version 2.0
  */
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
-using System.Windows.Forms;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+
+#region Personal Addition
+using System.Threading;
+using System.Windows.Forms;
 using DV = KGS.Tactile.Display;
+#endregion
 
 namespace DV2.Net_Graphics_Application
 {

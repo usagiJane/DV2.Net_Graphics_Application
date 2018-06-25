@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-#region Appended
+#region Personal Addition
 using System.Drawing;
 using System.Collections;
 using System.Text.RegularExpressions;
@@ -49,7 +49,7 @@ namespace DV2.Net_Graphics_Application
             /* 処理関数 */
             Slove, Get, Contact, Show, Clear,
             /* 特別関数 */
-            With, Point, Set,
+            With, Point, Set, On, In
         }
 
         public struct ToKen
@@ -73,7 +73,7 @@ namespace DV2.Net_Graphics_Application
         };
 
         /* ジャグ配列 */
-        KeyWord[] KeyWdTbl = new KeyWord[50];      //要約語と記号の種別対応表
+        KeyWord[] KeyWdTbl = new KeyWord[55];      //要約語と記号の種別対応表
         TknKind[] ctyp = new TknKind[256];         //文字種表定義
         private int loopInfo = 0;
         #endregion
@@ -218,8 +218,10 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[42] = new KeyWord("with", TknKind.With);
             KeyWdTbl[43] = new KeyWord("point", TknKind.Point);
             KeyWdTbl[44] = new KeyWord("set", TknKind.Set);
+            KeyWdTbl[45] = new KeyWord("on", TknKind.On);
+            KeyWdTbl[46] = new KeyWord("in", TknKind.In);
             //End of the Key Word Table List Mark
-            KeyWdTbl[45] = new KeyWord("", TknKind.END_keylist);
+            KeyWdTbl[47] = new KeyWord("", TknKind.END_keylist);
         }
 
         public void DebugImshow()

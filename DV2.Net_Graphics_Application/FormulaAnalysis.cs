@@ -1,6 +1,6 @@
 ﻿using System;
 
-#region Append
+#region Personal Addition
 using System.Linq;
 using System.Text.RegularExpressions;
 #endregion
@@ -237,17 +237,24 @@ namespace DV2.Net_Graphics_Application
                 }
             }
 
-            //get P on obj1
-            //objCommandData	"get|p|on|obj1|"
-            //objAnalysisData	"Get|Ident|Ident|Ident|"
             if (get_point)
             {
+                //get P on obj1
+                //objCommandData	"get|p|on|obj1|"
+                //objAnalysisData	"Get|Ident|On|Ident|"
                 LogOutput("For Debug");
                 objCommandData = objCommandData.Substring(0, objAnalysisData.Length - 1);
                 objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
-                if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[0].ToLower() == "var")
-                {
 
+                if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Count() == 4)
+                { 
+                    GetPointOnObject(objCommandData, objAnalysisData);
+                }
+                else
+                {
+                    //Error
+                    codeOutput("Error @FormulaAnalysis 256");
+                    tobeRead.SpeakAsync("入力ミスが発生していた。");
                 }
             }
         }

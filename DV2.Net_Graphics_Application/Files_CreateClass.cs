@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
+#region Personal Addition
+#endregion
+
 namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#region Append
+
+#region Personal Addition
 using OpenCvSharp;
 using OpenCvSharp.CPlusPlus;
 #endregion
