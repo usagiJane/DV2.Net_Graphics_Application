@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Collections;
 using System.Text.RegularExpressions;
-
+using DV = KGS.Tactile.Display;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 #endregion
@@ -30,6 +30,11 @@ namespace DV2.Net_Graphics_Application
         //FontSizeノーマルは"9"
         private static int FontSize = 9;
         //To storage the TabPages
+        MyDotView dv2Keyevent;
+        #endregion
+
+        #region About DV2
+
         #endregion
 
         #region About Define ToKen
@@ -47,7 +52,7 @@ namespace DV2.Net_Graphics_Application
             /* 図形命令 */
             Line, DashLine, Arrow, DashArrow, Arc, Circle, Triangle, Rectangle, 
             /* 処理関数 */
-            Slove, Get, Contact, Show, Clear,
+            Solve, Get, Contact, Show, Clear,
             /* 特別関数 */
             With, Point, Set, On, In
         }
@@ -98,31 +103,38 @@ namespace DV2.Net_Graphics_Application
             dataTable.Rows.Add(new String[] { "2", @"[\r\n]" });
             dataTable.Rows.Add(new String[] { "3", @"[\n]" });
 
+            #region Debug Mode Default Value
             //textBox1.Text = "this is text box 1"; be used to storage input data ->dataStorage
             //Debug
             //textBox2.Text = "this is text box 2";
             textBox3.Text = "this is text box 3";
 
-            //Debug Mode Default Value
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
             //textBox_Input.Text = "obj1=line(1,2,20.0,25.5)";
             //textBox_Input.Text = "obj1=circle(1,2,20.0)";
             //textBox_Input.Text = "obj1=circle(c,20.0)";
             //textBox_Input.Text = "var p : Point";
             textBox_Input.Text = "get p on obj1";
+            #endregion
 
-            //DV2_Debug
-            //DV2_Drawing dv2d = new DV2_Drawing();
-            //dv2d.Dv2ConnectFunction(this);
             tabControl_Graphics.Visible = false;
             textBox_Input.Focus();
             //this.dataGridView_monitor.Rows.Add();
             InitializationBaseDatas();
             //
             DebugImshow();
-            //Speaker
+
+            #region Speaker Setting
             //tobeRead.SelectVoice("Microsoft Anna");
             tobeRead.SpeakAsync("キーワードについて、大文字と小文字は区別されていません。");
+            #endregion
+
+            #region DV2 Key Event
+            MainForm.CheckForIllegalCrossThreadCalls = false;
+            Dv2ConnectFunction(this);
+            //mdv.DvCtl.KeyUp += new DV.KeyEventHandler(this.KeyHandle);
+
+            #endregion
         }
 
         internal void LogOutput(Object log)
@@ -207,7 +219,7 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[33] = new KeyWord("dashline", TknKind.DashLine);
             KeyWdTbl[34] = new KeyWord("dasharrow", TknKind.DashArrow);
             /* 処理関数 */
-            KeyWdTbl[35] = new KeyWord("slove", TknKind.Slove);
+            KeyWdTbl[35] = new KeyWord("solve", TknKind.Solve);
             KeyWdTbl[36] = new KeyWord("get", TknKind.Get);
             KeyWdTbl[37] = new KeyWord("contact", TknKind.Contact);
             KeyWdTbl[38] = new KeyWord("show", TknKind.Show);

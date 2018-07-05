@@ -24,6 +24,7 @@ namespace DV2.Net_Graphics_Application
             #region Boolean Flags
             bool def_point = false;
             bool get_point = false;
+            bool solve_point = false;
             #endregion
 
             //Debug
@@ -140,9 +141,14 @@ namespace DV2.Net_Graphics_Application
                     }
 
                     //"Slove" Route
-                    if (token.kind == TknKind.Slove)
+                    if (token.kind == TknKind.Ident)
                     {
                         //Slove the math program
+                        //Ex:solve c by contact(obj1,obj2,p)
+                        if (bef_tok_kind == TknKind.Solve)
+                        {
+                            solve_point = true;
+                        }
                     }
 
                     //"Object Plus" Route
@@ -210,6 +216,7 @@ namespace DV2.Net_Graphics_Application
                 codeOutput("Error @FormulaAnalysis MSG: Please Input Data!");
             }
 
+            //此処から処理するのデータは自動保存されていない。
             if (dataStorage.Text.Length != 0 && ObjName.Count != 0)
             {
                 //未完成、この部分は対象名の重複データをチェックする
@@ -255,6 +262,34 @@ namespace DV2.Net_Graphics_Application
                     //Error
                     codeOutput("Error @FormulaAnalysis 256");
                     tobeRead.SpeakAsync("入力ミスが発生していた。");
+                }
+            }
+
+            if (solve_point)
+            {
+                //solve c by contact(obj1,ojb2,p)
+                //objCommandData	"solve|c|by|contact|(|obj1|,|ojb2|,|p|)|"
+                //objAnalysisData	"Solve|Ident|Ident|Contact|Lparen|Ident|Comma|Ident|Comma|Ident|Rparen|"
+                LogOutput("For Debug");
+                objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
+                objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                string[] tmpCommData = Regex.Split(objCommandData, @"\|", RegexOptions.IgnoreCase);
+                string[] tmpAnaData = Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase);
+                int identCounter = 0;
+                bool contact_flag = false;
+
+                foreach (var temp in tmpAnaData)
+                {
+                    if (temp == "Ident")
+                        identCounter++;
+                    if (temp == "Contact")
+                    {
+                        contact_flag = true;
+                    }
+                }
+                if (contact_flag == true && identCounter == 5)
+                {
+                    TheSolveMode(objCommandData, tmpCommData, objAnalysisData, tmpAnaData);
                 }
             }
         }

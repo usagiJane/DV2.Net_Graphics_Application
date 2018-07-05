@@ -12,7 +12,7 @@ namespace DV2.Net_Graphics_Application
     class ColorRecognition
     {
         //指先のマーカーを検出する
-        public void FindColor(ref Mat srcImg, ref Mat dstImg)
+        internal void FindColor(ref Mat srcImg, ref Mat dstImg)
         {
             Mat srcImg2HSV, hueImg;
             IplImage srcImg2Ipl, dstImg2Ipl, srcImg2HSV2Ipl, hueImg2Ipl;

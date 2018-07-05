@@ -124,6 +124,36 @@ namespace DV2.Net_Graphics_Application
             }
         }
         
+        private void DrawCircleMode(ref ArrayList pointData, bool fillFlag = false, float offset = pub_offSet)
+        {
+            LogOutput("DrawCircle (" + pointData[0] + "," + pointData[1] + ") -> (" + pointData[2] + ")");
+            //offset 変位量
+            //pointData 座標点ArrayList,可変パラメータ
+            Pen picPen = pub_picPen;
+            float pointCx = 0, pointCy = 0, width = 0, height = 0;
+
+            //座標計算
+            //pointData[0] 中心座標点 X
+            //pointData[1] 中心座標点 Y
+            //pointData[2] 半径
+            //LogOutput(DateTime.Now.ToString("HH:mm") + " 画像円を描く");
+            pointCx = Convert.ToSingle(pointData[0]) - Convert.ToSingle(pointData[2]) + offset;
+            pointCy = Convert.ToSingle(pointData[1]) + Convert.ToSingle(pointData[2]) + offset;
+            width = Convert.ToSingle(pointData[2]) * 2 + offset;
+            height = Convert.ToSingle(pointData[2]) * 2 + offset;
+
+            if (fillFlag)
+            {
+                SolidBrush picBru = new SolidBrush(Color.Black);
+                graphObj.FillEllipse(picBru, pointCx, pointCy, width, height);
+            }
+            else
+            {
+                //picPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                graphObj.DrawEllipse(picPen, pointCx, pointCy, width, height);
+            }
+        }
+
         private void DrawCircleMode(ref ArrayList pointData, Pen picPen = null, bool fillFlag = false, float offset = pub_offSet)
         {
             LogOutput("DrawCircle (" + pointData[0] + "," + pointData[1] + ") -> (" + pointData[2] + ")");
