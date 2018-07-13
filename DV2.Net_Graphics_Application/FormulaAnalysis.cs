@@ -250,7 +250,7 @@ namespace DV2.Net_Graphics_Application
                 //objCommandData	"get|p|on|obj1|"
                 //objAnalysisData	"Get|Ident|On|Ident|"
                 LogOutput("For Debug");
-                objCommandData = objCommandData.Substring(0, objAnalysisData.Length - 1);
+                objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
                 objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
 
                 if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Count() == 4)
@@ -409,7 +409,7 @@ namespace DV2.Net_Graphics_Application
             if (kd == TknKind.Others)
             {
                 LogOutput("不正なトークンです: " + txtStr);
-                tobeRead.Speak("不正なトークンが存在しています.");
+                tobeRead.SpeakAsync("不正なトークンが存在しています.");
                 //exit(1);
             }
             tokenInfo.kind = kd;

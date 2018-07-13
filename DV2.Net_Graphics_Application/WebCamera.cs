@@ -5,9 +5,12 @@ using System.Text;
 #region Personal Addition
 using OpenCvSharp;
 using OpenCvSharp.Blob;
-using OpenCvSharp.CPlusPlus;
 using System.Linq;
 using System.Text.RegularExpressions;
+#endregion
+
+#region OpenCVSharp online document
+//https://shimat.github.io/opencvsharp_docs/html/d75eb659-6335-53f6-af7a-81814a21ab7f.htm
 #endregion
 
 namespace DV2.Net_Graphics_Application
@@ -41,19 +44,14 @@ namespace DV2.Net_Graphics_Application
                     //指検出方法
                     //FindColor(ref flipImg, ref tempImg);
                     iRo.FindColor(ref flipImg, ref tempImg);
-
-                    Cv2.CvtColor(tempImg, grayImg, ColorConversion.BgrToGray);
-                    Cv2.Threshold(grayImg, grayImg, 100, 255, ThresholdType.Binary);
-                    //Mat -> IplImage
-                    IplImage grayImg2Ipl = grayImg.ToIplImage();
+                    
+                    Cv2.CvtColor(tempImg, grayImg, ColorConversionCodes.BGR2GRAY);
+                    Cv2.Threshold(grayImg, grayImg, 100, 255, ThresholdTypes.Binary);
                     //ラベリング処理
-                    CvBlobs blobs = new CvBlobs(grayImg2Ipl);
+                    CvBlobs blobs = new CvBlobs(grayImg);
                     renderImg = new Mat(srcImgbyCam.Size(), MatType.CV_8UC3);
-                    //Mat -> IplImage
-                    IplImage renderImg2Ipl = renderImg.ToIplImage();
-                    IplImage srcImgbyCam2Ipl = srcImgbyCam.ToIplImage();
                     //ラベリング結果の描画
-                    blobs.RenderBlobs(srcImgbyCam2Ipl, renderImg2Ipl);
+                    blobs.RenderBlobs(srcImgbyCam, renderImg);
                     //緑最大面積を返す
                     CvBlob maxblob = blobs.LargestBlob();
 
@@ -69,11 +67,11 @@ namespace DV2.Net_Graphics_Application
                     int keyValue = Cv2.WaitKey(100);
                     if (keyValue == 27)
                     {
-                        CvWindow.DestroyAllWindows();
-                        //IplImage 対象Release
-                        Cv.ReleaseImage(grayImg2Ipl);
-                        Cv.ReleaseImage(renderImg2Ipl);
-                        Cv.ReleaseImage(srcImgbyCam2Ipl);
+                        Cv2.DestroyAllWindows();
+                        //対象Release
+                        tempImg.Release(); flipImg.Release();
+                        grayImg.Release(); renderImg.Release();
+                        srcImgbyCam.Release();
                         capFlag = false;
                         break;   //ESC キーで閉じる
                     }
@@ -89,7 +87,7 @@ namespace DV2.Net_Graphics_Application
             Mat tempImg, flipImg;
             Mat grayImg, renderImg;
             Mat srcImgbyCam = new Mat();
-            double centerX, centerY;
+            double centerX = 0.0, centerY = 0.0;
             ColorRecognition iRo = new ColorRecognition();
 
             using (var capture = new VideoCapture(CaptureDevice.VFW))
@@ -108,21 +106,16 @@ namespace DV2.Net_Graphics_Application
                     tempImg = Mat.Zeros(srcImgbyCam.Size(), srcImgbyCam.Type());
                     grayImg = new Mat(srcImgbyCam.Size(), MatType.CV_8UC1);
                     //指検出方法
-                    //FindColor(ref flipImg, ref tempImg);
                     iRo.FindColor(ref flipImg, ref tempImg);
 
-                    Cv2.CvtColor(tempImg, grayImg, ColorConversion.BgrToGray);
-                    Cv2.Threshold(grayImg, grayImg, 100, 255, ThresholdType.Binary);
-                    //Mat -> IplImage
-                    IplImage grayImg2Ipl = grayImg.ToIplImage();
+                    Cv2.CvtColor(tempImg, grayImg, ColorConversionCodes.BGR2GRAY);
+                    Cv2.Threshold(grayImg, grayImg, 100, 255, ThresholdTypes.Binary);
                     //ラベリング処理
-                    CvBlobs blobs = new CvBlobs(grayImg2Ipl);
+                    //CvBlobs blobs = new CvBlobs(grayImg2Ipl);
+                    CvBlobs blobs = new CvBlobs(grayImg);
                     renderImg = new Mat(srcImgbyCam.Size(), MatType.CV_8UC3);
-                    //Mat -> IplImage
-                    IplImage renderImg2Ipl = renderImg.ToIplImage();
-                    IplImage srcImgbyCam2Ipl = srcImgbyCam.ToIplImage();
                     //ラベリング結果の描画
-                    blobs.RenderBlobs(srcImgbyCam2Ipl, renderImg2Ipl);
+                    blobs.RenderBlobs(srcImgbyCam, renderImg);
                     //緑最大面積を返す
                     CvBlob maxblob = blobs.LargestBlob();
 
@@ -135,17 +128,17 @@ namespace DV2.Net_Graphics_Application
                     int keyValue = Cv2.WaitKey(100);
                     if (keyValue == 27)
                     {
-                        CvWindow.DestroyAllWindows();
-                        //IplImage 対象Release
-                        Cv.ReleaseImage(grayImg2Ipl);
-                        Cv.ReleaseImage(renderImg2Ipl);
-                        Cv.ReleaseImage(srcImgbyCam2Ipl);
+                        Window.DestroyAllWindows();
+                        //対象Release
+                        tempImg.Release(); flipImg.Release();
+                        grayImg.Release(); renderImg.Release();
+                        srcImgbyCam.Release();
                         capFlag = false;
                         break;   //ESC キーで閉じる
                     }
                 }
             }
-            return new System.Drawing.Point(0, 0);
+            return new System.Drawing.Point(Convert.ToInt32(centerX), Convert.ToInt32(centerY));
         }
 
         public System.Drawing.Point FingerFinder(string targetName, bool dashFlag = false)
@@ -314,6 +307,12 @@ namespace DV2.Net_Graphics_Application
                 tobeRead.SpeakAsync("Error,@WebCamera PointOnObject関数,指先座標が識別失敗しました.");
                 return;
             }
+        }
+
+        public int GetPixelData(int hei, int wid)
+        {
+            
+            return -1;
         }
     }
 }

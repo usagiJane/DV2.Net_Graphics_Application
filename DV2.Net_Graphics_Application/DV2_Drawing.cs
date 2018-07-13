@@ -9,49 +9,61 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using System.Collections;
 using DV = KGS.Tactile.Display;
+using System.Windows.Forms;
 #endregion
 
 namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm
     {
-        #region DV2 Global Parameter
-        MyDotView Dv2Instance;
-        #endregion
-
         //private const float pub_offSet = 35f;
         private const float pub_offSet = 5f;
         private readonly Pen pub_picPen = new Pen(Color.LightBlue, 2.7F);
-        
+        //表示用の配列を用意する
+        private int[,] forDisDots = new int[48, 32];
+
         public void Dv2ConnectFunction(MainForm fm)
         {
-            ConsoleKeyInfo cki;
+            //ConsoleKeyInfo cki;
             // MyDotView インスタンスを取得する
             Dv2Instance = MyDotView.getInstance(fm);
 
             // DotViewに接続する
             Dv2Instance.Connect();
 
-            // 表示用の配列を用意する
-            int[,] dots = new int[48, 32];
-            for (int i = 0; i < 48; i++)
+            for (int i = 24; i < 48; i++)
             {
                 // 1行目の点を表示
-                dots[i, 0] = 1;
-                // ２行目の点を点滅
-                dots[i, 1] = 2;
+                forDisDots[i, 20] = 1;
+                // 2行目の点を点滅
+                forDisDots[i, 10] = 2;
+                // 3行目の点を表示
+                forDisDots[i, 2] = 1;
             }
 
             // DotViewにデータを送信する
-            Dv2Instance.SetDots(dots, 0);
+            //Dv2Instance.SetDots(forDisDots, BlinkInterval);
 
+            #region Useless
             // アプリケーション終了時には切断処理を呼ぶ
+            /*
             Console.WriteLine("Press the Escape (Esc) key to quit: \n");
-            cki = Console.ReadKey();
-            if (cki.Key == ConsoleKey.Escape)
+            try
+            { 
+                cki = Console.ReadKey();
+                if (cki.Key == ConsoleKey.Escape)
+                {
+                    Dv2Instance.Disconnect();
+                }
+            }
+            catch(Exception ex)
             {
                 Dv2Instance.Disconnect();
+                codeOutput(ex.Message);
             }
+            */
+            #endregion
+
         }
 
         #region For The Test
@@ -277,10 +289,12 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
-        private void KeyHandle(object sender, DV.KeyEventArgs e)
+        private void KeyHandleEvent(object sender, DV.KeyEventArgs e)
         {
             tobeRead.SpeakAsyncCancelAll();
-            
+            codeOutput("Shift -+-> " + e.Shift);
+            codeOutput("Kind -+-> " + e.Kind);
+            codeOutput("Value -+-> " + e.Value);
             //DotViewの何かのキーが押された時の処理
             //手前両端上のボタン
             if (e.Shift == 128)
@@ -298,7 +312,6 @@ namespace DV2.Net_Graphics_Application
             if (e.Shift == 64)
             {
                 tobeRead.SpeakAsync("削除");
-
             }
 
             //縮小キー(順番に選択状態にする)
@@ -395,5 +408,54 @@ namespace DV2.Net_Graphics_Application
 
         }
 
+        private void MouseMoveEvent(object sender, MouseEventArgs e)
+        {
+            /*
+            label1.Text = Cursor.Position.X.ToString();
+            label2.Text = Cursor.Position.Y.ToString();
+            X1 = Cursor.Position.X;
+            Y1 = Cursor.Position.Y;
+
+            X2 = X1 - 73; //キャリブレーション 校正
+            Y2 = Y1 - 180; //キャリブレーション
+            X3 = X2 / 15;
+            Y3 = Y2 / 12;
+
+            X3 = 48 - X3;
+            Y3 = 32 - Y3;
+
+            if (X3 < 0)
+                X3 = 0;
+            if (X3 > 47)
+                X3 = 48;
+            if (Y3 < 0)
+                Y3 = 0;
+            if (Y3 > 31)
+                Y3 = 32;
+
+            height = Y3;
+            width = X3;
+            show_dot();
+            */
+        }
+
+        private void MakeObjectBraille()
+        {
+            //この関数はDV2出力データを準備する
+            int[,] allDotData = new int[picBox.Size.Height, picBox.Size.Width];
+            int[,] focusDotData = new int[48, 32];
+            Color pixel;
+
+            for (int hei = 0; hei < picBox.Size.Height; hei++)
+            {
+                for (int wid = 0; wid < picBox.Size.Width; wid++)
+                {
+                    //ピクセルデータを0と1に変化する
+                    pixel = debug_Image.GetPixel(hei, wid);
+                    
+                }
+            }
+
+        }
     }
 }

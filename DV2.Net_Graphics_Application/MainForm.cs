@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 #region Personal Addition
@@ -11,8 +7,15 @@ using System.Drawing;
 using System.Collections;
 using System.Text.RegularExpressions;
 using DV = KGS.Tactile.Display;
-using System.Speech.Recognition;
 using System.Speech.Synthesis;
+#endregion
+
+#region useless
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Speech.Recognition;
 #endregion
 
 namespace DV2.Net_Graphics_Application
@@ -30,11 +33,12 @@ namespace DV2.Net_Graphics_Application
         //FontSizeノーマルは"9"
         private static int FontSize = 9;
         //To storage the TabPages
-        MyDotView dv2Keyevent;
         #endregion
 
         #region About DV2
-
+        //DV2 Global Parameter
+        MyDotView Dv2Instance;
+        private int BlinkInterval = 0;
         #endregion
 
         #region About Define ToKen
@@ -110,11 +114,11 @@ namespace DV2.Net_Graphics_Application
             textBox3.Text = "this is text box 3";
 
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
-            //textBox_Input.Text = "obj1=line(1,2,20.0,25.5)";
+            textBox_Input.Text = "obj1=line(1,2,200.0,250.5)";
             //textBox_Input.Text = "obj1=circle(1,2,20.0)";
             //textBox_Input.Text = "obj1=circle(c,20.0)";
             //textBox_Input.Text = "var p : Point";
-            textBox_Input.Text = "get p on obj1";
+            //textBox_Input.Text = "get p on obj1";
             #endregion
 
             tabControl_Graphics.Visible = false;
@@ -130,10 +134,10 @@ namespace DV2.Net_Graphics_Application
             #endregion
 
             #region DV2 Key Event
-            MainForm.CheckForIllegalCrossThreadCalls = false;
+            CheckForIllegalCrossThreadCalls = false;
             Dv2ConnectFunction(this);
-            //mdv.DvCtl.KeyUp += new DV.KeyEventHandler(this.KeyHandle);
-
+            Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(KeyHandleEvent);
+            
             #endregion
         }
 
@@ -163,7 +167,7 @@ namespace DV2.Net_Graphics_Application
 
         private void InitializationBaseDatas()
         {
-            LogOutput("Progress in Initialization Base Datas...");
+            //LogOutput("Progress in Initialization Base Datas...");
             int loop_i = 0; //文字種表設定用
 
             for (loop_i = 0; loop_i < 256; loop_i++) { ctyp[loop_i] = TknKind.Others; }
@@ -368,7 +372,7 @@ namespace DV2.Net_Graphics_Application
 
         private Graphics PreparePaper()
         {
-            //この関数は出力画像を準備する
+            //この関数は出力画像データを準備する
             Size picSize = picBox.Size;
             debug_Image = new Bitmap(picSize.Width, picSize.Height);
             //Pen picPen = new Pen(Color.LightBlue, 2.7F);
