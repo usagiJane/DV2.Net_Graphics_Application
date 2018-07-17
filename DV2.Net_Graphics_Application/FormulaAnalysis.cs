@@ -16,15 +16,16 @@ namespace DV2.Net_Graphics_Application
             TknKind bef_tok_kind = TknKind.None;
             loopInfo = 0;
             //DV2_Drawing dv2d_FA = new DV2_Drawing();
+            string objName = "";
             string objAnalysisData = "";
             string objCommandData = "";
             string[] storageData;
             int dataGridView_index = 0;
             int objFinder_index = 0;
             #region Boolean Flags
-            bool def_point = false;
-            bool get_point = false;
-            bool solve_point = false;
+            bool pointDef_flg = false;
+            bool pointGet_flg = false;
+            bool pointSol_flg = false;
             #endregion
 
             //Debug
@@ -63,8 +64,16 @@ namespace DV2.Net_Graphics_Application
                             //入力した命令を保存する
                             if (storageData.Length == 2)
                             {
-                                ObjName.Add(storageData[0].Replace(" ", ""));
-                                ObjCommand.Add(storageData[1].Replace(" ", ""));
+                                if (ObjectFinder(storageData[0].Replace(" ", "")) == -1)
+                                {
+                                    ObjName.Add(storageData[0].Replace(" ", ""));
+                                    ObjCommand.Add(storageData[1].Replace(" ", ""));
+                                }
+                                else
+                                {
+                                    objName = storageData[0].Replace(" ", "");
+                                    ObjCommand[ObjectFinder(storageData[0].Replace(" ", ""))] = storageData[1].Replace(" ", "");
+                                }
                                 //データ監視器
                                 dataGridView_index = this.dataGridView_monitor.Rows.Add();
                                 this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = storageData[0].Replace(" ", "");
@@ -119,13 +128,21 @@ namespace DV2.Net_Graphics_Application
                         {
                             //Ex:"var p : Point" -> "p = Point(0,0)" 
                             storageData = Regex.Split(dataStorage.Text, ":", RegexOptions.IgnoreCase);
-                            ObjName.Add(storageData[0]);
-                            ObjCommand.Add(storageData[1].Replace(" ", ""));
+                            if (ObjectFinder(storageData[0].Replace(" ", "")) == -1)
+                            {
+                                ObjName.Add(storageData[0].Replace(" ", ""));
+                                ObjCommand.Add(storageData[1].Replace(" ", ""));
+                            }
+                            else
+                            {
+                                objName = storageData[0].Replace(" ", "");
+                                ObjCommand[ObjectFinder(storageData[0].Replace(" ", ""))] = storageData[1].Replace(" ", "");
+                            }
                             //データ監視器
                             dataGridView_index = this.dataGridView_monitor.Rows.Add();
                             this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = storageData[0];
                             this.dataGridView_monitor.Rows[dataGridView_index].Cells[1].Value = storageData[1].Replace(" ", "");
-                            def_point = true;
+                            pointDef_flg = true;
                         }
                     }
 
@@ -136,7 +153,7 @@ namespace DV2.Net_Graphics_Application
                         //Ex:get p on obj1
                         if (bef_tok_kind == TknKind.Get)
                         {
-                            get_point = true;
+                            pointGet_flg = true;
                         }
                     }
 
@@ -147,7 +164,7 @@ namespace DV2.Net_Graphics_Application
                         //Ex:solve c by contact(obj1,obj2,p)
                         if (bef_tok_kind == TknKind.Solve)
                         {
-                            solve_point = true;
+                            pointSol_flg = true;
                         }
                     }
 
@@ -174,12 +191,47 @@ namespace DV2.Net_Graphics_Application
                     //LogOutput(String.Format("{0, -15}", token.text) + String.Format("{0, -15}", token.kind) + String.Format("{0, -15}", token.dblVal));
                 }
 
+                //Modify old data
+                if (ObjAnalysis.Count == ObjName.Count && objName != "" && ObjectFinder(objName) != -1)
+                {
+                    bool assignFlag = false;
+                    int loop_i;
+
+                    //分析結果を保存する
+                    //正規表現関数
+                    for (loop_i = 0; loop_i < Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Length; loop_i++)
+                    {
+                        if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[loop_i] == "Assign")
+                        {
+                            assignFlag = true;
+                            break;
+                        }
+                    }
+
+                    if (assignFlag)
+                    {
+                        objAnalysisData = string.Join("|", Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Skip(loop_i + 1).ToArray());
+                        ObjAnalysis[ObjectFinder(objName)] = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                        this.dataGridView_monitor.Rows[dataGridView_index].Cells[2].Value = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                    }
+                    else
+                    {
+                        ObjAnalysis[ObjectFinder(objName)] = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                        this.dataGridView_monitor.Rows[dataGridView_index].Cells[2].Value = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                    }
+
+                    //Ex:"obj1|=|line|(|1|,|2|,|20.0|,|25.5|)|" -> "obj1|=|line|(|1|,|2|,|20.0|,|25.5|)"
+                    ObjCommand[ObjectFinder(objName)] = objCommandData.Substring(0, objCommandData.Length - 1);
+                    LogOutput("Modify Debug Point");
+                }
+
+                //New data appended!
                 if (ObjAnalysis.Count < ObjName.Count)
                 {
                     bool assignFlag = false;
                     int loop_i;
+
                     //分析結果を保存する
-                    //LogOutput(objAnalysisData);
                     //正規表現関数
                     for (loop_i = 0; loop_i < Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Length; loop_i++)
                     {
@@ -220,10 +272,10 @@ namespace DV2.Net_Graphics_Application
             if (dataStorage.Text.Length != 0 && ObjName.Count != 0)
             {
                 //未完成、この部分は対象名の重複データをチェックする
-                DuplicateChecking();
+                //DuplicateChecking();
             }
 
-            if (def_point)
+            if (pointDef_flg)
             {
                 if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[0].ToLower() == "var")
                 {
@@ -244,7 +296,7 @@ namespace DV2.Net_Graphics_Application
                 }
             }
 
-            if (get_point)
+            if (pointGet_flg)
             {
                 //get P on obj1
                 //objCommandData	"get|p|on|obj1|"
@@ -265,7 +317,7 @@ namespace DV2.Net_Graphics_Application
                 }
             }
 
-            if (solve_point)
+            if (pointSol_flg)
             {
                 //solve c by contact(obj1,ojb2,p)
                 //objCommandData	"solve|c|by|contact|(|obj1|,|ojb2|,|p|)|"
@@ -474,5 +526,23 @@ namespace DV2.Net_Graphics_Application
             return TknKind.Others;
         }
         #endregion
+
+        public void DuplicateChecking(string ObjName)
+        {
+            //Define
+            int objIndex;
+
+            objIndex = ObjectFinder(ObjName);
+            if(objIndex == -1)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
     }
+    //End of class @FormulaAnalysis
 }

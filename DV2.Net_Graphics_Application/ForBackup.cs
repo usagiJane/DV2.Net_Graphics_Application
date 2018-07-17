@@ -11,6 +11,9 @@ namespace DV2.Net_Graphics_Application
         private void LogOutput(Object log)
         {
             //Nothing!
+            int i = 5;
+            Console.WriteLine("i is an int? {0}", i.GetType() == typeof(int));
+            Console.WriteLine("i is an int? {0}", typeof(int).IsInstanceOfType(i));
         }
         #endregion
         #region LogOutput 
@@ -436,4 +439,5 @@ namespace DV2.Net_Graphics_Application
         #endregion
 
     }
+    //End of class Backup_Programs
 }

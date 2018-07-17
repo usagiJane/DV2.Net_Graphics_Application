@@ -114,7 +114,7 @@ namespace DV2.Net_Graphics_Application
             textBox3.Text = "this is text box 3";
 
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
-            textBox_Input.Text = "obj1=line(1,2,200.0,250.5)";
+            textBox_Input.Text = "obj1=line(0,5,200.0,205)";
             //textBox_Input.Text = "obj1=circle(1,2,20.0)";
             //textBox_Input.Text = "obj1=circle(c,20.0)";
             //textBox_Input.Text = "var p : Point";
@@ -487,10 +487,6 @@ namespace DV2.Net_Graphics_Application
             textBox_log.AppendText("TEST" + "\r\n");
         }
 
-        public void DuplicateChecking()
-        {
-            //未完成、この部分は対象名の重複データをチェックする
-        }
     }
-
+    //End of class MainForm
 }

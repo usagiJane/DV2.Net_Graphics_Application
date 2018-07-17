@@ -22,7 +22,7 @@ namespace DV2.Net_Graphics_Application
             //obj2          未知対象、未知変数が存在する。
             //Define
             int index = 0;
-            //string unknownAna;
+            string tempComm;
             string[] unknownComm, unknownAna;
             List<string> targetIdent = new List<string>();
 
@@ -94,40 +94,44 @@ namespace DV2.Net_Graphics_Application
             ArrayList cirData = new ArrayList();
             ArrayList pData = new ArrayList();
 
-            LogOutput("For Debug");
-
             //Line
             //line(1,2,20.0,25.5)
+            tempComm = ObjCommand[lineIdx].ToString();
+            AssignRemover(ref tempComm);
             index = 0;
             foreach (var temp in Regex.Split(ObjAnalysis[lineIdx].ToString(), @"\|", RegexOptions.IgnoreCase))
             {
                 if (temp == "IntNum" || temp == "DblNum")
                 {
-                    lineData.Add(ObjCommand[lineIdx].ToString().Split('|')[index]);
+                    lineData.Add(tempComm.Split('|')[index]);
                 }
                 index++;
             }
 
             //Circle
             //circle(c,20.0)
+            tempComm = ObjCommand[cirIdx].ToString();
+            AssignRemover(ref tempComm);
             index = 0;
             foreach (var temp in Regex.Split(ObjAnalysis[cirIdx].ToString(), @"\|", RegexOptions.IgnoreCase))
             {
                 if (temp == "IntNum" || temp == "DblNum")
                 {
-                    cirData.Add(ObjCommand[cirIdx].ToString().Split('|')[index]);
+                    cirData.Add(tempComm.Split('|')[index]);
                 }
                 index++;
             }
 
             //Point P
             //p(30,20)
+            tempComm = ObjCommand[pIdx].ToString();
+            AssignRemover(ref tempComm);
             index = 0;
             foreach (var temp in Regex.Split(ObjAnalysis[pIdx].ToString(), @"\|", RegexOptions.IgnoreCase))
             {
                 if (temp == "IntNum" || temp == "DblNum")
                 {
-                    pData.Add(ObjCommand[pIdx].ToString().Split('|')[index]);
+                    pData.Add(tempComm.Split('|')[index]);
                 }
                 index++;
             }
@@ -147,11 +151,13 @@ namespace DV2.Net_Graphics_Application
             pointData.Add(C2x); pointData.Add(C2y); pointData.Add(3);
             DrawCircleMode(ref pointData, true);
 
+            //ここから、指先を探す機能付き
+            /* 20180717 Need Fix!
             Point fingerPoint = new Point(0, 0);
             string targetName = "";
             fingerPoint = FingerFinder(targetName);
             PointOnObject(ref fingerPoint, targetName);
-
+            */
             #endregion
         }
 
