@@ -287,7 +287,7 @@ namespace DV2.Net_Graphics_Application
 
                     //New Data Append
                     ObjName.Add(temp[1]);
-                    ObjCommand.Add("point(0,0)");
+                    ObjCommand.Add("Point|(|0|,|0|)");
                     ObjAnalysis.Add("Point|Lparen|IntNum|Comma|IntNum|Rparen");
                     //データ監視器 Rewirte
                     this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = temp[1];

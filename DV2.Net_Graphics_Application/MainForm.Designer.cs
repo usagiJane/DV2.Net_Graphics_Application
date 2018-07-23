@@ -96,7 +96,7 @@
             // 
             this.textBox_Input.Location = new System.Drawing.Point(24, 424);
             this.textBox_Input.Name = "textBox_Input";
-            this.textBox_Input.Size = new System.Drawing.Size(712, 21);
+            this.textBox_Input.Size = new System.Drawing.Size(712, 19);
             this.textBox_Input.TabIndex = 5;
             // 
             // label4
@@ -104,7 +104,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(24, 24);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(65, 12);
+            this.label4.Size = new System.Drawing.Size(56, 12);
             this.label4.TabIndex = 4;
             this.label4.Text = "コード入力";
             // 
@@ -169,7 +169,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(192, 136);
+            this.button1.Location = new System.Drawing.Point(190, 30);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 13;
@@ -182,9 +182,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(24, 120);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 12);
+            this.label3.Size = new System.Drawing.Size(71, 12);
             this.label3.TabIndex = 11;
-            this.label3.Text = "終了座標";
+            this.label3.Text = "Get用点座標";
             // 
             // label2
             // 
@@ -193,20 +193,20 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 12);
             this.label2.TabIndex = 12;
-            this.label2.Text = "出発座標";
+            this.label2.Text = "中心座標";
             // 
             // textBox3
             // 
             this.textBox3.Location = new System.Drawing.Point(24, 136);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(160, 21);
+            this.textBox3.Size = new System.Drawing.Size(160, 19);
             this.textBox3.TabIndex = 10;
             // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(24, 88);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(160, 21);
+            this.textBox2.Size = new System.Drawing.Size(160, 19);
             this.textBox2.TabIndex = 9;
             // 
             // dataStorage
@@ -214,7 +214,7 @@
             this.dataStorage.Location = new System.Drawing.Point(328, 40);
             this.dataStorage.Name = "dataStorage";
             this.dataStorage.ReadOnly = true;
-            this.dataStorage.Size = new System.Drawing.Size(400, 21);
+            this.dataStorage.Size = new System.Drawing.Size(400, 19);
             this.dataStorage.TabIndex = 8;
             // 
             // comboBox_codeType
@@ -231,7 +231,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(24, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.Size = new System.Drawing.Size(55, 12);
             this.label1.TabIndex = 6;
             this.label1.Text = "分裂タイプ";
             // 

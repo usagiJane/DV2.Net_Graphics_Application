@@ -30,7 +30,7 @@ namespace DV2.Net_Graphics_Application
             Cv2.CvtColor(srcImg, srcImg2HSV, ColorConversionCodes.BGR2HSV);
             //Camera Test window
             //ImShowはMat対象のみ
-            Cv2.ImShow("srcImg2HSV", srcImg2HSV);
+            //Cv2.ImShow("srcImg2HSV", srcImg2HSV);
 
             Cv2.Split(srcImg2HSV, out channelsplit);
             hueImg = channelsplit[0];

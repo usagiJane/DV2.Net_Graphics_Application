@@ -26,14 +26,24 @@ namespace DV2.Net_Graphics_Application
             Mat srcImgbyCam = new Mat();
             ColorRecognition iRo = new ColorRecognition();
 
-            using (var capture = new VideoCapture(CaptureDevice.VFW))
+            var capture = new VideoCapture(CaptureDevice.Any)
+            {
+                //キャプチャする画像のサイズフレームレートの指定
+                FrameHeight = 480,
+                FrameWidth = 320,
+                //FrameHeight = 640, FrameWidth = 480,
+            };
+
+            using (capture)
             {
                 while (capFlag)
                 {
                     //カメラから画像をキャプチャする
                     capFlag = capture.Read(srcImgbyCam);
-                    if (!capFlag)
+
+                    if (srcImgbyCam.Empty())
                     { break; }
+
                     //Camera Test window
                     Cv2.ImShow("srcImgbyCam", srcImgbyCam);
                     flipImg = srcImgbyCam.Clone();
@@ -57,11 +67,10 @@ namespace DV2.Net_Graphics_Application
 
                     if (maxblob != null)
                     {
-                        double a = maxblob.Centroid.X;
-                        double b = maxblob.Centroid.Y;
-                        //Debug
-                        //textBox_X.Text = a.ToString();
-                        //textBox_Y.Text = b.ToString();
+                        double a = Math.Round(maxblob.Centroid.X, 2);
+                        double b = Math.Round(maxblob.Centroid.Y, 2);
+                        //For Debug
+                        textBox2.Text = a.ToString() + "," + b.ToString();
                     }
 
                     int keyValue = Cv2.WaitKey(100);
@@ -90,14 +99,24 @@ namespace DV2.Net_Graphics_Application
             double centerX = 0.0, centerY = 0.0;
             ColorRecognition iRo = new ColorRecognition();
 
-            using (var capture = new VideoCapture(CaptureDevice.VFW))
+            var capture = new VideoCapture(CaptureDevice.Any)
+            {
+                //キャプチャする画像のサイズフレームレートの指定
+                FrameHeight = 480,
+                FrameWidth = 320,
+                //FrameHeight = 640, FrameWidth = 480,
+            };
+
+            using (capture)
             {
                 while (capFlag)
                 {
                     //カメラから画像をキャプチャする
                     capFlag = capture.Read(srcImgbyCam);
-                    if (!capFlag)
+
+                    if (srcImgbyCam.Empty())
                     { break; }
+
                     //Camera Test window
                     Cv2.ImShow("srcImgbyCam", srcImgbyCam);
                     flipImg = srcImgbyCam.Clone();
@@ -121,8 +140,10 @@ namespace DV2.Net_Graphics_Application
 
                     if (maxblob != null)
                     {
-                        centerX = maxblob.Centroid.X;
-                        centerY = maxblob.Centroid.Y;
+                        centerX = Math.Round(maxblob.Centroid.X, 2);
+                        centerY = Math.Round(maxblob.Centroid.Y, 2);
+                        //For Debug
+                        textBox2.Text = centerX.ToString() + " , " + centerY.ToString();
                     }
 
                     int keyValue = Cv2.WaitKey(100);
@@ -195,7 +216,12 @@ namespace DV2.Net_Graphics_Application
             PointOnObject(ref fingerPoint, targetName);
 
             index = ObjectFinder(pointName);
-            ObjCommand[index] = "point(" + fingerPoint.X + "," + fingerPoint.Y + ")";
+            ObjCommand[index] = "Point|(|" + fingerPoint.X + "|,|" + fingerPoint.Y + "|)";
+            textBox3.Text = fingerPoint.X.ToString() + " , " + fingerPoint.Y.ToString();
+            int dataGridView_index = this.dataGridView_monitor.Rows.Add();
+            this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = pointName;
+            this.dataGridView_monitor.Rows[dataGridView_index].Cells[1].Value = "point("+fingerPoint.X+","+fingerPoint.Y+")";
+            this.dataGridView_monitor.Rows[dataGridView_index].Cells[2].Value = "Point|Lparen|IntNum|Comma|IntNum|Rparen";
         }
 
         public void PointOnObject(ref System.Drawing.Point fingerPoint, string targetName)
@@ -225,18 +251,18 @@ namespace DV2.Net_Graphics_Application
 
             targetComm = Regex.Split(targetComm, @"\|", RegexOptions.IgnoreCase)[0];
 
-            switch (targetComm)
+            switch (targetComm.ToLower())
             {
-                case "Line":
+                case "line":
                     GetLinePoints(targetName, ref points);
                     break;
-                case "Circle":
+                case "circle":
                     GetCirclePoints(targetName, ref points);
                     break;
                 //To be continued
                 default:
-                    codeOutput("Error @WebCamera.cs PointOnObject関数");
-                    break;
+                    codeOutput("Error @WebCamera.cs PointOnObject関数 switch部分");
+                    return;
             }
 
             //座標点集合を回す、OpenCVのPoint型Listを作る
@@ -275,8 +301,28 @@ namespace DV2.Net_Graphics_Application
                 {
                     //Y座標値は直線座標集合の中に存在しない
                     //未完成、処理方法は不明
-                    codeOutput("Error @WebCamera.cs PointOnObject関数 236行.");
-                    tobeRead.SpeakAsync("指先座標点をえることが失敗した,Get命令をもう一度入力して下さい！");
+                    //codeOutput("Error @WebCamera.cs PointOnObject関数 236行.");
+                    //tobeRead.SpeakAsync("指先座標点をえることが失敗した,Get命令をもう一度実行して下さい！");
+
+                    double temp_avg = 0.0;
+                    foreach (double loop in avgPointY)
+                    {
+                        temp_avg += loop;
+                    }
+                    temp_avg = Convert.ToDouble(temp_avg / avgPointY.Count);
+                    temp = avgPointY.BinarySearch(temp_avg);
+                    if (temp < 0)
+                    {
+                        //Find the nearest
+                        //Use the LINQ system library to solve the problem.
+                        var result = (from x in avgPointY select new { Key = x, Value = Math.Abs(x - temp_avg) }).OrderBy(x => x.Value);
+                        //result.ToList().ForEach(x => Console.Write(x.Key + " "));
+                        fingerPoint.Y = Convert.ToInt32(result.ToList()[0].Key);
+                    }
+                    else
+                    {
+                        fingerPoint.Y = Convert.ToInt32(temp_avg);
+                    }
                 }
                 else
                 {

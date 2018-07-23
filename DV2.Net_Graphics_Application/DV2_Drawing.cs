@@ -184,17 +184,17 @@ namespace DV2.Net_Graphics_Application
 
             if (Math.Max(pointData[1], pointData[3]) == pointData[1])
             {
-                theMaxX.X = Convert.ToInt32(pointData[1]);
-                theMaxX.Y = Convert.ToInt32(pointData[2]);
-                theMinX.X = Convert.ToInt32(pointData[3]);
-                theMinX.Y = Convert.ToInt32(pointData[4]);
+                theMaxX.X = Convert.ToInt32(Math.Round(pointData[0]));
+                theMaxX.Y = Convert.ToInt32(Math.Round(pointData[1]));
+                theMinX.X = Convert.ToInt32(Math.Round(pointData[2]));
+                theMinX.Y = Convert.ToInt32(Math.Round(pointData[3]));
             }
             else
             {
-                theMaxX.X = Convert.ToInt32(pointData[3]);
-                theMaxX.Y = Convert.ToInt32(pointData[4]);
-                theMinX.X = Convert.ToInt32(pointData[1]);
-                theMinX.Y = Convert.ToInt32(pointData[2]);
+                theMaxX.X = Convert.ToInt32(Math.Round(pointData[2]));
+                theMaxX.Y = Convert.ToInt32(Math.Round(pointData[3]));
+                theMinX.X = Convert.ToInt32(Math.Round(pointData[0]));
+                theMinX.Y = Convert.ToInt32(Math.Round(pointData[1]));
             }
 
             slope = ((double)(theMinX.Y - theMaxX.Y)) / (theMinX.X - theMaxX.X);
@@ -207,7 +207,7 @@ namespace DV2.Net_Graphics_Application
                 if (0.001 > temp && temp > -0.001)
                 {
                     subLinePoints.Add(i);
-                    subLinePoints.Add(Convert.ToInt32(temp));
+                    subLinePoints.Add(Convert.ToInt32(y));
                 }
             }
 

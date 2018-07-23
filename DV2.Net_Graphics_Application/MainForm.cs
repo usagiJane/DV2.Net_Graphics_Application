@@ -111,7 +111,9 @@ namespace DV2.Net_Graphics_Application
             //textBox1.Text = "this is text box 1"; be used to storage input data ->dataStorage
             //Debug
             //textBox2.Text = "this is text box 2";
-            textBox3.Text = "this is text box 3";
+            textBox2.ReadOnly = true;
+            //textBox3.Text = "this is text box 3";
+            textBox3.ReadOnly = true;
 
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
             textBox_Input.Text = "obj1=line(0,5,200.0,205)";

@@ -74,19 +74,19 @@ namespace DV2.Net_Graphics_Application
             int lineIdx = ObjectFinder(lineObj);
             if (lineIdx < 0)
             {
-                codeOutput("Error @TheSolveMode");
+                codeOutput("Error @solvecontact.cs  TheSolveMode関数");
                 return;
             }
             int cirIdx = ObjectFinder(cirObj);
             if (cirIdx < 0)
             {
-                codeOutput("Error @TheSolveMode");
+                codeOutput("Error @solvecontact.cs  TheSolveMode関数");
                 return;
             }
             int pIdx = ObjectFinder(pCont);
             if (pIdx < 0)
             {
-                codeOutput("Error @TheSolveMode");
+                codeOutput("Error @solvecontact.cs  TheSolveMode関数");
                 return;
             }
 
@@ -160,7 +160,6 @@ namespace DV2.Net_Graphics_Application
             */
             #endregion
         }
-
 
     }
 }
