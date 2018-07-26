@@ -151,6 +151,7 @@ namespace DV2.Net_Graphics_Application
             pointData.Add(C2x); pointData.Add(C2y); pointData.Add(3);
             DrawCircleMode(ref pointData, true);
 
+            LogOutput("Debug");
             //ここから、指先を探す機能付き
             /* 20180717 Need Fix!
             Point fingerPoint = new Point(0, 0);

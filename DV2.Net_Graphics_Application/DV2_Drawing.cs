@@ -66,24 +66,6 @@ namespace DV2.Net_Graphics_Application
 
         }
 
-        #region For The Test
-        public void line_model_A(PointF pointA, PointF pointB)
-        {
-            Thread thread = new Thread(new ParameterizedThreadStart(ThreadTest));
-            thread.Start("Test");
-        }
-
-        static void ThreadTest(object obj)
-        {
-            Console.WriteLine(obj);
-        }
-
-        public void AutoSelectmode()
-        {
-            
-        }
-        #endregion
-
         public void AssignRemover(ref string ObjComm)
         {
             //イコール記号までのデータを削除する
@@ -289,7 +271,7 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
-        private void KeyHandleEvent(object sender, DV.KeyEventArgs e)
+        private void Dv2KeyEventHandle(object sender, DV.KeyEventArgs e)
         {
             tobeRead.SpeakAsyncCancelAll();
             codeOutput("Shift -+-> " + e.Shift);
@@ -442,20 +424,54 @@ namespace DV2.Net_Graphics_Application
         private void MakeObjectBraille()
         {
             //この関数はDV2出力データを準備する
+            //picBox.Size.Height   400
+            //picBox.Size.Width    600
+            //allDotData   全てのDotデータを保存する場所
+            //focusDotData   全てのDotデータを保存する場所
+
             int[,] allDotData = new int[picBox.Size.Height, picBox.Size.Width];
             int[,] focusDotData = new int[48, 32];
+            Point movement = new Point (0,0);
             Color pixel;
 
-            for (int hei = 0; hei < picBox.Size.Height; hei++)
+            DotDataInitialization (ref forDisDots);
+            DotDataInitialization (ref allDotData);
+            DotDataInitialization (ref focusDotData);
+
+            LogOutput("MakeObjectBraille Start!");
+
+            for (int width = 0; width < picBox.Size.Width; width++)
             {
-                for (int wid = 0; wid < picBox.Size.Width; wid++)
+                for (int height = 0; height < picBox.Size.Height; height++)
                 {
                     //ピクセルデータを0と1に変化する
-                    pixel = debug_Image.GetPixel(hei, wid);
-                    
+                    pixel = debug_Image.GetPixel(width, height);
+                    if (pixel.Name != "0")
+                    {
+                        if ((width - movement.X) < forDisDots.GetLength(0) && (height - movement.Y) < forDisDots.GetLength(1))
+                        {
+                            forDisDots[width, height] = 2;
+                        }
+                    }
                 }
             }
 
+            Dv2Instance.SetDots(forDisDots, BlinkInterval);
         }
+
+        private void DotDataInitialization(ref int[,] dotDatas)
+        {
+            int rows = dotDatas.GetLength(0);
+            int columns = dotDatas.GetLength(1);
+
+            for (int m = 0; m < rows; m++)
+            {
+                for (int n = 0; n < columns; n++)
+                {
+                    dotDatas[m, n] = 0;
+                }
+            }
+        }
+
     }
 }

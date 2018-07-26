@@ -8,5 +8,8 @@
     <Setting Name="GraphicInstruction" Type="System.String" Scope="User">
       <Value Profile="(Default)">LineDashLineArcCircleArrowDashArrowTriangleRectanglePoint</Value>
     </Setting>
+    <Setting Name="SpecialInstruction" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Ident</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -1,6 +1,7 @@
 ﻿using System;
 
 #region Personal Addition
+using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 #endregion
@@ -26,6 +27,7 @@ namespace DV2.Net_Graphics_Application
             bool pointDef_flg = false;
             bool pointGet_flg = false;
             bool pointSol_flg = false;
+            bool objPlus_flg = false;
             #endregion
 
             //Debug
@@ -52,6 +54,7 @@ namespace DV2.Net_Graphics_Application
                         break;
                     }
 
+                    #region Assign Route
                     //Command "Assign" Route
                     if (token.kind == TknKind.Assign)
                     {
@@ -86,40 +89,47 @@ namespace DV2.Net_Graphics_Application
                             }
                         }
                     }
+                    #endregion
 
+                    #region Show Route
                     //Command "Show" Route
                     if (token.kind == TknKind.Ident)
                     {
                         //表示命令を判別する
                         if (bef_tok_kind == TknKind.Show)
                         {
-                            tabControl_Graphics.SelectTab(1);
+                            //tabControl_Graphics.SelectTab(1);
 
-                            foreach (string finder in ObjName)
+                            if (ObjectFinder(token.text) != -1)
                             {
-                                if (finder == token.text)
-                                {
-                                    break;
-                                }
-                                objFinder_index += 1;
+                                objFinder_index = ObjectFinder(token.text);
+                            }
+                            else
+                            {
+                                tobeRead.SpeakAsync("表示される " + token.text + " 対象は不存在，もう一度確認してください。");
+                                codeOutput("表示される " + token.text + " 対象は不存在，もう一度確認してください。");
+                                return;
                             }
 
                             if (ObjName[objFinder_index] != null && ObjAnalysis[objFinder_index] != null)
                             {
-                                //LogOutput(ObjCommand[index]);
-                                //LogOutput(ObjAnalysis[index]);
+                                //LogOutput(ObjCommand[objFinder_index]);
+                                //LogOutput(ObjAnalysis[objFinder_index]);
                                 //分析結果を転送する
                                 ParameterChecker(ObjAnalysis[objFinder_index], objFinder_index);
+                                picBox.Refresh();
                             }
                             else
                             {
-                                tobeRead.SpeakAsync(token.text + "対象は不存在，もう一度確認してください。");
-                                codeOutput(token.text + "対象は不存在，もう一度確認してください。");
+                                tobeRead.SpeakAsync("表示される " + token.text + " 対象は不存在，もう一度確認してください。");
+                                codeOutput("表示される " + token.text + " 対象は不存在，もう一度確認してください。");
                             }
                         }
 
                     }
+                    #endregion
 
+                    #region Point Define Route
                     //"Point Define" Route
                     if (token.kind == TknKind.Point)
                     {
@@ -145,7 +155,9 @@ namespace DV2.Net_Graphics_Application
                             pointDef_flg = true;
                         }
                     }
+                    #endregion
 
+                    #region Get P Route
                     //"Get P" Route
                     if (token.kind == TknKind.Ident)
                     {
@@ -156,7 +168,9 @@ namespace DV2.Net_Graphics_Application
                             pointGet_flg = true;
                         }
                     }
+                    #endregion
 
+                    #region Slove Route
                     //"Slove" Route
                     if (token.kind == TknKind.Ident)
                     {
@@ -167,16 +181,31 @@ namespace DV2.Net_Graphics_Application
                             pointSol_flg = true;
                         }
                     }
+                    #endregion
 
+                    #region Object Plus Route
                     //"Object Plus" Route
                     if (token.kind == TknKind.Ident)
                     {
                         //obj3=obj1+obj2
                         if (bef_tok_kind == TknKind.Plus)
                         {
-
+                            objPlus_flg = true;
                         }
                     }
+                    #endregion
+
+                    #region Clear Route
+                    if (token.kind == TknKind.Clear)
+                    {
+                        LogOutput("Clear The graphObj");
+                        graphObj.Dispose();
+                        debug_Image.Dispose();
+                        graphObj = PreparePaper();
+                        picBox.Image = (Image)debug_Image;
+                        picBox.Refresh();
+                    }
+                    #endregion
 
                     //"Set" Route
                     if (token.kind == TknKind.Set)
@@ -301,7 +330,6 @@ namespace DV2.Net_Graphics_Application
                 //get P on obj1
                 //objCommandData	"get|p|on|obj1|"
                 //objAnalysisData	"Get|Ident|On|Ident|"
-                LogOutput("For Debug");
                 objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
                 objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
 
@@ -322,7 +350,6 @@ namespace DV2.Net_Graphics_Application
                 //solve c by contact(obj1,ojb2,p)
                 //objCommandData	"solve|c|by|contact|(|obj1|,|ojb2|,|p|)|"
                 //objAnalysisData	"Solve|Ident|Ident|Contact|Lparen|Ident|Comma|Ident|Comma|Ident|Rparen|"
-                LogOutput("For Debug");
                 objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
                 objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
                 string[] tmpCommData = Regex.Split(objCommandData, @"\|", RegexOptions.IgnoreCase);
@@ -342,6 +369,36 @@ namespace DV2.Net_Graphics_Application
                 if (contact_flag == true && identCounter == 5)
                 {
                     TheSolveMode(objCommandData, tmpCommData, objAnalysisData, tmpAnaData);
+                }
+            }
+
+            if (objPlus_flg)
+            {
+                //obj3=obj1+obj2
+                //objCommandData	"obj3|=|obj1|+|obj2|"
+                //objAnalysisData	"Ident|Plus|Ident|"
+                //LogOutput("For Debug");
+                objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
+                objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                AssignRemover(ref objCommandData);
+                string[] tmpCommData = Regex.Split(objCommandData, @"\|", RegexOptions.IgnoreCase);
+                string[] tmpAnaData = Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase);
+
+                if (objAnalysisData != "Ident|Plus|Ident")
+                {
+                    return;
+                }
+
+                for (int i = 0; i < tmpAnaData.Length; i++)
+                {
+                    if (tmpAnaData[i] == "Ident")
+                    {
+                        if (ObjectFinder(tmpCommData[i]) == -1)
+                        {
+                            tobeRead.SpeakAsync(ObjectFinder(tmpCommData[i]) + "対象は定義されていません！");
+                            codeOutput(ObjectFinder(tmpCommData[i]) + "対象は定義されていません！");
+                        }
+                    }
                 }
             }
         }

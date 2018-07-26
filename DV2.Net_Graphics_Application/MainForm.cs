@@ -96,6 +96,7 @@ namespace DV2.Net_Graphics_Application
             //イベントを宣言する
             this.textBox_Input.KeyDown += new KeyEventHandler(EnterKeyPress);
             this.tabControl_code.SelectedIndexChanged += new EventHandler(tabControl_code_SelectedIndexChanged);
+            this.KeyDown += new KeyEventHandler(KeyMovement);
         }
 
         private void formloader(object sender, EventArgs e)
@@ -116,15 +117,18 @@ namespace DV2.Net_Graphics_Application
             textBox3.ReadOnly = true;
 
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
-            textBox_Input.Text = "obj1=line(0,5,200.0,205)";
+            textBox_Input.Text = "obj1=line(0,5,200.0,405.0)";
             //textBox_Input.Text = "obj1=circle(1,2,20.0)";
             //textBox_Input.Text = "obj1=circle(c,20.0)";
             //textBox_Input.Text = "var p : Point";
             //textBox_Input.Text = "get p on obj1";
             #endregion
 
+            tabControl_Graphics.Enabled = true;
             tabControl_Graphics.Visible = false;
             textBox_Input.Focus();
+            tabControl_code.Enabled = true;
+            tabControl_code.
             //this.dataGridView_monitor.Rows.Add();
             InitializationBaseDatas();
             //
@@ -138,8 +142,8 @@ namespace DV2.Net_Graphics_Application
             #region DV2 Key Event
             CheckForIllegalCrossThreadCalls = false;
             Dv2ConnectFunction(this);
-            Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(KeyHandleEvent);
-            
+            Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(this.Dv2KeyEventHandle);
+
             #endregion
         }
 
@@ -291,6 +295,34 @@ namespace DV2.Net_Graphics_Application
             #endregion
         }
 
+        private void KeyMovement(object sender, KeyEventArgs e)
+        {
+            #region Movement
+            if (e.KeyCode == Keys.Up)
+            {
+                codeOutput("Up Pressed!");
+            }
+
+            if (e.KeyCode == Keys.Down)
+            {
+                codeOutput("Down Pressed!");
+            }
+
+            if (e.KeyCode == Keys.Left)
+            {
+                codeOutput("Left Pressed!");
+
+            }
+
+            if (e.KeyCode == Keys.Right)
+            {
+                codeOutput("Right Pressed!");
+
+            }
+
+            #endregion
+        }
+
         private void ParameterChecker(object GraphIns, int listIndex)
         {
             //Debug
@@ -299,76 +331,103 @@ namespace DV2.Net_Graphics_Application
             //Define
             //DV2_Drawing dv2Draw = new DV2_Drawing();
             var GraphicInstruction = DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction;
+            var SpecialInstruction = DV2.Net_Graphics_Application.Properties.Settings.Default.SpecialInstruction;
             string GraphCmd = Convert.ToString(GraphIns);
             string temp_ObjCom, temp_ObjAna;
             GraphCmd = Regex.Split(GraphCmd, @"\|", RegexOptions.IgnoreCase)[0];
 
             //Debug GraphCmd
             LogOutput("@ParameterChecker  ># " + GraphCmd + " #<");
-            
-            if (!Regex.IsMatch(GraphicInstruction, GraphCmd, RegexOptions.IgnoreCase))
+
+            #region GraphicInstruction
+            if (Regex.IsMatch(GraphicInstruction, GraphCmd, RegexOptions.IgnoreCase))
+            {
+                switch (GraphCmd)
+                {
+                    case "Line":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd Line -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd Line -- " + temp_ObjAna);
+
+                        Draw_LineMode(temp_ObjCom, temp_ObjAna);
+                        break;
+                    case "DashLine":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjAna);
+
+                        Draw_LineMode(temp_ObjCom, temp_ObjAna);
+                        break;
+                    case "Arc":
+                        break;
+                    case "Circle":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd Circle -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd Circle -- " + temp_ObjAna);
+
+                        Draw_CircleMode(temp_ObjCom, temp_ObjAna);
+                        break;
+                    case "Arrow":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd Arrow -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd Arrow -- " + temp_ObjAna);
+
+                        Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
+                        break;
+                    case "DashArrow":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd DashArrow -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd DashArrow -- " + temp_ObjAna);
+
+                        Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
+                        break;
+                    case "Triangle":
+                        break;
+                    case "Rectangle":
+                        break;
+                    case "Point":
+                        break;
+                    default:
+                        codeOutput("Error @ParameterChecker @644");
+                        break;
+                }
+            }
+            #endregion
+
+            #region SpecialInstruction
+            else if (Regex.IsMatch(SpecialInstruction, GraphCmd, RegexOptions.IgnoreCase))
+            {
+                if (GraphCmd == "Ident")
+                {
+                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                    AssignRemover(ref temp_ObjCom);
+
+                    //GraphIns   Ident|Plus|Ident
+                    //temp_ObjCom   obj1|+|obj2
+                    for (int i = 0; i < Regex.Split(GraphIns.ToString(), @"\|", RegexOptions.IgnoreCase).Length; i++)
+                    {
+                        if (Regex.Split(GraphIns.ToString(), @"\|", RegexOptions.IgnoreCase)[i] == "Ident")
+                        {
+                            ParameterChecker(ObjAnalysis[ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i])], ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i]));
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            else
             {
                 codeOutput("Error @ParameterChecker @587");
-            }
-
-            switch (GraphCmd)
-            {
-                case "Line":
-                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                    temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                    //Debug
-                    LogOutput("switch GraphCmd Line -- " + temp_ObjCom);
-                    LogOutput("switch GraphCmd Line -- " + temp_ObjAna);
-                    
-                    Draw_LineMode(temp_ObjCom, temp_ObjAna);
-                    break;
-                case "DashLine":
-                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                    temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                    //Debug
-                    LogOutput("switch GraphCmd DashLine -- " + temp_ObjCom);
-                    LogOutput("switch GraphCmd DashLine -- " + temp_ObjAna);
-                    
-                    Draw_LineMode(temp_ObjCom, temp_ObjAna);
-                    break;
-                case "Arc":
-                    break;
-                case "Circle":
-                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                    temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                    //Debug
-                    LogOutput("switch GraphCmd Circle -- " + temp_ObjCom);
-                    LogOutput("switch GraphCmd Circle -- " + temp_ObjAna);
-                    
-                    Draw_CircleMode(temp_ObjCom, temp_ObjAna);
-                    break;
-                case "Arrow":
-                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                    temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                    //Debug
-                    LogOutput("switch GraphCmd Arrow -- " + temp_ObjCom);
-                    LogOutput("switch GraphCmd Arrow -- " + temp_ObjAna);
-                    
-                    Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
-                    break;
-                case "DashArrow":
-                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                    temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                    //Debug
-                    LogOutput("switch GraphCmd DashArrow -- " + temp_ObjCom);
-                    LogOutput("switch GraphCmd DashArrow -- " + temp_ObjAna);
-                    
-                    Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
-                    break;
-                case "Triangle":
-                    break;
-                case "Rectangle":
-                    break;
-                case "Point":
-                    break;
-                default:
-                    codeOutput("Error @ParameterChecker 644");
-                    break;
             }
         }
 
@@ -485,8 +544,7 @@ namespace DV2.Net_Graphics_Application
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            textBox_log.Font = new Font(textBox_log.Font.FontFamily, FontSize);
-            textBox_log.AppendText("TEST" + "\r\n");
+            MakeObjectBraille();
         }
 
     }

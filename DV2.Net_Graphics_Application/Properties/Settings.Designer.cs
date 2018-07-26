@@ -49,13 +49,13 @@ namespace DV2.Net_Graphics_Application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string setting {
+        [global::System.Configuration.DefaultSettingValueAttribute("Ident")]
+        public string SpecialInstruction {
             get {
-                return ((string)(this["setting"]));
+                return ((string)(this["SpecialInstruction"]));
             }
             set {
-                this["setting"] = value;
+                this["SpecialInstruction"] = value;
             }
         }
     }

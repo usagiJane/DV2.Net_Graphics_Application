@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+            Dv2Instance.Disconnect();
             base.Dispose(disposing);
         }
 
@@ -55,7 +56,6 @@
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tabControl_code.SuspendLayout();
             this.tabPage_code.SuspendLayout();
             this.tabPage_log.SuspendLayout();
             this.groupBox_log.SuspendLayout();
@@ -63,6 +63,7 @@
             this.tabPage_outPut.SuspendLayout();
             this.groupBox_pic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
+            this.tabControl_code.SuspendLayout();
             this.tabControl_Graphics.SuspendLayout();
             this.tabPage_dataGridView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_monitor)).BeginInit();
@@ -70,6 +71,7 @@
             // 
             // tabControl_code
             // 
+            this.tabControl_code.CausesValidation = false;
             this.tabControl_code.Controls.Add(this.tabPage_code);
             this.tabControl_code.Controls.Add(this.tabPage_log);
             this.tabControl_code.Controls.Add(this.tabPage_pms);
@@ -169,11 +171,11 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(190, 30);
+            this.button1.Location = new System.Drawing.Point(653, 134);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 13;
-            this.button1.Text = "画像生成";
+            this.button1.Text = "機能テスト用";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -336,6 +338,7 @@
             this.ClientSize = new System.Drawing.Size(1476, 593);
             this.Controls.Add(this.tabControl_code);
             this.Controls.Add(this.tabControl_Graphics);
+            this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "Graphics Form";
             this.Load += new System.EventHandler(this.formloader);

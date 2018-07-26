@@ -83,7 +83,7 @@ namespace DV2.Net_Graphics_Application
             if (!bRet)
             {
                 //MessageBox.Show("@Connect関数 DotViewの接続に失敗した");
-                mainform.textBox_code.AppendText("  DotViewの接続に失敗した  ->  @MyDotView.cs Connect関数" + "\r\n");
+                mainform.textBox_code.AppendText(" @MyDotView.cs Connect関数  ->  DotViewの接続に失敗した " + "\r\n");
                 isConnect = false;
                 return;
             }
@@ -100,7 +100,7 @@ namespace DV2.Net_Graphics_Application
             if (!bRet)
             {
                 //MessageBox.Show("@Connect関数　DotViewの初期化は失敗した");
-                mainform.textBox_code.AppendText("  DotViewの初期化は失敗した  ->  @MyDotView.cs Connect関数" + "\r\n");
+                mainform.textBox_code.AppendText(" @MyDotView.cs Connect関数  ->  DotViewの初期化は失敗した " + "\r\n");
                 isConnect = false;
                 return;
             }
