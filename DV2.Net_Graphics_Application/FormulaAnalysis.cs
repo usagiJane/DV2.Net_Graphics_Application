@@ -28,10 +28,11 @@ namespace DV2.Net_Graphics_Application
             bool pointGet_flg = false;
             bool pointSol_flg = false;
             bool objPlus_flg = false;
+            bool rotate_flg = false;
             #endregion
 
             //Debug
-            LogOutput("Resources.Graph_line  :> " + DV2.Net_Graphics_Application.Properties.Resources.Graph_line);
+            LogOutput("Resources.Graph_line  :> " + Properties.Resources.Graph_line);
             //LogOutput("Settings.GraphicInstruction  :> " + DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction);
             LogOutput(dataStorage.Text.Length);
 
@@ -124,6 +125,8 @@ namespace DV2.Net_Graphics_Application
                                 tobeRead.SpeakAsync("表示される " + token.text + " 対象は不存在，もう一度確認してください。");
                                 codeOutput("表示される " + token.text + " 対象は不存在，もう一度確認してください。");
                             }
+                            //debug_Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                            MakeObjectBraille();
                         }
 
                     }
@@ -213,6 +216,17 @@ namespace DV2.Net_Graphics_Application
                         //Setting the parameters
 
                     }
+
+                    #region "Rotate" Route
+                    if (token.kind == TknKind.IntNum || token.kind == TknKind.DblNum)
+                    {
+                        if (bef_tok_kind == TknKind.Rotate)
+                        {
+                            //画像を回転する
+                            rotate_flg = true;
+                        }
+                    }
+                    #endregion
 
                     bef_tok_kind = token.kind;
                     objAnalysisData += token.kind + "|";
@@ -377,7 +391,6 @@ namespace DV2.Net_Graphics_Application
                 //obj3=obj1+obj2
                 //objCommandData	"obj3|=|obj1|+|obj2|"
                 //objAnalysisData	"Ident|Plus|Ident|"
-                //LogOutput("For Debug");
                 objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
                 objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
                 AssignRemover(ref objCommandData);
@@ -386,6 +399,7 @@ namespace DV2.Net_Graphics_Application
 
                 if (objAnalysisData != "Ident|Plus|Ident")
                 {
+                    //Error Route
                     return;
                 }
 
@@ -400,6 +414,16 @@ namespace DV2.Net_Graphics_Application
                         }
                     }
                 }
+            }
+            if (rotate_flg)
+            {
+                //rotate -30
+                //objCommandData	"rotate|-30|"
+                //objAnalysisData	"Rotate|IntNum|"
+                objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
+                objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+
+                Rotate(objCommandData, objAnalysisData);
             }
         }
 
@@ -457,7 +481,30 @@ namespace DV2.Net_Graphics_Application
                         txtStr += txtChar;
                         txtChar = nextCh();
                     }
-
+                    tokenInfo.text = txtStr;
+                    tokenInfo.dblVal = Convert.ToDouble(txtStr);
+                    return tokenInfo;
+                /* 負数 */
+                case TknKind.Minus:
+                    tokenInfo.kind = TknKind.IntNum;
+                    txtStr += txtChar;
+                    txtChar = nextCh();
+                    while (ctyp[txtChar] == TknKind.Digit)
+                    {
+                        txtStr += txtChar;
+                        txtChar = nextCh();
+                    }
+                    if (txtChar == '.')
+                    {
+                        tokenInfo.kind = TknKind.DblNum;
+                        txtStr += txtChar;
+                        txtChar = nextCh();
+                    }
+                    while (ctyp[txtChar] == TknKind.Digit)
+                    {
+                        txtStr += txtChar;
+                        txtChar = nextCh();
+                    }
                     tokenInfo.text = txtStr;
                     tokenInfo.dblVal = Convert.ToDouble(txtStr);
                     return tokenInfo;
@@ -517,8 +564,8 @@ namespace DV2.Net_Graphics_Application
             kd = get_kind(ref txtStr);
             if (kd == TknKind.Others)
             {
-                LogOutput("不正なトークンです: " + txtStr);
-                tobeRead.SpeakAsync("不正なトークンが存在しています.");
+                LogOutput("サポートされていないトークンが存在する: " + txtStr);
+                tobeRead.SpeakAsync("サポートされていないトークンが存在する.");
                 //exit(1);
             }
             tokenInfo.kind = kd;

@@ -58,5 +58,29 @@ namespace DV2.Net_Graphics_Application.Properties {
                 this["SpecialInstruction"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("左上")]
+        public string FocusPoint {
+            get {
+                return ((string)(this["FocusPoint"]));
+            }
+            set {
+                this["FocusPoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string Rotation {
+            get {
+                return ((string)(this["Rotation"]));
+            }
+            set {
+                this["Rotation"] = value;
+            }
+        }
     }
 }

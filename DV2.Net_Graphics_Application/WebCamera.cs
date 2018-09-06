@@ -217,7 +217,11 @@ namespace DV2.Net_Graphics_Application
 
             index = ObjectFinder(pointName);
             ObjCommand[index] = "Point|(|" + fingerPoint.X + "|,|" + fingerPoint.Y + "|)";
+            //計算結果を表示する
             textBox3.Text = fingerPoint.X.ToString() + " , " + fingerPoint.Y.ToString();
+            codeOutput(">" + fingerPoint.X.ToString() + " , " + fingerPoint.Y.ToString());
+            tobeRead.SpeakAsync("座標点は" + fingerPoint.X.ToString() + " , " + fingerPoint.Y.ToString() + "となる.");
+
             int dataGridView_index = this.dataGridView_monitor.Rows.Add();
             this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = pointName;
             this.dataGridView_monitor.Rows[dataGridView_index].Cells[1].Value = "point("+fingerPoint.X+","+fingerPoint.Y+")";

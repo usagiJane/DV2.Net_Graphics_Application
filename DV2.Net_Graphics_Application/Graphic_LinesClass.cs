@@ -17,12 +17,15 @@ namespace DV2.Net_Graphics_Application
             //LogOutput("\r\n@Graphic_LinesClass  -> Draw_LineMode");
             //LogOutput("Parameter 1  -> " + ObjComm);
             //LogOutput("Parameter 2  -> " + ObjAna + "\r\n");
+            //Parameter 1->obj1 |=| line | (| 0 |,| 5 |,| 200.0 |,| 405.0 |)
+            //Parameter 2->Line | Lparen | IntNum | Comma | IntNum | Comma | DblNum | Comma | DblNum | Rparen
             //System.Windows.Forms.MessageBox.Show("Draw_LineMode");
 
             //Define
             string[] chkData, commData;
+            string backObjComm = ObjComm;
             ArrayList pointData = new ArrayList();
-            Pen picPen = new Pen(Color.Black, 2.7F);
+            Pen picPen = new Pen(Color.Black, 1F);
 
             //Processing
             AssignRemover(ref ObjComm);
@@ -47,8 +50,8 @@ namespace DV2.Net_Graphics_Application
             }
             else
             {
-                tobeRead.SpeakAsync("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(ObjComm)] + "対象定義識別失敗!");
-                codeOutput("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(ObjComm)] + "対象定義識別失敗!");
+                tobeRead.SpeakAsync("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
+                codeOutput("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
             }
         }
 
@@ -68,7 +71,15 @@ namespace DV2.Net_Graphics_Application
             
             if(dashFlag)
             {
-                picPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                picPen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+                float[] dashArray =
+                {
+                    5f,     //线长5个像素
+                    3.5f,     //间断3.5个像素
+                    15f,    //线长15个像素
+                    3.5f      //间断3.5个像素
+                };
+                picPen.DashPattern = dashArray;
             }
             graphObj.DrawLine(picPen, pointAx, pointAy, pointBx, pointBy);
         }
@@ -84,7 +95,7 @@ namespace DV2.Net_Graphics_Application
             //Define
             string[] chkData, commData;
             ArrayList pointData = new ArrayList();
-            Pen picPen = new Pen(Color.Black, 2.7F);
+            Pen picPen = new Pen(Color.Black, 1F);
 
             //Processing
             AssignRemover(ref ObjComm);
@@ -130,7 +141,15 @@ namespace DV2.Net_Graphics_Application
 
             if (dashFlag)
             {
-                picPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                picPen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+                float[] dashArray =
+                {
+                    5f,     //线长5个像素
+                    3.5f,     //间断3.5个像素
+                    15f,    //线长15个像素
+                    3.5f      //间断3.5个像素
+                };
+                picPen.DashPattern = dashArray;
             }
             picPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
             graphObj.DrawLine(picPen, pointAx, pointAy, pointBx, pointBy);

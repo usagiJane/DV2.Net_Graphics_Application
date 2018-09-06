@@ -143,7 +143,10 @@ namespace DV2.Net_Graphics_Application
 			// DotViewが正しく接続されていれば
 			if (isConnect)
 			{
-				for (int i=0; i<48; i++)
+                Array.Clear(dPanelFixed.Buffer, 0, dPanelFixed.SizeOfDataBytes);
+                Array.Clear(dPanelBlinking.Buffer, 0, dPanelBlinking.SizeOfDataBytes);
+
+                for (int i=0; i<48; i++)
                 { 
 					for (int j=0; j<32; j++)
 					{
@@ -153,6 +156,7 @@ namespace DV2.Net_Graphics_Application
                             spb(i, j, dPanelBlinking);
 					}
                 }
+
                 // DotViewへバッファの送信
                 DvCtl.DisplayGraphicData(dPanelFixed.Buffer, dPanelBlinking.Buffer, BlinkInterval);
 			}

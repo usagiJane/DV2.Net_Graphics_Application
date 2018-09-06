@@ -137,9 +137,11 @@ namespace DV2.Net_Graphics_Application
             }
 
             double slopeA = Math.Round((Convert.ToDouble(lineData[3]) - Convert.ToDouble(lineData[1])) / (Convert.ToDouble(lineData[2]) - Convert.ToDouble(lineData[0])));
-            double C1x = Math.Round(Convert.ToDouble(pData[0]) + slopeA * Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
+            //点 C1
+            double C1x = Math.Round(Convert.ToDouble(pData[0]) - slopeA * Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
             double C1y = Math.Round(Convert.ToDouble(pData[1]) + Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
-            double C2x = Math.Round(Convert.ToDouble(pData[0]) - slopeA * Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
+            //点 C2
+            double C2x = Math.Round(Convert.ToDouble(pData[0]) + slopeA * Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
             double C2y = Math.Round(Convert.ToDouble(pData[1]) - Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
 
             ArrayList pointData = new ArrayList();

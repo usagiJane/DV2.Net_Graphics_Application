@@ -17,10 +17,13 @@ namespace DV2.Net_Graphics_Application
     public partial class MainForm
     {
         //private const float pub_offSet = 35f;
-        private const float pub_offSet = 5f;
-        private readonly Pen pub_picPen = new Pen(Color.LightBlue, 2.7F);
+        private const float pub_offSet = 0f;
+        private readonly Pen pub_picPen = new Pen(Color.LightBlue, 1F);
         //表示用の配列を用意する
         private int[,] forDisDots = new int[48, 32];
+        private int[,] allDotData;
+        //movementのlocationは左上
+        Point movement;
 
         public void Dv2ConnectFunction(MainForm fm)
         {
@@ -30,7 +33,10 @@ namespace DV2.Net_Graphics_Application
 
             // DotViewに接続する
             Dv2Instance.Connect();
+            DotDataInitialization(ref forDisDots);
+            DotDataInitialization(ref allDotData);
 
+            /*
             for (int i = 24; i < 48; i++)
             {
                 // 1行目の点を表示
@@ -40,9 +46,10 @@ namespace DV2.Net_Graphics_Application
                 // 3行目の点を表示
                 forDisDots[i, 2] = 1;
             }
+            */
 
             // DotViewにデータを送信する
-            //Dv2Instance.SetDots(forDisDots, BlinkInterval);
+            Dv2Instance.SetDots(forDisDots, BlinkInterval);
 
             #region Useless
             // アプリケーション終了時には切断処理を呼ぶ
@@ -427,16 +434,18 @@ namespace DV2.Net_Graphics_Application
             //picBox.Size.Height   400
             //picBox.Size.Width    600
             //allDotData   全てのDotデータを保存する場所
-            //focusDotData   全てのDotデータを保存する場所
+            //focusDotData   拡大縮小用Dotデータを保存する場所
+            //forDisDots   DV2 Displayを転送するデータ
 
-            int[,] allDotData = new int[picBox.Size.Height, picBox.Size.Width];
-            int[,] focusDotData = new int[48, 32];
-            Point movement = new Point (0,0);
+            //allDotData = new int[picBox.Width, picBox.Height];
+            //int[,] focusDotData = new int[48, 32];
+            movement = new Point(0, 0);
             Color pixel;
 
-            DotDataInitialization (ref forDisDots);
-            DotDataInitialization (ref allDotData);
-            DotDataInitialization (ref focusDotData);
+            //データ初期化
+            DotDataInitialization(ref allDotData);
+            DotDataInitialization(ref forDisDots);
+            //DotDataInitialization (ref focusDotData);
 
             LogOutput("MakeObjectBraille Start!");
 
@@ -448,6 +457,8 @@ namespace DV2.Net_Graphics_Application
                     pixel = debug_Image.GetPixel(width, height);
                     if (pixel.Name != "0")
                     {
+                        allDotData[width, height] = 1;
+
                         if ((width - movement.X) < forDisDots.GetLength(0) && (height - movement.Y) < forDisDots.GetLength(1))
                         {
                             forDisDots[width, height] = 2;
@@ -457,6 +468,9 @@ namespace DV2.Net_Graphics_Application
             }
 
             Dv2Instance.SetDots(forDisDots, BlinkInterval);
+            //tabControl_code.Enabled = false;
+            tabControl_code.SelectTab(0);
+            tabControl_Graphics.Enabled = false;
         }
 
         private void DotDataInitialization(ref int[,] dotDatas)
@@ -473,5 +487,9 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        private void Rotate(string ObjComm, string ObjAna)
+        {
+            LogOutput("for Debug");
+        }
     }
 }

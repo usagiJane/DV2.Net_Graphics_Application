@@ -56,7 +56,7 @@ namespace DV2.Net_Graphics_Application
             /* 図形命令 */
             Line, DashLine, Arrow, DashArrow, Arc, Circle, Triangle, Rectangle, 
             /* 処理関数 */
-            Solve, Get, Contact, Show, Clear,
+            Solve, Get, Contact, Show, Clear, Rotate,
             /* 特別関数 */
             With, Point, Set, On, In
         }
@@ -122,13 +122,14 @@ namespace DV2.Net_Graphics_Application
             //textBox_Input.Text = "obj1=circle(c,20.0)";
             //textBox_Input.Text = "var p : Point";
             //textBox_Input.Text = "get p on obj1";
+            //textBox_Input.Text = "c = Point(4, 7)";
             #endregion
 
             tabControl_Graphics.Enabled = true;
             tabControl_Graphics.Visible = false;
-            textBox_Input.Focus();
             tabControl_code.Enabled = true;
-            tabControl_code.
+            textBox_code.Enabled = false;
+            textBox_Input.Focus();
             //this.dataGridView_monitor.Rows.Add();
             InitializationBaseDatas();
             //
@@ -140,6 +141,7 @@ namespace DV2.Net_Graphics_Application
             #endregion
 
             #region DV2 Key Event
+            allDotData = new int[picBox.Width, picBox.Height];
             CheckForIllegalCrossThreadCalls = false;
             Dv2ConnectFunction(this);
             Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(this.Dv2KeyEventHandle);
@@ -234,6 +236,7 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[37] = new KeyWord("contact", TknKind.Contact);
             KeyWdTbl[38] = new KeyWord("show", TknKind.Show);
             KeyWdTbl[39] = new KeyWord("clear", TknKind.Clear);
+            KeyWdTbl[47] = new KeyWord("rotate", TknKind.Rotate);
             /* 特別関数 */
             KeyWdTbl[40] = new KeyWord("var", TknKind.Var);
             KeyWdTbl[41] = new KeyWord(":", TknKind.Colon);
@@ -243,14 +246,14 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[45] = new KeyWord("on", TknKind.On);
             KeyWdTbl[46] = new KeyWord("in", TknKind.In);
             //End of the Key Word Table List Mark
-            KeyWdTbl[47] = new KeyWord("", TknKind.END_keylist);
+            KeyWdTbl[48] = new KeyWord("", TknKind.END_keylist);
         }
 
         public void DebugImshow()
         {
             tabControl_Graphics.Visible = true;
             //Analog_signal_switch -> False
-            if (DV2.Net_Graphics_Application.Properties.Settings.Default.Analog_signal_switch)
+            if (Properties.Settings.Default.Analog_signal_switch)
             {
                 //tabPage_outPutを隠す
                 tabPage_outPut.Parent = null;
@@ -297,41 +300,95 @@ namespace DV2.Net_Graphics_Application
 
         private void KeyMovement(object sender, KeyEventArgs e)
         {
+            bool moved_flg = false;
             #region Movement
             if (e.KeyCode == Keys.Up)
             {
-                codeOutput("Up Pressed!");
+                //codeOutput("Up Pressed!");
+                movement.Y -= 1;
+                moved_flg = true;
+
+                if (movement.Y < 0)
+                {
+                    movement.Y = 0;
+                    moved_flg = false;
+                }
             }
 
             if (e.KeyCode == Keys.Down)
             {
-                codeOutput("Down Pressed!");
+                //codeOutput("Down Pressed!");
+                movement.Y += 1;
+                moved_flg = true;
+
+                if (movement.Y + 32 > picBox.Height)
+                {
+                    movement.Y = picBox.Height - 32;
+                    moved_flg = false;
+                }
             }
 
             if (e.KeyCode == Keys.Left)
             {
-                codeOutput("Left Pressed!");
+                //codeOutput("Left Pressed!");
+                movement.X -= 1;
+                moved_flg = true;
 
+                if (movement.X < 0)
+                {
+                    movement.X = 0;
+                    moved_flg = false;
+                }
             }
 
             if (e.KeyCode == Keys.Right)
             {
-                codeOutput("Right Pressed!");
+                //codeOutput("Right Pressed!");
+                movement.X += 1;
+                moved_flg = true;
 
+                if (movement.X + 48 > picBox.Width)
+                {
+                    movement.X = picBox.Width - 48;
+                    moved_flg = false;
+                }
             }
 
+            if (e.KeyCode == Keys.End)
+            {
+                //codeOutput("End Pressed!");
+                tobeRead.SpeakAsync("触るモード終了.");
+                tabControl_code.SelectTab(0);
+                tabControl_code.Enabled = true;
+                tabControl_Graphics.Enabled = true;
+            }
             #endregion
+
+            if (moved_flg)
+            {
+                DotDataInitialization(ref forDisDots);
+
+                for (int width = 0; width < 48; width++)
+                {
+                    for (int height = 0; height < 32; height++)
+                    {
+                        forDisDots[width, height] = allDotData[movement.X + width, movement.Y + height];
+                    }
+                }
+                Dv2Instance.SetDots(forDisDots, BlinkInterval);
+            }
         }
 
         private void ParameterChecker(object GraphIns, int listIndex)
         {
+            //For Command "Show" Route
             //Debug
             LogOutput("\r\n" + "***ParameterChecker Strat!###");
             LogOutput("***object GraphIns is!###  " + GraphIns);
             //Define
             //DV2_Drawing dv2Draw = new DV2_Drawing();
-            var GraphicInstruction = DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction;
-            var SpecialInstruction = DV2.Net_Graphics_Application.Properties.Settings.Default.SpecialInstruction;
+            var GraphicInstruction = Properties.Settings.Default.GraphicInstruction;
+            var SpecialInstruction = Properties.Settings.Default.SpecialInstruction;
             string GraphCmd = Convert.ToString(GraphIns);
             string temp_ObjCom, temp_ObjAna;
             GraphCmd = Regex.Split(GraphCmd, @"\|", RegexOptions.IgnoreCase)[0];
@@ -363,6 +420,13 @@ namespace DV2.Net_Graphics_Application
                         Draw_LineMode(temp_ObjCom, temp_ObjAna);
                         break;
                     case "Arc":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjAna);
+
+                        Draw_CurveMode(temp_ObjCom, temp_ObjAna);
                         break;
                     case "Circle":
                         temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
@@ -392,10 +456,30 @@ namespace DV2.Net_Graphics_Application
                         Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
                         break;
                     case "Triangle":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjAna);
+
+                        Draw_TriangleMode(temp_ObjCom, temp_ObjAna);
                         break;
                     case "Rectangle":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjAna);
+
+                        Draw_QuadrilateralMode(temp_ObjCom, temp_ObjAna);
                         break;
                     case "Point":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjAna);
+
                         break;
                     default:
                         codeOutput("Error @ParameterChecker @644");
@@ -437,6 +521,7 @@ namespace DV2.Net_Graphics_Application
             Size picSize = picBox.Size;
             debug_Image = new Bitmap(picSize.Width, picSize.Height);
             //Pen picPen = new Pen(Color.LightBlue, 2.7F);
+
             Graphics graphObj = Graphics.FromImage(debug_Image);
 
             LogOutput("picSize.Width: " + picSize.Width);
@@ -447,7 +532,7 @@ namespace DV2.Net_Graphics_Application
             graphObj.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             graphObj.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             graphObj.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-
+            
             return graphObj;
         }
 
@@ -537,13 +622,9 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
-        /// <summary>
-        /// Button Thread Tester
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
+            // Button Tester
             MakeObjectBraille();
         }
 

@@ -56,6 +56,7 @@
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabControl_code.SuspendLayout();
             this.tabPage_code.SuspendLayout();
             this.tabPage_log.SuspendLayout();
             this.groupBox_log.SuspendLayout();
@@ -63,7 +64,6 @@
             this.tabPage_outPut.SuspendLayout();
             this.groupBox_pic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
-            this.tabControl_code.SuspendLayout();
             this.tabControl_Graphics.SuspendLayout();
             this.tabPage_dataGridView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_monitor)).BeginInit();
@@ -260,7 +260,7 @@
             // 
             // picBox
             // 
-            this.picBox.Location = new System.Drawing.Point(8, 24);
+            this.picBox.Location = new System.Drawing.Point(8, 16);
             this.picBox.Name = "picBox";
             this.picBox.Size = new System.Drawing.Size(600, 400);
             this.picBox.TabIndex = 4;

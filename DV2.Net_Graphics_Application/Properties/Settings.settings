@@ -11,5 +11,11 @@
     <Setting Name="SpecialInstruction" Type="System.String" Scope="User">
       <Value Profile="(Default)">Ident</Value>
     </Setting>
+    <Setting Name="FocusPoint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">左上</Value>
+    </Setting>
+    <Setting Name="Rotation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
