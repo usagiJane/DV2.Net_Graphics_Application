@@ -155,12 +155,12 @@ namespace DV2.Net_Graphics_Application
 
             LogOutput("Debug");
             //ここから、指先を探す機能付き
-            /* 20180717 Need Fix!
+            
             Point fingerPoint = new Point(0, 0);
             string targetName = "";
             fingerPoint = FingerFinder(targetName);
             PointOnObject(ref fingerPoint, targetName);
-            */
+            
             #endregion
         }
 

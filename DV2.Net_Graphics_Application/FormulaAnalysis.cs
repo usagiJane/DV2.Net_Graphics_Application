@@ -23,16 +23,20 @@ namespace DV2.Net_Graphics_Application
             string[] storageData;
             int dataGridView_index = 0;
             int objFinder_index = 0;
+            System.DateTime currentTime = new System.DateTime();
+            currentTime = System.DateTime.Now;
             #region Boolean Flags
             bool pointDef_flg = false;
             bool pointGet_flg = false;
             bool pointSol_flg = false;
             bool objPlus_flg = false;
-            bool rotate_flg = false;
+            bool rotation_flg = false;
+            bool setPoint_flg = false;
             #endregion
 
             //Debug
-            LogOutput("Resources.Graph_line  :> " + Properties.Resources.Graph_line);
+            //LogOutput("Resources.Graph_line  :> " + Properties.Resources.Graph_line);
+            LogOutput("Formula Analysis Strat at ->   *******  " + currentTime + "  *******");
             //LogOutput("Settings.GraphicInstruction  :> " + DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction);
             LogOutput(dataStorage.Text.Length);
 
@@ -218,13 +222,21 @@ namespace DV2.Net_Graphics_Application
                     }
 
                     #region "Rotate" Route
-                    if (token.kind == TknKind.IntNum || token.kind == TknKind.DblNum)
+                    if (token.kind == TknKind.Lparen)
                     {
-                        if (bef_tok_kind == TknKind.Rotate)
+                        if (bef_tok_kind == TknKind.Rotation)
                         {
                             //画像を回転する
-                            rotate_flg = true;
+                            rotation_flg = true;
                         }
+                    }
+                    #endregion
+
+                    #region "SetPoint" Route
+                    if (token.kind == TknKind.SetPoint)
+                    {
+                        //相対位置処理入口
+                        setPoint_flg = true;
                     }
                     #endregion
 
@@ -318,6 +330,7 @@ namespace DV2.Net_Graphics_Application
                 //DuplicateChecking();
             }
 
+            #region PointDefine Route
             if (pointDef_flg)
             {
                 if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase)[0].ToLower() == "var")
@@ -338,7 +351,9 @@ namespace DV2.Net_Graphics_Application
                     this.dataGridView_monitor.Rows[dataGridView_index].Cells[2].Value = "Point|Lparen|IntNum|Comma|IntNum|Rparen";
                 }
             }
+            #endregion
 
+            #region PointGet Route
             if (pointGet_flg)
             {
                 //get P on obj1
@@ -358,7 +373,9 @@ namespace DV2.Net_Graphics_Application
                     tobeRead.SpeakAsync("入力ミスが発生していた。");
                 }
             }
+            #endregion
 
+            #region The Solve Route
             if (pointSol_flg)
             {
                 //solve c by contact(obj1,ojb2,p)
@@ -385,7 +402,9 @@ namespace DV2.Net_Graphics_Application
                     TheSolveMode(objCommandData, tmpCommData, objAnalysisData, tmpAnaData);
                 }
             }
+            #endregion
 
+            #region objPlus Route
             if (objPlus_flg)
             {
                 //obj3=obj1+obj2
@@ -415,16 +434,35 @@ namespace DV2.Net_Graphics_Application
                     }
                 }
             }
-            if (rotate_flg)
+            #endregion
+
+            #region Rotation Route
+            if (rotation_flg)
             {
-                //rotate -30
-                //objCommandData	"rotate|-30|"
-                //objAnalysisData	"Rotate|IntNum|"
+                //rotation -30
+                //objCommandData	"rotation|(|obj1|,|30|)|"
+                //objAnalysisData	"Rotation|Lparen|Ident|Comma|IntNum|Rparen|"
                 objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
                 objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
 
-                Rotate(objCommandData, objAnalysisData);
+                Rotation(objCommandData, objAnalysisData);
             }
+            #endregion
+
+            #region setPoint Route
+            if (setPoint_flg)
+            {
+                //obj1:setpoint(LEFT,obj2,Right,10,0)
+                //objCommandData	"obj1|:|setpoint|(|LEFT|,|obj2|,|Right|,|10|,|0|)|"
+                //objAnalysisData	"Ident|Colon|SetPoint|Lparen|Left|Comma|Ident|Comma|Right|Comma|IntNum|Comma|IntNum|Rparen|"
+                objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
+                objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                LogOutput("objCommandData     " + objCommandData);
+                LogOutput("objAnalysisData    " + objAnalysisData);
+
+
+            }
+            #endregion
         }
 
         #region ToKen Analysis

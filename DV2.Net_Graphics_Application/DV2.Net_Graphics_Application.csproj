@@ -56,7 +56,7 @@
     <ApplicationIcon>bitbug_favicon2.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\Debug\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -64,10 +64,19 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KsDvCtl, Version=1.0.4289.18722, Culture=neutral, PublicKeyToken=8d5159f1241f19af, processorArchitecture=AMD64">
+    <Reference Include="KsDvCtl, Version=1.0.4290.26520, Culture=neutral, PublicKeyToken=8d5159f1241f19af, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\KsDvCtl.dll</HintPath>
+      <HintPath>bin\x86\Debug\KsDvCtl.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp3-AnyCPU.3.4.1.20180319\lib\net20\OpenCvSharp.dll</HintPath>
@@ -94,7 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorRecognition.cs" />
-    <Compile Include="DV2_Drawing.cs">
+    <Compile Include="DV2_Control.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Files_CreateClass.cs">
@@ -108,6 +117,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Graphic_CurveClass.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Graphic_Rotation.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Graphic_LinesClass.cs">

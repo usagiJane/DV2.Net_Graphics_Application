@@ -32,7 +32,6 @@ namespace DV2.Net_Graphics_Application
         private static SpeechSynthesizer tobeRead = new SpeechSynthesizer();
         //FontSizeノーマルは"9"
         private static int FontSize = 9;
-        //To storage the TabPages
         #endregion
 
         #region About DV2
@@ -56,9 +55,11 @@ namespace DV2.Net_Graphics_Application
             /* 図形命令 */
             Line, DashLine, Arrow, DashArrow, Arc, Circle, Triangle, Rectangle, 
             /* 処理関数 */
-            Solve, Get, Contact, Show, Clear, Rotate,
+            Solve, Get, Contact, Show, Clear, Rotation, SetPoint,
             /* 特別関数 */
-            With, Point, Set, On, In
+            With, Point, Set, On, In,
+            //
+            Left, Right, Center, Bottom, Top
         }
 
         public struct ToKen
@@ -82,7 +83,7 @@ namespace DV2.Net_Graphics_Application
         };
 
         /* ジャグ配列 */
-        KeyWord[] KeyWdTbl = new KeyWord[55];      //要約語と記号の種別対応表
+        KeyWord[] KeyWdTbl = new KeyWord[65];      //要約語と記号の種別対応表
         TknKind[] ctyp = new TknKind[256];         //文字種表定義
         private int loopInfo = 0;
         #endregion
@@ -145,7 +146,10 @@ namespace DV2.Net_Graphics_Application
             CheckForIllegalCrossThreadCalls = false;
             Dv2ConnectFunction(this);
             Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(this.Dv2KeyEventHandle);
-
+            if(DV2.Net_Graphics_Application.Properties.Settings.Default.Dv2_DEBUG)
+            { 
+                Dv2Instance.Connect();
+            }
             #endregion
         }
 
@@ -231,12 +235,13 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[33] = new KeyWord("dashline", TknKind.DashLine);
             KeyWdTbl[34] = new KeyWord("dasharrow", TknKind.DashArrow);
             /* 処理関数 */
-            KeyWdTbl[35] = new KeyWord("solve", TknKind.Solve);
-            KeyWdTbl[36] = new KeyWord("get", TknKind.Get);
-            KeyWdTbl[37] = new KeyWord("contact", TknKind.Contact);
-            KeyWdTbl[38] = new KeyWord("show", TknKind.Show);
-            KeyWdTbl[39] = new KeyWord("clear", TknKind.Clear);
-            KeyWdTbl[47] = new KeyWord("rotate", TknKind.Rotate);
+            KeyWdTbl[35] = new KeyWord("solve", TknKind.Solve); //算出
+            KeyWdTbl[36] = new KeyWord("get", TknKind.Get); //指先入力点を取る
+            KeyWdTbl[37] = new KeyWord("contact", TknKind.Contact); //連結
+            KeyWdTbl[38] = new KeyWord("show", TknKind.Show); //表示
+            KeyWdTbl[39] = new KeyWord("clear", TknKind.Clear); //削除
+            KeyWdTbl[47] = new KeyWord("rotation", TknKind.Rotation); //回転
+            KeyWdTbl[48] = new KeyWord("setpoint", TknKind.SetPoint); //相対位置
             /* 特別関数 */
             KeyWdTbl[40] = new KeyWord("var", TknKind.Var);
             KeyWdTbl[41] = new KeyWord(":", TknKind.Colon);
@@ -245,8 +250,13 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[44] = new KeyWord("set", TknKind.Set);
             KeyWdTbl[45] = new KeyWord("on", TknKind.On);
             KeyWdTbl[46] = new KeyWord("in", TknKind.In);
+            KeyWdTbl[49] = new KeyWord("right", TknKind.Right);
+            KeyWdTbl[50] = new KeyWord("left", TknKind.Left);
+            KeyWdTbl[51] = new KeyWord("center", TknKind.Center);
+            KeyWdTbl[52] = new KeyWord("bottom", TknKind.Bottom);
+            KeyWdTbl[53] = new KeyWord("top", TknKind.Top);
             //End of the Key Word Table List Mark
-            KeyWdTbl[48] = new KeyWord("", TknKind.END_keylist);
+            KeyWdTbl[54] = new KeyWord("", TknKind.END_keylist);
         }
 
         public void DebugImshow()
@@ -296,87 +306,6 @@ namespace DV2.Net_Graphics_Application
                 FormulaAnalysis();
             }
             #endregion
-        }
-
-        private void KeyMovement(object sender, KeyEventArgs e)
-        {
-            bool moved_flg = false;
-            #region Movement
-            if (e.KeyCode == Keys.Up)
-            {
-                //codeOutput("Up Pressed!");
-                movement.Y -= 1;
-                moved_flg = true;
-
-                if (movement.Y < 0)
-                {
-                    movement.Y = 0;
-                    moved_flg = false;
-                }
-            }
-
-            if (e.KeyCode == Keys.Down)
-            {
-                //codeOutput("Down Pressed!");
-                movement.Y += 1;
-                moved_flg = true;
-
-                if (movement.Y + 32 > picBox.Height)
-                {
-                    movement.Y = picBox.Height - 32;
-                    moved_flg = false;
-                }
-            }
-
-            if (e.KeyCode == Keys.Left)
-            {
-                //codeOutput("Left Pressed!");
-                movement.X -= 1;
-                moved_flg = true;
-
-                if (movement.X < 0)
-                {
-                    movement.X = 0;
-                    moved_flg = false;
-                }
-            }
-
-            if (e.KeyCode == Keys.Right)
-            {
-                //codeOutput("Right Pressed!");
-                movement.X += 1;
-                moved_flg = true;
-
-                if (movement.X + 48 > picBox.Width)
-                {
-                    movement.X = picBox.Width - 48;
-                    moved_flg = false;
-                }
-            }
-
-            if (e.KeyCode == Keys.End)
-            {
-                //codeOutput("End Pressed!");
-                tobeRead.SpeakAsync("触るモード終了.");
-                tabControl_code.SelectTab(0);
-                tabControl_code.Enabled = true;
-                tabControl_Graphics.Enabled = true;
-            }
-            #endregion
-
-            if (moved_flg)
-            {
-                DotDataInitialization(ref forDisDots);
-
-                for (int width = 0; width < 48; width++)
-                {
-                    for (int height = 0; height < 32; height++)
-                    {
-                        forDisDots[width, height] = allDotData[movement.X + width, movement.Y + height];
-                    }
-                }
-                Dv2Instance.SetDots(forDisDots, BlinkInterval);
-            }
         }
 
         private void ParameterChecker(object GraphIns, int listIndex)

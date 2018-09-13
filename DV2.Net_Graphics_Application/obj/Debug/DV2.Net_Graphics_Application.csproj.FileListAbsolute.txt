@@ -21,3 +21,4 @@ D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application
 D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\dll\x64\opencv_ffmpeg341_64.dll
 D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\OpenCvSharp.pdb
 D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\OpenCvSharp.Blob.pdb
+D:\Takagi_lab\Projects\DV2.Net_Graphics_Application\DV2.Net_Graphics_Application\bin\Debug\KsDvCtl.dll

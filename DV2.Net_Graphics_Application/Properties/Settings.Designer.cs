@@ -82,5 +82,29 @@ namespace DV2.Net_Graphics_Application.Properties {
                 this["Rotation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DEBUG_LEVEL {
+            get {
+                return ((int)(this["DEBUG_LEVEL"]));
+            }
+            set {
+                this["DEBUG_LEVEL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Dv2_DEBUG {
+            get {
+                return ((bool)(this["Dv2_DEBUG"]));
+            }
+            set {
+                this["Dv2_DEBUG"] = value;
+            }
+        }
     }
 }

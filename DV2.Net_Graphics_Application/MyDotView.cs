@@ -55,7 +55,7 @@ namespace DV2.Net_Graphics_Application
 			EquipmentName = null;
 			TextSize = 0;
 			GrpX = 0; GrpY = 0;
-		}
+        }
 
 		// このクラスのインスタンスを生成して返却する
 		// シングルトンなので必ず1度しかインスタンスは作られない
