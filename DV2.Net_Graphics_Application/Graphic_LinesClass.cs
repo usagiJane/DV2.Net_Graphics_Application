@@ -94,6 +94,7 @@ namespace DV2.Net_Graphics_Application
 
             //Define
             string[] chkData, commData;
+            string backObjComm = ObjComm;
             ArrayList pointData = new ArrayList();
             Pen picPen = new Pen(Color.Black, 1F);
 
@@ -110,7 +111,7 @@ namespace DV2.Net_Graphics_Application
                 }
             }
 
-            if (commData[0].ToLower() == "line" && chkData[0] == "Line" && pointData.Count == 4)
+            if (commData[0].ToLower() == "arrow" && chkData[0] == "Arrow" && pointData.Count == 4)
             {
                 DrawArrow(ref pointData, picPen);
             }
@@ -120,8 +121,8 @@ namespace DV2.Net_Graphics_Application
             }
             else
             {
-                tobeRead.SpeakAsync("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(ObjComm)] + "対象定義識別失敗!");
-                codeOutput("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(ObjComm)] + "対象定義識別失敗!");
+                tobeRead.SpeakAsync("@Graphic_LinesClass Draw_ArrowMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
+                codeOutput("@Graphic_LinesClass Draw_ArrowMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
             }
         }
 

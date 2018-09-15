@@ -281,13 +281,18 @@ namespace DV2.Net_Graphics_Application
         private void Rotation(string ObjComm, string ObjAna)
         {
             bool fk;
-            double degree = 0;
+            double degree = 45;
+            Bitmap outputImage;
             LogOutput("for Debug");
-            fk = Rotation(debug_Image, degree,out debug_Image);
+            //fk = Rotation(debug_Image, degree,out outputImage);
+            //outputImage = Rotation(debug_Image, (int) degree);
+            outputImage = rotateImage(debug_Image, (int)degree);
 
+
+            picBox.Image = (Image)outputImage;
         }
 
-        public void kaiten()
+        public void oldkaiten()
         {
             /*
             zukei tmp;
@@ -568,6 +573,104 @@ namespace DV2.Net_Graphics_Application
             */
         }
 
+        public void Rotation(double degree)
+        {
+            //Define
+            double x2, x3;
+            double y2, y3;
+
+            //tmp.ssita_third += (Math.PI) / 36.0;
+            if (degree >= (Math.PI / 2.0) && degree < (Math.PI * 3.0 / 2.0))
+                degree = (Math.PI * (3.0 / 2.0));
+            if (degree >= (Math.PI * 2.0))
+                degree = 0.0;
+            if (degree >= ((Math.PI / 2.0) - (Math.PI) / 36.0) && degree < (Math.PI / 2.0))
+                degree = (Math.PI / 2.0);
+
+            int s_x_max = 0, x_max, x_min, y_max, y_min, x_mid=0, y_mid=0,r=0;
+            int s_x_min = 95;
+            int s_y_max = 0;
+            int s_y_min = 63;
+            for (double i = 0.0; i <= r * 2.0; i += 1.0)
+            {
+                x2 = (x_mid - r - x_mid + i) * Math.Cos(degree) - (y_mid - y_mid) * Math.Sin(degree) + x_mid;
+                y2 = (x_mid - r - x_mid + i) * Math.Sin(degree) + (y_mid - y_mid) * Math.Cos(degree) + y_mid;
+                x2 = Math.Round(x2, 5);
+                y2 = Math.Round(y2, 5);
+                if (s_x_max <= x2)
+                    s_x_max = (int)x2;
+                if (s_x_min >= x2)
+                    s_x_min = (int)x2;
+                if (s_y_max <= (int)y2)
+                    s_y_max = (int)y2;
+                if (s_y_min >= (int)y2)
+                    s_y_min = (int)y2;
+            }
+            x_max = s_x_max;
+            x_min = s_x_min;
+            y_max = s_y_max;
+            y_min = s_y_min;
+            if (x_max <= 95 && x_min >= 1 && y_max <= 63 && y_min >= 1)
+            {
+                //seikei_w(ref seikei_all_DotData, obj_num, 0);
+                //inf_zukei[obj_num] = tmp;
+                //seikei_w(ref seikei_all_DotData, obj_num, 2);
+            }
+        }
+
+        public Bitmap Rotation(Bitmap b, int angle)
+        {
+            angle = angle % 360;
+            //弧度转换
+            double radian = angle * Math.PI / 180.0;
+            double cos = Math.Cos(radian);
+            double sin = Math.Sin(radian);
+            //原图的宽和高
+            int w = b.Width;
+            int h = b.Height;
+            int W = (int)(Math.Max(Math.Abs(w * cos - h * sin), Math.Abs(w * cos + h * sin)));
+            int H = (int)(Math.Max(Math.Abs(w * sin - h * cos), Math.Abs(w * sin + h * cos)));
+            //目标位图
+            Bitmap dsImage = new Bitmap(W, H);
+            System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(dsImage);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bilinear;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            //计算偏移量
+            Point Offset = new Point((W - w) / 2, (H - h) / 2);
+            //构造图像显示区域：让图像的中心与窗口的中心点一致
+            Rectangle rect = new Rectangle(Offset.X, Offset.Y, w, h);
+            Point center = new Point(rect.X + rect.Width / 2, rect.Y + rect.Height / 2);
+            g.TranslateTransform(center.X, center.Y);
+            g.RotateTransform(360 - angle);
+            //恢复图像在水平和垂直方向的平移
+            g.TranslateTransform(-center.X, -center.Y);
+            g.DrawImage(b, rect);
+            //重至绘图的所有变换
+            g.ResetTransform();
+            g.Save();
+            g.Dispose();
+            //dsImage.Save("yuancd.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            return dsImage;
+        }
+
+        public Bitmap rotateImage(Bitmap b, int angle)
+        {
+            //create a new empty bitmap to hold rotated image
+            Bitmap returnBitmap = new Bitmap(b.Width, b.Height);
+            //make a graphics object from the empty bitmap
+            Graphics g = Graphics.FromImage(returnBitmap);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            //move rotation point to center of image
+            g.TranslateTransform((float)b.Width / 2, (float)b.Height / 2);
+            //rotate
+            g.RotateTransform(angle);
+            //move image back
+            g.TranslateTransform(-(float)b.Width / 2, -(float)b.Height / 2);
+            //draw passed in image onto graphics object
+            g.DrawImage(b, new Point(0, 0));
+            return returnBitmap;
+        }
+
         /// <summary>
         /// Rotation
         /// </summary>
@@ -575,7 +678,7 @@ namespace DV2.Net_Graphics_Application
         /// <param name="degree">回転角度</param>
         /// <param name="dstBmp">output</param>
         /// <returns> true / false </returns>
-        public static bool Rotation(Bitmap srcBmp, double degree, out Bitmap dstBmp)
+        public bool Rotation(Bitmap srcBmp, double degree, out Bitmap dstBmp)
         {
             if (srcBmp == null)
             {

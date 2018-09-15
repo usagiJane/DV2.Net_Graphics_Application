@@ -22,6 +22,8 @@ namespace DV2.Net_Graphics_Application
         private int[,] allDotData;
         //movementのlocationは左上
         Point movement;
+        //静態平行移動量
+        Point public_Offset;
 
         public void Dv2ConnectFunction(MainForm fm)
         {
@@ -276,9 +278,55 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        public void GetCirclePoints(Point theCenter, int radius, ref List<int> cirPoints, bool oninSwitch = false)
+        {
+            //円座標点の集合を計算する
+            //oninSwitchは[ture]の場合は円の線分の座標点集合を返す、[false]の場合は円の線分と中身の座標点集合を返す。
+
+            //Define
+            List<int> subCirPoints = new List<int>();
+            if (oninSwitch)
+            {
+                for (int degree = 0; degree < 360; degree++)
+                {
+
+                    subCirPoints.Add(theCenter.X + radius * Convert.ToInt32(Math.Round(Math.Cos(degree * (Math.PI / 180)))));
+                    subCirPoints.Add(theCenter.Y + radius * Convert.ToInt32(Math.Round(Math.Sin(degree * (Math.PI / 180)))));
+                }
+            }
+
+            else
+            {
+                for (int loop_r = 0; loop_r <= radius; loop_r++)
+                {
+                    for (int degree = 0; degree < 360; degree++)
+                    {
+
+                        subCirPoints.Add(theCenter.X + loop_r * Convert.ToInt32(Math.Round(Math.Cos(degree * (Math.PI / 180)))));
+                        subCirPoints.Add(theCenter.Y + loop_r * Convert.ToInt32(Math.Round(Math.Sin(degree * (Math.PI / 180)))));
+                    }
+                }
+            }
+
+            //return;
+            if (subCirPoints.Count() % 2 == 0)
+            {
+                cirPoints = subCirPoints;
+            }
+            else
+            {
+                //Error
+                return;
+            }
+        }
+
         private void Dv2KeyEventHandle(object sender, DV.KeyEventArgs e)
         {
             bool moved_flg = false;
+            bool debug_movedflg = false;
+            //for the test
+            int objFinder_index = 0;
+            
             tobeRead.SpeakAsyncCancelAll();
             #region Debug
             if (false)
@@ -297,12 +345,23 @@ namespace DV2.Net_Graphics_Application
             {
                 //親指キー
                 tobeRead.SpeakAsync("親指キー");
+                int cir_x = 24 + movement.X;
+                int cir_y = 16 + movement.Y;
+
+                ObjName.Add("obj11");
+                ObjCommand.Add("obj11|=|circle|(|" + cir_x + "|,|" + cir_y + "|,|15|)");
+                ObjAnalysis.Add("Circle|Lparen|IntNum|Comma|IntNum|Comma|IntNum|Rparen");
+
+                objFinder_index = ObjectFinder("obj11");
+                ParameterChecker(ObjAnalysis[objFinder_index], objFinder_index);
+                MakeObjectBraille();
             }
 
             if (e.Shift == 64 && e.Kind == 0 && e.Value == 0)
             {
                 //ステータスキー
                 tobeRead.SpeakAsync("ステータスキー");
+
             }
 
             if (e.Shift == 0 && e.Kind == 4 && e.Value == 16)
@@ -322,12 +381,12 @@ namespace DV2.Net_Graphics_Application
                 //方向レバー 上
                 //tobeRead.SpeakAsync("方向レバー 上");
                 movement.Y -= 1;
-                moved_flg = true;
+                debug_movedflg = true;
 
                 if (movement.Y < 0)
                 {
                     movement.Y = 0;
-                    moved_flg = false;
+                    debug_movedflg = false;
                 }
             }
 
@@ -336,12 +395,12 @@ namespace DV2.Net_Graphics_Application
                 //方向レバー 下
                 //tobeRead.SpeakAsync("方向レバー 下");
                 movement.Y += 1;
-                moved_flg = true;
+                debug_movedflg = true;
 
                 if (movement.Y + 32 > picBox.Height)
                 {
                     movement.Y = picBox.Height - 32;
-                    moved_flg = false;
+                    debug_movedflg = false;
                 }
             }
 
@@ -350,12 +409,12 @@ namespace DV2.Net_Graphics_Application
                 //方向レバー 左
                 //tobeRead.SpeakAsync("方向レバー 左");
                 movement.X -= 1;
-                moved_flg = true;
+                debug_movedflg = true;
 
                 if (movement.X < 0)
                 {
                     movement.X = 0;
-                    moved_flg = false;
+                    debug_movedflg = false;
                 }
             }
 
@@ -364,12 +423,12 @@ namespace DV2.Net_Graphics_Application
                 //方向レバー 右
                 //tobeRead.SpeakAsync("方向レバー 右");
                 movement.X += 1;
-                moved_flg = true;
+                debug_movedflg = true;
 
                 if (movement.X + 48 > picBox.Width)
                 {
                     movement.X = picBox.Width - 48;
-                    moved_flg = false;
+                    debug_movedflg = false;
                 }
             }
 
@@ -386,24 +445,64 @@ namespace DV2.Net_Graphics_Application
             {
                 //上矢印キー
                 tobeRead.SpeakAsync("上矢印キー");
+
+                //方向レバー 上 Code Back Up
+                movement.Y -= 1;
+                moved_flg = true;
+
+                if (movement.Y < 0)
+                {
+                    movement.Y = 0;
+                    moved_flg = false;
+                }
             }
 
             if (e.Shift == 0 && e.Kind == 4 && e.Value == 2)
             {
                 //下矢印キー
                 tobeRead.SpeakAsync("下矢印キー");
+
+                //方向レバー 下 Code Back Up
+                movement.Y += 1;
+                moved_flg = true;
+
+                if (movement.Y + 32 > picBox.Height)
+                {
+                    movement.Y = picBox.Height - 32;
+                    moved_flg = false;
+                }
             }
 
             if (e.Shift == 0 && e.Kind == 4 && e.Value == 8)
             {
                 //左矢印キー
                 tobeRead.SpeakAsync("左矢印キー");
+
+                //方向レバー 左 Code Back Up
+                movement.X -= 1;
+                moved_flg = true;
+
+                if (movement.X < 0)
+                {
+                    movement.X = 0;
+                    moved_flg = false;
+                }
             }
 
             if (e.Shift == 0 && e.Kind == 4 && e.Value == 4)
             {
                 //右矢印キー
                 tobeRead.SpeakAsync("右矢印キー");
+
+                //方向レバー 右 Code Back Up
+                movement.X += 1;
+                moved_flg = true;
+
+                if (movement.X + 48 > picBox.Width)
+                {
+                    movement.X = picBox.Width - 48;
+                    moved_flg = false;
+                }
             }
 
             if (e.Shift == 32 && e.Kind == 0 && e.Value == 0)
@@ -435,6 +534,21 @@ namespace DV2.Net_Graphics_Application
                     for (int height = 0; height < 32; height++)
                     {
                         forDisDots[width, height] = allDotData[movement.X + width, movement.Y + height];
+                    }
+                }
+                Dv2Instance.SetDots(forDisDots, BlinkInterval);
+            }
+
+            if (debug_movedflg)
+            {
+                DotDataInitialization(ref allDotData);
+                LogOutput(movement);
+
+                for (int width = 0; width < 48; width++)
+                {
+                    for (int height = 0; height < 32; height++)
+                    {
+                        allDotData[movement.X + width, movement.Y + height] = forDisDots[width, height];
                     }
                 }
                 Dv2Instance.SetDots(forDisDots, BlinkInterval);
@@ -483,7 +597,8 @@ namespace DV2.Net_Graphics_Application
 
             //allDotData = new int[picBox.Width, picBox.Height];
             //int[,] focusDotData = new int[48, 32];
-            movement = new Point(0, 0);
+            //左上の原点に戻る
+            //movement = new Point(0, 0);
             Color pixel;
 
             //データ初期化
@@ -499,15 +614,24 @@ namespace DV2.Net_Graphics_Application
                 {
                     //ピクセルデータを0と1に変化する
                     pixel = debug_Image.GetPixel(width, height);
+
                     if (pixel.Name != "0")
                     {
                         allDotData[width, height] = 1;
 
                         if ((width - movement.X) < forDisDots.GetLength(0) && (height - movement.Y) < forDisDots.GetLength(1))
                         {
-                            forDisDots[width, height] = 2;
+                            //forDisDots[width, height] = 1;
                         }
                     }
+                }
+            }
+
+            for (int width = 0; width < 48; width++)
+            {
+                for (int height = 0; height < 32; height++)
+                {
+                    forDisDots[width, height] = allDotData[width + movement.X, height + movement.Y];
                 }
             }
 

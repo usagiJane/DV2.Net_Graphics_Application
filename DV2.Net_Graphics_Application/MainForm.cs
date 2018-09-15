@@ -31,7 +31,7 @@ namespace DV2.Net_Graphics_Application
         static Bitmap debug_Image;
         private static SpeechSynthesizer tobeRead = new SpeechSynthesizer();
         //FontSizeノーマルは"9"
-        private static int FontSize = 9;
+        private static int FontSize = 24;
         #endregion
 
         #region About DV2
@@ -118,7 +118,7 @@ namespace DV2.Net_Graphics_Application
             textBox3.ReadOnly = true;
 
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
-            textBox_Input.Text = "obj1=line(0,5,200.0,405.0)";
+            //textBox_Input.Text = "obj1=line(0,5,200.0,405.0)";
             //textBox_Input.Text = "obj1=circle(1,2,20.0)";
             //textBox_Input.Text = "obj1=circle(c,20.0)";
             //textBox_Input.Text = "var p : Point";
@@ -133,8 +133,10 @@ namespace DV2.Net_Graphics_Application
             textBox_Input.Focus();
             //this.dataGridView_monitor.Rows.Add();
             InitializationBaseDatas();
-            //
+            //Debug Image
             DebugImshow();
+            //入力フォントサイズ
+            textBox_Input.Font = new Font(textBox_Input.Font.FontFamily, FontSize);
 
             #region Speaker Setting
             //tobeRead.SelectVoice("Microsoft Anna");
@@ -156,6 +158,7 @@ namespace DV2.Net_Graphics_Application
         internal void LogOutput(Object log)
         {
             //FontSizeノーマルは"9"
+            int FontSize = 9;
             textBox_log.Font = new Font(textBox_log.Font.FontFamily, FontSize);
             textBox_log.AppendText(log + "\r\n");
             //textBox_log.ScrollToCaret(); 
@@ -306,142 +309,6 @@ namespace DV2.Net_Graphics_Application
                 FormulaAnalysis();
             }
             #endregion
-        }
-
-        private void ParameterChecker(object GraphIns, int listIndex)
-        {
-            //For Command "Show" Route
-            //Debug
-            LogOutput("\r\n" + "***ParameterChecker Strat!###");
-            LogOutput("***object GraphIns is!###  " + GraphIns);
-            //Define
-            //DV2_Drawing dv2Draw = new DV2_Drawing();
-            var GraphicInstruction = Properties.Settings.Default.GraphicInstruction;
-            var SpecialInstruction = Properties.Settings.Default.SpecialInstruction;
-            string GraphCmd = Convert.ToString(GraphIns);
-            string temp_ObjCom, temp_ObjAna;
-            GraphCmd = Regex.Split(GraphCmd, @"\|", RegexOptions.IgnoreCase)[0];
-
-            //Debug GraphCmd
-            LogOutput("@ParameterChecker  ># " + GraphCmd + " #<");
-
-            #region GraphicInstruction
-            if (Regex.IsMatch(GraphicInstruction, GraphCmd, RegexOptions.IgnoreCase))
-            {
-                switch (GraphCmd)
-                {
-                    case "Line":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd Line -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd Line -- " + temp_ObjAna);
-
-                        Draw_LineMode(temp_ObjCom, temp_ObjAna);
-                        break;
-                    case "DashLine":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjAna);
-
-                        Draw_LineMode(temp_ObjCom, temp_ObjAna);
-                        break;
-                    case "Arc":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjAna);
-
-                        Draw_CurveMode(temp_ObjCom, temp_ObjAna);
-                        break;
-                    case "Circle":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd Circle -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd Circle -- " + temp_ObjAna);
-
-                        Draw_CircleMode(temp_ObjCom, temp_ObjAna);
-                        break;
-                    case "Arrow":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd Arrow -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd Arrow -- " + temp_ObjAna);
-
-                        Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
-                        break;
-                    case "DashArrow":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd DashArrow -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd DashArrow -- " + temp_ObjAna);
-
-                        Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
-                        break;
-                    case "Triangle":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjAna);
-
-                        Draw_TriangleMode(temp_ObjCom, temp_ObjAna);
-                        break;
-                    case "Rectangle":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjAna);
-
-                        Draw_QuadrilateralMode(temp_ObjCom, temp_ObjAna);
-                        break;
-                    case "Point":
-                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
-                        //Debug
-                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd Rectangle -- " + temp_ObjAna);
-
-                        break;
-                    default:
-                        codeOutput("Error @ParameterChecker @644");
-                        break;
-                }
-            }
-            #endregion
-
-            #region SpecialInstruction
-            else if (Regex.IsMatch(SpecialInstruction, GraphCmd, RegexOptions.IgnoreCase))
-            {
-                if (GraphCmd == "Ident")
-                {
-                    temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
-                    AssignRemover(ref temp_ObjCom);
-
-                    //GraphIns   Ident|Plus|Ident
-                    //temp_ObjCom   obj1|+|obj2
-                    for (int i = 0; i < Regex.Split(GraphIns.ToString(), @"\|", RegexOptions.IgnoreCase).Length; i++)
-                    {
-                        if (Regex.Split(GraphIns.ToString(), @"\|", RegexOptions.IgnoreCase)[i] == "Ident")
-                        {
-                            ParameterChecker(ObjAnalysis[ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i])], ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i]));
-                        }
-                    }
-                }
-            }
-            #endregion
-
-            else
-            {
-                codeOutput("Error @ParameterChecker @587");
-            }
         }
 
         private Graphics PreparePaper()

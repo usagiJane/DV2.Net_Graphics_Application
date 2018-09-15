@@ -88,7 +88,7 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
-        public System.Drawing.Point FingerFinder(string targetName)
+        public System.Drawing.Point FingerFinder(string targetName = "")
         {
             //To find the finger point which on the Graphics
             //カメラのパラメタ
@@ -144,6 +144,10 @@ namespace DV2.Net_Graphics_Application
                         centerY = Math.Round(maxblob.Centroid.Y, 2);
                         //For Debug
                         textBox2.Text = centerX.ToString() + " , " + centerY.ToString();
+
+                        //手動のキャリブレーション
+                        centerX = (centerX - 12) / 12.87;
+                        centerY = (centerY - 43) / 12.40;
                     }
 
                     int keyValue = Cv2.WaitKey(100);
@@ -159,7 +163,7 @@ namespace DV2.Net_Graphics_Application
                     }
                 }
             }
-            return new System.Drawing.Point(Convert.ToInt32(centerX), Convert.ToInt32(centerY));
+            return new System.Drawing.Point(Convert.ToInt32(centerX + movement.X), Convert.ToInt32(centerY + movement.Y));
         }
 
         public System.Drawing.Point FingerFinder(string targetName, bool dashFlag = false)
@@ -240,9 +244,9 @@ namespace DV2.Net_Graphics_Application
         {
             //Define
             string targetComm;
-            double temp_X = 0, temp_Y = 0;
+            int temp_X = 0, temp_Y = 0;
             List<int> points = new List<int>();
-            List<double> avgPointY = new List<double>();
+            List<int> avgPointY = new List<int>();
             List<Point> LinePoints = new List<Point>();
             //System.Drawing.Point fingerPoint = new System.Drawing.Point(fPx, fPy);
 
@@ -316,12 +320,12 @@ namespace DV2.Net_Graphics_Application
                     //codeOutput("Error @WebCamera.cs PointOnObject関数 236行.");
                     //tobeRead.SpeakAsync("指先座標点をえることが失敗した,Get命令をもう一度実行して下さい！");
 
-                    double temp_avg = 0.0;
-                    foreach (double loop in avgPointY)
+                    int temp_avg = 0;
+                    foreach (int loop in avgPointY)
                     {
                         temp_avg += loop;
                     }
-                    temp_avg = Convert.ToDouble(temp_avg / avgPointY.Count);
+                    temp_avg = Convert.ToInt32(temp_avg / avgPointY.Count);
                     temp = avgPointY.BinarySearch(temp_avg);
                     if (temp < 0)
                     {
@@ -338,12 +342,12 @@ namespace DV2.Net_Graphics_Application
                 }
                 else
                 {
-                    double temp_avg = 0.0;
-                    foreach(double loop in avgPointY)
+                    int temp_avg = 0;
+                    foreach(int loop in avgPointY)
                     {
                         temp_avg += loop;
                     }
-                    temp_avg = Convert.ToDouble(temp_avg / avgPointY.Count);
+                    temp_avg = Convert.ToInt32(temp_avg / avgPointY.Count);
                     temp = avgPointY.BinarySearch(temp_avg);
                     if(temp < 0)
                     {

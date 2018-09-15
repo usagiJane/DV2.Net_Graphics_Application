@@ -1,0 +1,6 @@
+obj1=line(0,5,50.0,105)
+c = Point(0, 0)
+obj2 = circle(c, 11)
+var p : Point
+get p on obj1
+solve c by contact (obj1,obj2,p)

@@ -155,12 +155,47 @@ namespace DV2.Net_Graphics_Application
 
             LogOutput("Debug");
             //ここから、指先を探す機能付き
-            
+            tobeRead.SpeakAsync("もう一度触ってください。");
             Point fingerPoint = new Point(0, 0);
-            string targetName = "";
-            fingerPoint = FingerFinder(targetName);
-            PointOnObject(ref fingerPoint, targetName);
-            
+            double distanceCir1, distanceCir2 = 0.0;
+
+            fingerPoint = FingerFinder();
+            distanceCir1 = Math.Sqrt(Math.Abs(C1x - fingerPoint.X) * Math.Abs(C1x - fingerPoint.X) + Math.Abs(C1y - fingerPoint.Y) * Math.Abs(C1y - fingerPoint.Y));
+            distanceCir2 = Math.Sqrt(Math.Abs(C2x - fingerPoint.X) * Math.Abs(C2x - fingerPoint.X) + Math.Abs(C2y - fingerPoint.Y) * Math.Abs(C2y - fingerPoint.Y));
+
+            if (distanceCir1 > distanceCir2)
+            {
+                //circle 2
+                fingerPoint.X = (int)C2x;
+                fingerPoint.Y = (int)C2y;
+            }
+
+            else
+            {
+                //circle 1
+                fingerPoint.X = (int)C1x;
+                fingerPoint.Y = (int)C1y;
+            }
+
+            index = 0;
+            foreach (var temp in lisAnaData)
+            {
+                if (temp != "Ident")
+                    index++;
+                else
+                    break;
+            }
+
+            if (ObjectFinder(lisCommData[index])!= -1)
+            {
+                ObjCommand[ObjectFinder(lisCommData[index])] = ObjName[ObjectFinder(lisCommData[index])]+ "|=|Point|(|"+ fingerPoint.X + "|,|"+ fingerPoint.Y + "|)";
+            }
+            LogOutput(fingerPoint);
+            LogOutput(ObjName[ObjectFinder(lisCommData[index])] + "|=|Point|(|" + fingerPoint.X + "|,|" + fingerPoint.Y + "|)");
+
+
+
+
             #endregion
         }
 
