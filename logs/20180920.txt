@@ -1,0 +1,6 @@
+LogOutput >>  @WebCamera GetPointOnObject
+      
+--------
+/20 19:07:02  *******
+omma|IntNum|Rparen
+n

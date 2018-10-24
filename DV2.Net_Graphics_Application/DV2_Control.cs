@@ -22,8 +22,8 @@ namespace DV2.Net_Graphics_Application
         private int[,] allDotData;
         //movementのlocationは左上
         Point movement;
-        //静態平行移動量
-        Point public_Offset;
+        //静態平行移動量, 
+        static Point Point_Offset = new Point(0, 0);
 
         public void Dv2ConnectFunction(MainForm fm)
         {
@@ -119,6 +119,12 @@ namespace DV2.Net_Graphics_Application
             return -1;
         }
 
+        /// <summary>
+        /// 入力した対象名が存在するかどうかを判断する関数
+        /// </summary>
+        /// <param name="targetName">入力した対象名</param>
+        /// <returns>不存在の場合は　-1</returns>
+        /// <returns>存在する場合は　適当な数字</returns>
         public int ObjectFinder(string targetName)
         {
             //Find the targetName in the ArrayList ObjName
@@ -126,7 +132,7 @@ namespace DV2.Net_Graphics_Application
 
             foreach (string finder in ObjName)
             {
-                if (finder == targetName)
+                if (finder.ToLower() == targetName.ToLower())
                 {
                     return index;
                 }
@@ -323,7 +329,6 @@ namespace DV2.Net_Graphics_Application
         private void Dv2KeyEventHandle(object sender, DV.KeyEventArgs e)
         {
             bool moved_flg = false;
-            bool debug_movedflg = false;
             //for the test
             int objFinder_index = 0;
             
@@ -381,12 +386,12 @@ namespace DV2.Net_Graphics_Application
                 //方向レバー 上
                 //tobeRead.SpeakAsync("方向レバー 上");
                 movement.Y -= 1;
-                debug_movedflg = true;
+                moved_flg = true;
 
                 if (movement.Y < 0)
                 {
                     movement.Y = 0;
-                    debug_movedflg = false;
+                    moved_flg = false;
                 }
             }
 
@@ -395,12 +400,12 @@ namespace DV2.Net_Graphics_Application
                 //方向レバー 下
                 //tobeRead.SpeakAsync("方向レバー 下");
                 movement.Y += 1;
-                debug_movedflg = true;
+                moved_flg = true;
 
-                if (movement.Y + 32 > picBox.Height)
+                if (movement.Y + 0 > picBox.Height)
                 {
-                    movement.Y = picBox.Height - 32;
-                    debug_movedflg = false;
+                    movement.Y = picBox.Height - 0;
+                    moved_flg = false;
                 }
             }
 
@@ -409,12 +414,12 @@ namespace DV2.Net_Graphics_Application
                 //方向レバー 左
                 //tobeRead.SpeakAsync("方向レバー 左");
                 movement.X -= 1;
-                debug_movedflg = true;
+                moved_flg = true;
 
                 if (movement.X < 0)
                 {
                     movement.X = 0;
-                    debug_movedflg = false;
+                    moved_flg = false;
                 }
             }
 
@@ -423,12 +428,12 @@ namespace DV2.Net_Graphics_Application
                 //方向レバー 右
                 //tobeRead.SpeakAsync("方向レバー 右");
                 movement.X += 1;
-                debug_movedflg = true;
+                moved_flg = true;
 
-                if (movement.X + 48 > picBox.Width)
+                if (movement.X + 0 > picBox.Width)
                 {
-                    movement.X = picBox.Width - 48;
-                    debug_movedflg = false;
+                    movement.X = picBox.Width - 0;
+                    moved_flg = false;
                 }
             }
 
@@ -446,15 +451,6 @@ namespace DV2.Net_Graphics_Application
                 //上矢印キー
                 tobeRead.SpeakAsync("上矢印キー");
 
-                //方向レバー 上 Code Back Up
-                movement.Y -= 1;
-                moved_flg = true;
-
-                if (movement.Y < 0)
-                {
-                    movement.Y = 0;
-                    moved_flg = false;
-                }
             }
 
             if (e.Shift == 0 && e.Kind == 4 && e.Value == 2)
@@ -462,15 +458,6 @@ namespace DV2.Net_Graphics_Application
                 //下矢印キー
                 tobeRead.SpeakAsync("下矢印キー");
 
-                //方向レバー 下 Code Back Up
-                movement.Y += 1;
-                moved_flg = true;
-
-                if (movement.Y + 32 > picBox.Height)
-                {
-                    movement.Y = picBox.Height - 32;
-                    moved_flg = false;
-                }
             }
 
             if (e.Shift == 0 && e.Kind == 4 && e.Value == 8)
@@ -478,15 +465,6 @@ namespace DV2.Net_Graphics_Application
                 //左矢印キー
                 tobeRead.SpeakAsync("左矢印キー");
 
-                //方向レバー 左 Code Back Up
-                movement.X -= 1;
-                moved_flg = true;
-
-                if (movement.X < 0)
-                {
-                    movement.X = 0;
-                    moved_flg = false;
-                }
             }
 
             if (e.Shift == 0 && e.Kind == 4 && e.Value == 4)
@@ -494,15 +472,6 @@ namespace DV2.Net_Graphics_Application
                 //右矢印キー
                 tobeRead.SpeakAsync("右矢印キー");
 
-                //方向レバー 右 Code Back Up
-                movement.X += 1;
-                moved_flg = true;
-
-                if (movement.X + 48 > picBox.Width)
-                {
-                    movement.X = picBox.Width - 48;
-                    moved_flg = false;
-                }
             }
 
             if (e.Shift == 32 && e.Kind == 0 && e.Value == 0)
@@ -533,25 +502,25 @@ namespace DV2.Net_Graphics_Application
                 {
                     for (int height = 0; height < 32; height++)
                     {
+                        #region for Test
+                        /*
+                        if (movement.X + width >= picBox.Width)
+                        {
+                            movement.X = picBox.Width - width;
+                        }
+
+                        if (movement.Y + height >= picBox.Height)
+                        {
+                            movement.Y = picBox.Height - height;
+                        }
+                        */
+                        #endregion
                         forDisDots[width, height] = allDotData[movement.X + width, movement.Y + height];
                     }
                 }
                 Dv2Instance.SetDots(forDisDots, BlinkInterval);
-            }
-
-            if (debug_movedflg)
-            {
-                DotDataInitialization(ref allDotData);
-                LogOutput(movement);
-
-                for (int width = 0; width < 48; width++)
-                {
-                    for (int height = 0; height < 32; height++)
-                    {
-                        allDotData[movement.X + width, movement.Y + height] = forDisDots[width, height];
-                    }
-                }
-                Dv2Instance.SetDots(forDisDots, BlinkInterval);
+                label6.Text = movement.X.ToString();
+                label8.Text = movement.Y.ToString();
             }
         }
 
@@ -618,11 +587,6 @@ namespace DV2.Net_Graphics_Application
                     if (pixel.Name != "0")
                     {
                         allDotData[width, height] = 1;
-
-                        if ((width - movement.X) < forDisDots.GetLength(0) && (height - movement.Y) < forDisDots.GetLength(1))
-                        {
-                            //forDisDots[width, height] = 1;
-                        }
                     }
                 }
             }
@@ -733,8 +697,79 @@ namespace DV2.Net_Graphics_Application
                     }
                 }
                 Dv2Instance.SetDots(forDisDots, BlinkInterval);
+                label6.Text = movement.X.ToString();
+                label8.Text = movement.Y.ToString();
             }
         }
 
+        /// <summary>
+        /// 指定された対象を図面に削除する関数
+        /// </summary>
+        /// <param name="targetData">入力データ「空白抜き」</param>
+        /// <param name="targetAna">入力データの解析結果</param>
+        /// <returns>処理結果を返し、成功や失敗</returns>
+        private bool ClearTargetAndCheck(string targetData, string targetAna)
+        {
+            bool return_flg = false;
+            string CleTarget;
+            string[] listTarData = Regex.Split(targetData, @"\|", RegexOptions.IgnoreCase);
+            string[] listTarAnaData = Regex.Split(targetAna, @"\|", RegexOptions.IgnoreCase);
+            
+            if (listTarData.Length == 2 && listTarAnaData.Length == 2 && listTarAnaData[listTarAnaData.Length - 1] == "Ident")
+            {
+                CleTarget = listTarData[listTarData.Length - 1];
+            }
+
+            else
+            {
+                //Error Route & Jump Back
+                codeOutput("");
+                tobeRead.SpeakAsync("");
+                LogOutput("");
+                return false;
+            }
+
+            if (ObjectFinder(CleTarget) == -1)
+            {
+                codeOutput(CleTarget + "対象名不存在");
+                tobeRead.SpeakAsync("削除する対象名" + CleTarget + "が不存在");
+                LogOutput(CleTarget + "対象名不存在");
+                return false;
+            }
+
+            //ObjDisplayed  表示された対象名のリスト
+            if (ObjDisplayed.Count != 0)
+            {
+                for (int i = 0; i < ObjDisplayed.Count; i++)
+                {
+                    if (ObjDisplayed[i].ToString() == CleTarget)
+                    {
+                        ObjDisplayed.RemoveAt(i);
+                    }
+                }
+            }
+
+            graphObj.Dispose();
+            debug_Image.Dispose();
+            graphObj = PreparePaper();
+            picBox.Image = debug_Image;
+            picBox.Refresh();
+            DotDataInitialization(ref forDisDots);
+            Dv2Instance.SetDots(forDisDots, BlinkInterval);
+
+            for (int i = 0; i < ObjDisplayed.Count; i++)
+            {
+                int loop = ObjectFinder(ObjDisplayed[i].ToString());
+
+                if (loop != -1)
+                {
+                    ParameterChecker(ObjAnalysis[loop], loop);
+                }
+            }
+            MakeObjectBraille();
+            return_flg = true;
+
+            return return_flg;
+        }
     }
 }

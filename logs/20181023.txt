@@ -1,0 +1,3 @@
+LogOutput >>  PrimaryScreen Size is  1920 : 1080
+IntNum|Comma|IntNum|Comma|IntNum|Comma|IntNum|Comma|IntNum|Rparen
+n

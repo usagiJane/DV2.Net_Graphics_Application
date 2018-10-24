@@ -20,7 +20,7 @@ namespace DV2.Net_Graphics_Application
             string[] chkData, commData;
             string backObjComm = ObjComm;
             ArrayList pointData = new ArrayList();
-            Pen picPen = new Pen(Color.Black, 1F);
+            Pen picPen = new Pen(Color.Black, 0.1F);
 
             //Processing
             AssignRemover(ref ObjComm);
@@ -138,10 +138,10 @@ namespace DV2.Net_Graphics_Application
             //pointData[1] 中心座標点 Y
             //pointData[2] 半径
             //LogOutput(DateTime.Now.ToString("HH:mm") + " 画像円を描く");
-            pointCx = Convert.ToInt16(pointData[0]) - Convert.ToInt16(pointData[2]) + offset;
-            pointCy = Convert.ToInt16(pointData[1]) - Convert.ToInt16(pointData[2]) + offset;
-            width = Convert.ToInt16(pointData[2]) * 2 + offset;
-            height = Convert.ToInt16(pointData[2]) * 2 + offset;
+            pointCx = Convert.ToInt16(pointData[0]) - Convert.ToInt16(pointData[2]) + offset + Point_Offset.X;
+            pointCy = Convert.ToInt16(pointData[1]) - Convert.ToInt16(pointData[2]) + offset + Point_Offset.Y;
+            width = Convert.ToInt16(pointData[2]) * 2;
+            height = Convert.ToInt16(pointData[2]) * 2;
 
             if (fillFlag)
             {
@@ -168,10 +168,10 @@ namespace DV2.Net_Graphics_Application
             //pointData[1] 中心座標点 Y
             //pointData[2] 半径
             //LogOutput(DateTime.Now.ToString("HH:mm") + " 画像円を描く");
-            pointCx = Convert.ToInt16(pointData[0]) - Convert.ToInt16(pointData[2]) + offset;
-            pointCy = Convert.ToInt16(pointData[1]) - Convert.ToInt16(pointData[2]) + offset;
-            width = Convert.ToInt16(pointData[2]) * 2 + offset;
-            height = Convert.ToInt16(pointData[2]) * 2 + offset;
+            pointCx = Convert.ToInt16(pointData[0]) - Convert.ToInt16(pointData[2]) + offset + Point_Offset.X;
+            pointCy = Convert.ToInt16(pointData[1]) - Convert.ToInt16(pointData[2]) + offset + Point_Offset.Y;
+            width = Convert.ToInt16(pointData[2]) * 2;
+            height = Convert.ToInt16(pointData[2]) * 2;
 
             if (fillFlag)
             {
@@ -183,6 +183,32 @@ namespace DV2.Net_Graphics_Application
                 //picPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 graphObj.DrawEllipse(picPen, pointCx, pointCy, width, height);
             }
+        }
+
+        public void Draw_PointMode(string ObjComm, string ObjAna)
+        {
+            LogOutput("Draw_PointMode");
+            //Define
+            string[] chkData, commData;
+            string backObjComm = ObjComm;
+            ArrayList pointData = new ArrayList();
+
+            //Processing
+            AssignRemover(ref ObjComm);
+            commData = Regex.Split(ObjComm, @"\|", RegexOptions.IgnoreCase);
+            chkData = Regex.Split(ObjAna, @"\|", RegexOptions.IgnoreCase);
+
+            for (int i = 0; i < chkData.Length; i++)
+            {
+                if (chkData[i] == "IntNum" || chkData[i] == "DblNum")
+                {
+                    pointData.Add(commData[i]);
+                }
+            }
+
+            //座標点の半径を手動的に
+            pointData.Add(2);
+            DrawCircleMode(ref pointData, true);
         }
     }
 }

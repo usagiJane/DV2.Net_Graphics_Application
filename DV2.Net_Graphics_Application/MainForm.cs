@@ -26,6 +26,7 @@ namespace DV2.Net_Graphics_Application
         ArrayList ObjName = new ArrayList();
         ArrayList ObjCommand = new ArrayList();
         ArrayList ObjAnalysis = new ArrayList();
+        ArrayList ObjDisplayed = new ArrayList();
 
         static Graphics graphObj;
         static Bitmap debug_Image;
@@ -58,8 +59,8 @@ namespace DV2.Net_Graphics_Application
             Solve, Get, Contact, Show, Clear, Rotation, SetPoint,
             /* 特別関数 */
             With, Point, Set, On, In,
-            //
-            Left, Right, Center, Bottom, Top
+            /* Position 位置*/
+            Position, Left, Right, Center, Bottom, Top
         }
 
         public struct ToKen
@@ -98,6 +99,25 @@ namespace DV2.Net_Graphics_Application
             this.textBox_Input.KeyDown += new KeyEventHandler(EnterKeyPress);
             this.tabControl_code.SelectedIndexChanged += new EventHandler(tabControl_code_SelectedIndexChanged);
             this.KeyDown += new KeyEventHandler(KeyMovement);
+
+            #region About the Tablet Event
+            MouseMove += new MouseEventHandler(this.TabletMouseMove);
+            #endregion
+
+            #region DV2 Key Event
+            allDotData = new int[picBox.Width + 48, picBox.Height + 32];
+            CheckForIllegalCrossThreadCalls = false;
+            Point_Offset.X = picBox.Width / 2;
+            Point_Offset.Y = picBox.Height / 2;
+
+            Dv2ConnectFunction(this);
+            Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(this.Dv2KeyEventHandle);
+            if (DV2.Net_Graphics_Application.Properties.Settings.Default.Dv2_DEBUG)
+            {
+                Dv2Instance.Connect();
+            }
+            #endregion
+
         }
 
         private void formloader(object sender, EventArgs e)
@@ -126,6 +146,11 @@ namespace DV2.Net_Graphics_Application
             //textBox_Input.Text = "c = Point(4, 7)";
             #endregion
 
+            //Draw a border style for the picture box
+            picBox.BorderStyle = BorderStyle.FixedSingle;
+            label6.BorderStyle = BorderStyle.FixedSingle;
+            label8.BorderStyle = BorderStyle.FixedSingle;
+            //Set the table control values
             tabControl_Graphics.Enabled = true;
             tabControl_Graphics.Visible = false;
             tabControl_code.Enabled = true;
@@ -143,16 +168,10 @@ namespace DV2.Net_Graphics_Application
             tobeRead.SpeakAsync("キーワードについて、大文字と小文字は区別されていません。");
             #endregion
 
-            #region DV2 Key Event
-            allDotData = new int[picBox.Width, picBox.Height];
-            CheckForIllegalCrossThreadCalls = false;
-            Dv2ConnectFunction(this);
-            Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(this.Dv2KeyEventHandle);
-            if(DV2.Net_Graphics_Application.Properties.Settings.Default.Dv2_DEBUG)
-            { 
-                Dv2Instance.Connect();
-            }
-            #endregion
+            //PrimaryScreen Size
+            int iActulaWidth = Screen.PrimaryScreen.Bounds.Width;
+            int iActulaHeight = Screen.PrimaryScreen.Bounds.Height;
+            LogOutput("PrimaryScreen Size is  " + iActulaWidth + " : " + iActulaHeight);
         }
 
         internal void LogOutput(Object log)
@@ -162,6 +181,8 @@ namespace DV2.Net_Graphics_Application
             textBox_log.Font = new Font(textBox_log.Font.FontFamily, FontSize);
             textBox_log.AppendText(log + "\r\n");
             //textBox_log.ScrollToCaret(); 
+            //Write the log file
+            LogFileWriter("LogOutput >>  " + log.ToString());
         }
 
         internal void codeOutput(Object log)
@@ -170,6 +191,8 @@ namespace DV2.Net_Graphics_Application
             textBox_code.Font = new Font(textBox_code.Font.FontFamily, FontSize);
             textBox_code.AppendText(log + "\r\n");
             textBox_code.ScrollToCaret();
+            //Write the log file
+            LogFileWriter("codeOutput >>  " + log.ToString());
         }
 
         private void tabControl_code_SelectedIndexChanged(object sender, EventArgs e)
@@ -180,6 +203,9 @@ namespace DV2.Net_Graphics_Application
             textBox_log.ScrollToCaret();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void InitializationBaseDatas()
         {
             //LogOutput("Progress in Initialization Base Datas...");
@@ -253,11 +279,11 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[44] = new KeyWord("set", TknKind.Set);
             KeyWdTbl[45] = new KeyWord("on", TknKind.On);
             KeyWdTbl[46] = new KeyWord("in", TknKind.In);
-            KeyWdTbl[49] = new KeyWord("right", TknKind.Right);
-            KeyWdTbl[50] = new KeyWord("left", TknKind.Left);
-            KeyWdTbl[51] = new KeyWord("center", TknKind.Center);
-            KeyWdTbl[52] = new KeyWord("bottom", TknKind.Bottom);
-            KeyWdTbl[53] = new KeyWord("top", TknKind.Top);
+            KeyWdTbl[49] = new KeyWord("right", TknKind.Position);
+            KeyWdTbl[50] = new KeyWord("left", TknKind.Position);
+            KeyWdTbl[51] = new KeyWord("center", TknKind.Position);
+            KeyWdTbl[52] = new KeyWord("bottom", TknKind.Position);
+            KeyWdTbl[53] = new KeyWord("top", TknKind.Position);
             //End of the Key Word Table List Mark
             KeyWdTbl[54] = new KeyWord("", TknKind.END_keylist);
         }
@@ -322,7 +348,7 @@ namespace DV2.Net_Graphics_Application
 
             LogOutput("picSize.Width: " + picSize.Width);
             LogOutput("picSize.Height: " + picSize.Height);
-            LogOutput("comboBox Pictype SelectedIndex: " + comboBox_codeType.SelectedIndex);
+            //LogOutput("comboBox Pictype SelectedIndex: " + comboBox_codeType.SelectedIndex);
             LogOutput("System String Processing Strated!");
 
             graphObj.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;

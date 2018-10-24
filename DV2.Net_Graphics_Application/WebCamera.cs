@@ -17,6 +17,8 @@ namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm
     {
+        bool capFlag = false;
+
         internal void CameraStart()
         {
             //カメラのパラメタ
@@ -69,6 +71,11 @@ namespace DV2.Net_Graphics_Application
                     {
                         double a = Math.Round(maxblob.Centroid.X, 2);
                         double b = Math.Round(maxblob.Centroid.Y, 2);
+
+                        //手動のキャリブレーション
+                        a = (a - 12) / 12.87;
+                        b = (b - 43) / 12.40;
+
                         //For Debug
                         textBox2.Text = a.ToString() + "," + b.ToString();
                     }
@@ -92,7 +99,7 @@ namespace DV2.Net_Graphics_Application
         {
             //To find the finger point which on the Graphics
             //カメラのパラメタ
-            bool capFlag = true;
+            capFlag = true;
             Mat tempImg, flipImg;
             Mat grayImg, renderImg;
             Mat srcImgbyCam = new Mat();
@@ -142,12 +149,17 @@ namespace DV2.Net_Graphics_Application
                     {
                         centerX = Math.Round(maxblob.Centroid.X, 2);
                         centerY = Math.Round(maxblob.Centroid.Y, 2);
-                        //For Debug
-                        textBox2.Text = centerX.ToString() + " , " + centerY.ToString();
 
                         //手動のキャリブレーション
-                        centerX = (centerX - 12) / 12.87;
-                        centerY = (centerY - 43) / 12.40;
+                        centerX = (int)((centerX - 12) / 12.87);
+                        centerY = (int)((centerY - 43) / 12.40);
+
+                        //手動のキャリブレーション Ⅱ
+                        centerX = (int)((centerX - 2) * 2);
+                        centerY = (int)((centerY - 1) * 2);
+
+                        //For Debug
+                        textBox2.Text = centerX.ToString() + " , " + centerY.ToString();
                     }
 
                     int keyValue = Cv2.WaitKey(100);
@@ -216,6 +228,7 @@ namespace DV2.Net_Graphics_Application
                 }
             }
 
+            //指先座標Get
             fingerPoint = FingerFinder(targetName);
             PointOnObject(ref fingerPoint, targetName);
 
@@ -295,6 +308,7 @@ namespace DV2.Net_Graphics_Application
                 LinePoints.Add(new Point(temp_X, temp_Y));
             }
 
+            fingerPoint.X = fingerPoint.X - movement.X;
             //マーカーの中心座標に似ている、座標点数を数える、X座標を基準として。
             foreach (Point loop in LinePoints)
             {

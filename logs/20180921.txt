@@ -1,0 +1,8 @@
+LogOutput >>  c|=|Point|(|7|,|19|)
+t!
+ (3)
+   
+--------
+/21 17:02:09  *******
+omma|IntNum|Rparen
+n

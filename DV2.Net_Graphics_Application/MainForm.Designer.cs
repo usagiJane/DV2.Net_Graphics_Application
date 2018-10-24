@@ -39,17 +39,21 @@
             this.textBox_log = new System.Windows.Forms.TextBox();
             this.tabPage_pms = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.dataStorage = new System.Windows.Forms.TextBox();
             this.comboBox_codeType = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.tabControl_Graphics = new System.Windows.Forms.TabControl();
             this.tabPage_outPut = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox_pic = new System.Windows.Forms.GroupBox();
             this.picBox = new System.Windows.Forms.PictureBox();
-            this.tabControl_Graphics = new System.Windows.Forms.TabControl();
             this.tabPage_camera = new System.Windows.Forms.TabPage();
             this.tabPage_dataGridView = new System.Windows.Forms.TabPage();
             this.dataGridView_monitor = new System.Windows.Forms.DataGridView();
@@ -61,10 +65,10 @@
             this.tabPage_log.SuspendLayout();
             this.groupBox_log.SuspendLayout();
             this.tabPage_pms.SuspendLayout();
+            this.tabControl_Graphics.SuspendLayout();
             this.tabPage_outPut.SuspendLayout();
             this.groupBox_pic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
-            this.tabControl_Graphics.SuspendLayout();
             this.tabPage_dataGridView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_monitor)).BeginInit();
             this.SuspendLayout();
@@ -75,10 +79,10 @@
             this.tabControl_code.Controls.Add(this.tabPage_code);
             this.tabControl_code.Controls.Add(this.tabPage_log);
             this.tabControl_code.Controls.Add(this.tabPage_pms);
-            this.tabControl_code.Location = new System.Drawing.Point(8, 8);
+            this.tabControl_code.Location = new System.Drawing.Point(1116, 12);
             this.tabControl_code.Name = "tabControl_code";
             this.tabControl_code.SelectedIndex = 0;
-            this.tabControl_code.Size = new System.Drawing.Size(768, 496);
+            this.tabControl_code.Size = new System.Drawing.Size(792, 501);
             this.tabControl_code.TabIndex = 4;
             // 
             // tabPage_code
@@ -89,7 +93,7 @@
             this.tabPage_code.Location = new System.Drawing.Point(4, 22);
             this.tabPage_code.Name = "tabPage_code";
             this.tabPage_code.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_code.Size = new System.Drawing.Size(760, 470);
+            this.tabPage_code.Size = new System.Drawing.Size(784, 475);
             this.tabPage_code.TabIndex = 0;
             this.tabPage_code.Text = "画像コード";
             this.tabPage_code.UseVisualStyleBackColor = true;
@@ -126,7 +130,7 @@
             this.tabPage_log.Location = new System.Drawing.Point(4, 22);
             this.tabPage_log.Name = "tabPage_log";
             this.tabPage_log.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_log.Size = new System.Drawing.Size(760, 470);
+            this.tabPage_log.Size = new System.Drawing.Size(784, 475);
             this.tabPage_log.TabIndex = 1;
             this.tabPage_log.Text = "LogDatas";
             this.tabPage_log.UseVisualStyleBackColor = true;
@@ -136,7 +140,7 @@
             this.groupBox_log.Controls.Add(this.textBox_log);
             this.groupBox_log.Location = new System.Drawing.Point(24, 24);
             this.groupBox_log.Name = "groupBox_log";
-            this.groupBox_log.Size = new System.Drawing.Size(712, 352);
+            this.groupBox_log.Size = new System.Drawing.Size(712, 405);
             this.groupBox_log.TabIndex = 0;
             this.groupBox_log.TabStop = false;
             this.groupBox_log.Text = "Logs";
@@ -148,23 +152,19 @@
             this.textBox_log.Name = "textBox_log";
             this.textBox_log.ReadOnly = true;
             this.textBox_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox_log.Size = new System.Drawing.Size(696, 328);
+            this.textBox_log.Size = new System.Drawing.Size(696, 379);
             this.textBox_log.TabIndex = 0;
             // 
             // tabPage_pms
             // 
             this.tabPage_pms.Controls.Add(this.button1);
-            this.tabPage_pms.Controls.Add(this.label3);
-            this.tabPage_pms.Controls.Add(this.label2);
-            this.tabPage_pms.Controls.Add(this.textBox3);
-            this.tabPage_pms.Controls.Add(this.textBox2);
+            this.tabPage_pms.Controls.Add(this.label1);
             this.tabPage_pms.Controls.Add(this.dataStorage);
             this.tabPage_pms.Controls.Add(this.comboBox_codeType);
-            this.tabPage_pms.Controls.Add(this.label1);
             this.tabPage_pms.Location = new System.Drawing.Point(4, 22);
             this.tabPage_pms.Name = "tabPage_pms";
             this.tabPage_pms.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_pms.Size = new System.Drawing.Size(760, 470);
+            this.tabPage_pms.Size = new System.Drawing.Size(784, 475);
             this.tabPage_pms.TabIndex = 2;
             this.tabPage_pms.Text = "システムパラメータ";
             this.tabPage_pms.UseVisualStyleBackColor = true;
@@ -179,37 +179,14 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label3
+            // label1
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 120);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 12);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "Get用点座標";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 72);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 12);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "中心座標";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(24, 136);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(160, 19);
-            this.textBox3.TabIndex = 10;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(24, 88);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(160, 19);
-            this.textBox2.TabIndex = 9;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(24, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(55, 12);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "分裂タイプ";
             // 
             // dataStorage
             // 
@@ -228,62 +205,129 @@
             this.comboBox_codeType.Size = new System.Drawing.Size(160, 20);
             this.comboBox_codeType.TabIndex = 7;
             // 
-            // label1
+            // label2
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 12);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "分裂タイプ";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(497, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(53, 12);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "中心座標";
             // 
-            // tabPage_outPut
+            // label3
             // 
-            this.tabPage_outPut.Controls.Add(this.groupBox_pic);
-            this.tabPage_outPut.Location = new System.Drawing.Point(4, 22);
-            this.tabPage_outPut.Name = "tabPage_outPut";
-            this.tabPage_outPut.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_outPut.Size = new System.Drawing.Size(632, 454);
-            this.tabPage_outPut.TabIndex = 0;
-            this.tabPage_outPut.Text = "画像出力";
-            this.tabPage_outPut.UseVisualStyleBackColor = true;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(479, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(71, 12);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Get用点座標";
             // 
-            // groupBox_pic
+            // textBox2
             // 
-            this.groupBox_pic.Controls.Add(this.picBox);
-            this.groupBox_pic.Location = new System.Drawing.Point(8, 8);
-            this.groupBox_pic.Name = "groupBox_pic";
-            this.groupBox_pic.Size = new System.Drawing.Size(616, 440);
-            this.groupBox_pic.TabIndex = 5;
-            this.groupBox_pic.TabStop = false;
-            this.groupBox_pic.Text = "Analog Signal";
+            this.textBox2.Location = new System.Drawing.Point(556, 6);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(70, 19);
+            this.textBox2.TabIndex = 9;
             // 
-            // picBox
+            // textBox3
             // 
-            this.picBox.Location = new System.Drawing.Point(8, 16);
-            this.picBox.Name = "picBox";
-            //this.picBox.Size = new System.Drawing.Size(600, 400);
-            this.picBox.Size = new System.Drawing.Size(144, 96);
-            this.picBox.TabIndex = 4;
-            this.picBox.TabStop = false;
+            this.textBox3.Location = new System.Drawing.Point(556, 31);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(70, 19);
+            this.textBox3.TabIndex = 10;
             // 
             // tabControl_Graphics
             // 
             this.tabControl_Graphics.Controls.Add(this.tabPage_outPut);
             this.tabControl_Graphics.Controls.Add(this.tabPage_camera);
             this.tabControl_Graphics.Controls.Add(this.tabPage_dataGridView);
-            this.tabControl_Graphics.Location = new System.Drawing.Point(832, 24);
+            this.tabControl_Graphics.Location = new System.Drawing.Point(1180, 519);
             this.tabControl_Graphics.Name = "tabControl_Graphics";
             this.tabControl_Graphics.SelectedIndex = 0;
-            this.tabControl_Graphics.Size = new System.Drawing.Size(640, 480);
+            this.tabControl_Graphics.Size = new System.Drawing.Size(640, 450);
             this.tabControl_Graphics.TabIndex = 5;
+            // 
+            // tabPage_outPut
+            // 
+            this.tabPage_outPut.Controls.Add(this.label6);
+            this.tabPage_outPut.Controls.Add(this.label8);
+            this.tabPage_outPut.Controls.Add(this.label2);
+            this.tabPage_outPut.Controls.Add(this.label3);
+            this.tabPage_outPut.Controls.Add(this.label7);
+            this.tabPage_outPut.Controls.Add(this.textBox2);
+            this.tabPage_outPut.Controls.Add(this.label5);
+            this.tabPage_outPut.Controls.Add(this.textBox3);
+            this.tabPage_outPut.Controls.Add(this.groupBox_pic);
+            this.tabPage_outPut.Location = new System.Drawing.Point(4, 22);
+            this.tabPage_outPut.Name = "tabPage_outPut";
+            this.tabPage_outPut.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_outPut.Size = new System.Drawing.Size(632, 424);
+            this.tabPage_outPut.TabIndex = 0;
+            this.tabPage_outPut.Text = "画像出力";
+            this.tabPage_outPut.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(135, 24);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(11, 12);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "0";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(135, 46);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(11, 12);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "0";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(52, 46);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(68, 12);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "Movement Y";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(52, 24);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(68, 12);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "Movement X";
+            // 
+            // groupBox_pic
+            // 
+            this.groupBox_pic.Controls.Add(this.picBox);
+            this.groupBox_pic.Location = new System.Drawing.Point(128, 88);
+            this.groupBox_pic.Name = "groupBox_pic";
+            this.groupBox_pic.Size = new System.Drawing.Size(386, 262);
+            this.groupBox_pic.TabIndex = 5;
+            this.groupBox_pic.TabStop = false;
+            this.groupBox_pic.Text = "Analog Signal";
+            // 
+            // picBox
+            // 
+            this.picBox.BackColor = System.Drawing.Color.Transparent;
+            this.picBox.Location = new System.Drawing.Point(119, 83);
+            this.picBox.Name = "picBox";
+            this.picBox.Size = new System.Drawing.Size(144, 96);
+            this.picBox.TabIndex = 4;
+            this.picBox.TabStop = false;
             // 
             // tabPage_camera
             // 
             this.tabPage_camera.Location = new System.Drawing.Point(4, 22);
             this.tabPage_camera.Name = "tabPage_camera";
             this.tabPage_camera.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_camera.Size = new System.Drawing.Size(632, 454);
+            this.tabPage_camera.Size = new System.Drawing.Size(632, 424);
             this.tabPage_camera.TabIndex = 1;
             this.tabPage_camera.Text = "Real Camera";
             this.tabPage_camera.UseVisualStyleBackColor = true;
@@ -294,7 +338,7 @@
             this.tabPage_dataGridView.Location = new System.Drawing.Point(4, 22);
             this.tabPage_dataGridView.Name = "tabPage_dataGridView";
             this.tabPage_dataGridView.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_dataGridView.Size = new System.Drawing.Size(632, 454);
+            this.tabPage_dataGridView.Size = new System.Drawing.Size(632, 424);
             this.tabPage_dataGridView.TabIndex = 2;
             this.tabPage_dataGridView.Text = "DataGridView";
             this.tabPage_dataGridView.UseVisualStyleBackColor = true;
@@ -336,12 +380,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1476, 593);
+            this.ClientSize = new System.Drawing.Size(1920, 980);
             this.Controls.Add(this.tabControl_code);
             this.Controls.Add(this.tabControl_Graphics);
             this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "Graphics Form";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.formloader);
             this.tabControl_code.ResumeLayout(false);
             this.tabPage_code.ResumeLayout(false);
@@ -351,10 +396,11 @@
             this.groupBox_log.PerformLayout();
             this.tabPage_pms.ResumeLayout(false);
             this.tabPage_pms.PerformLayout();
+            this.tabControl_Graphics.ResumeLayout(false);
             this.tabPage_outPut.ResumeLayout(false);
+            this.tabPage_outPut.PerformLayout();
             this.groupBox_pic.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
-            this.tabControl_Graphics.ResumeLayout(false);
             this.tabPage_dataGridView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_monitor)).EndInit();
             this.ResumeLayout(false);
@@ -373,6 +419,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.GroupBox groupBox_pic;
         //PictureBox
         private System.Windows.Forms.PictureBox picBox;

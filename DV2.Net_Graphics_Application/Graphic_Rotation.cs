@@ -280,7 +280,7 @@ namespace DV2.Net_Graphics_Application
 
         private void Rotation(string ObjComm, string ObjAna)
         {
-            bool fk;
+            //bool fk;
             double degree = 45;
             Bitmap outputImage;
             LogOutput("for Debug");

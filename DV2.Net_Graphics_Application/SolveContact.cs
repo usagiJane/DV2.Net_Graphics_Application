@@ -136,13 +136,15 @@ namespace DV2.Net_Graphics_Application
                 index++;
             }
 
-            double slopeA = Math.Round((Convert.ToDouble(lineData[3]) - Convert.ToDouble(lineData[1])) / (Convert.ToDouble(lineData[2]) - Convert.ToDouble(lineData[0])));
+            double slopeA = Math.Round((Convert.ToDouble(lineData[3]) - Convert.ToDouble(lineData[1])) / (Convert.ToDouble(lineData[2]) - Convert.ToDouble(lineData[0])), 5);
+            //データの有効性判断
+            IsInfinityOrNaN(ref slopeA);
             //点 C1
-            double C1x = Math.Round(Convert.ToDouble(pData[0]) - slopeA * Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
-            double C1y = Math.Round(Convert.ToDouble(pData[1]) + Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
+            double C1x = Math.Round(Convert.ToDouble(pData[0]) - slopeA * Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)), 2);
+            double C1y = Math.Round(Convert.ToDouble(pData[1]) + Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)), 2);
             //点 C2
-            double C2x = Math.Round(Convert.ToDouble(pData[0]) + slopeA * Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
-            double C2y = Math.Round(Convert.ToDouble(pData[1]) - Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)));
+            double C2x = Math.Round(Convert.ToDouble(pData[0]) + slopeA * Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)), 2);
+            double C2y = Math.Round(Convert.ToDouble(pData[1]) - Convert.ToDouble(cirData[0]) * Math.Sqrt(1 / (Math.Pow(slopeA, 2) + 1)), 2);
 
             ArrayList pointData = new ArrayList();
             //Pen picPen = new Pen(Color.Black, 2.7F);
@@ -153,15 +155,21 @@ namespace DV2.Net_Graphics_Application
             pointData.Add(C2x); pointData.Add(C2y); pointData.Add(3);
             DrawCircleMode(ref pointData, true);
 
-            LogOutput("Debug");
+            //Reflush
+            picBox.Refresh();
+            MakeObjectBraille();
+
+            LogOutput("Debug TheSolveMode Secound Touch.");
             //ここから、指先を探す機能付き
             tobeRead.SpeakAsync("もう一度触ってください。");
             Point fingerPoint = new Point(0, 0);
             double distanceCir1, distanceCir2 = 0.0;
 
             fingerPoint = FingerFinder();
+            LogOutput("The Secound Touch Point :  " + fingerPoint);
             distanceCir1 = Math.Sqrt(Math.Abs(C1x - fingerPoint.X) * Math.Abs(C1x - fingerPoint.X) + Math.Abs(C1y - fingerPoint.Y) * Math.Abs(C1y - fingerPoint.Y));
             distanceCir2 = Math.Sqrt(Math.Abs(C2x - fingerPoint.X) * Math.Abs(C2x - fingerPoint.X) + Math.Abs(C2y - fingerPoint.Y) * Math.Abs(C2y - fingerPoint.Y));
+            LogOutput("");
 
             if (distanceCir1 > distanceCir2)
             {
@@ -199,5 +207,63 @@ namespace DV2.Net_Graphics_Application
             #endregion
         }
 
+        /// <summary>
+        /// 数字がInfinityとNaNの場合は0に変換する。
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns>True データが0に変換した</returns>
+        /// <returns>False データが変換されていない</returns>
+        public bool IsInfinityOrNaN(ref double num)
+        {
+            if (double.IsNaN(num))
+            {
+                num = 0;
+                return true;
+            }
+
+            if (double.IsInfinity(num))
+            {
+                num = 0;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// SetPointMode相対位置機能関数
+        /// </summary>
+        /// <param name="objCommData"></param>
+        /// <param name="objAnaData"></param>
+        public void TheSetPointMode(string objCommData, string objAnaData)
+        {
+            //objA: setpoint(left, objB, right, 10, 0)
+            //objCommData objA|:|setpoint|(|left|,|objB|,|right|,|10|,|0|)
+            //objAnaData  Ident|Colon|SetPoint|Lparen|Position|Comma|Ident|Comma|Position|Comma|IntNum|Comma|IntNum|Rparen
+            //Define
+            List<int> positionData = new List<int>();
+            List<string> targetIdent = new List<string>();
+            string[] listCommData = Regex.Split(objCommData, @"\|", RegexOptions.IgnoreCase);
+            string[] listAnaData = Regex.Split(objAnaData, @"\|", RegexOptions.IgnoreCase);
+
+            //string finder in listAnaData
+            for (int i = 0; i < listAnaData.Length; i++)
+            {
+                if (listAnaData[i] == "Ident")
+                {
+                    if (ObjectFinder(listAnaData[i]) != -1)
+                    {
+                        targetIdent.Add(listAnaData[i]);
+                    }
+                }
+
+                if (listAnaData[i] == "Position")
+                {
+                    positionData.Add(i);
+                }
+            }
+
+
+        }
     }
 }

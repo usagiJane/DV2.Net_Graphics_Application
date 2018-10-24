@@ -22,10 +22,15 @@ namespace DV2.Net_Graphics_Application
             //System.Windows.Forms.MessageBox.Show("Draw_LineMode");
 
             //Define
+            double distance = 0.0;
+            #region pointData.Count -> 5 用パラメーター
+            double unKnownX = 0, unKnownY = 0;
+            double slopeA = 0, InterceptB = 0, alpha = 0;
+            #endregion
             string[] chkData, commData;
             string backObjComm = ObjComm;
             ArrayList pointData = new ArrayList();
-            Pen picPen = new Pen(Color.Black, 1F);
+            Pen picPen = new Pen(Color.Black, 0.1F);
 
             //Processing
             AssignRemover(ref ObjComm);
@@ -48,6 +53,89 @@ namespace DV2.Net_Graphics_Application
             {
                 DrawLine(ref pointData, picPen, true);
             }
+            else if (commData[0].ToLower() == "line" && chkData[0] == "Line" && pointData.Count == 5)
+            {
+                LogOutput("LIne new mode debugging");
+                //distance = 0.0;
+                distance = Math.Sqrt((Convert.ToDouble(pointData[0]) - Convert.ToDouble(pointData[3])) * (Convert.ToDouble(pointData[0]) - Convert.ToDouble(pointData[3])) + (Convert.ToDouble(pointData[2]) - Convert.ToDouble(pointData[4])) * (Convert.ToDouble(pointData[2]) - Convert.ToDouble(pointData[4])));
+                //y = Ax + B
+                slopeA = Math.Round((Convert.ToDouble(pointData[3]) - Convert.ToDouble(pointData[1])) / (Convert.ToDouble(pointData[2]) - Convert.ToDouble(pointData[0])), 5);
+                //データの有効性判断
+                if (IsInfinityOrNaN(ref slopeA))
+                {
+                    //垂直処理
+                    //InterceptB = Convert.ToDouble(pointData[3]);
+                    //alpha = Math.Atan(slopeA);
+
+                    unKnownX = Convert.ToDouble(pointData[2]);
+                    unKnownY = Convert.ToDouble(pointData[3]) + Convert.ToDouble(pointData[4]);
+                }
+
+                else if (!IsInfinityOrNaN(ref slopeA) && slopeA == 0)
+                {
+                    //平行処理
+                    unKnownX = Convert.ToDouble(pointData[2]) + Convert.ToDouble(pointData[4]);
+                    unKnownY = Convert.ToDouble(pointData[3]);
+                }
+
+                else
+                {
+                    //通常処理
+                    InterceptB = Convert.ToDouble(pointData[3]) - slopeA * Convert.ToDouble(pointData[2]);
+                    alpha = Math.Atan(slopeA);
+
+                    unKnownX = Math.Round(Convert.ToDouble(pointData[2]) + Convert.ToDouble(pointData[4]) * Math.Cos(alpha), 2);
+                    unKnownY = Math.Round(Convert.ToDouble(pointData[3]) + Convert.ToDouble(pointData[4]) * Math.Sin(alpha), 2);
+                }
+
+                ArrayList temp_pointData = new ArrayList();
+                //Pen picPen = new Pen(Color.Black, 0.1F);
+                temp_pointData.Add(pointData[0]); temp_pointData.Add(pointData[1]);
+                temp_pointData.Add(unKnownX); temp_pointData.Add(unKnownY);
+                DrawLine(ref temp_pointData, picPen);
+            }
+            else if (commData[0].ToLower() == "dashline" && chkData[0] == "DashLine" && pointData.Count == 5)
+            {
+                LogOutput("DashLIne new mode debugging");
+                //distance = 0.0;
+                distance = Math.Sqrt((Convert.ToInt32(pointData[0]) - Convert.ToInt32(pointData[3])) * (Convert.ToInt32(pointData[0]) - Convert.ToInt32(pointData[3])) + (Convert.ToInt32(pointData[2]) - Convert.ToInt32(pointData[4])) * (Convert.ToInt32(pointData[2]) - Convert.ToInt32(pointData[4])));
+                //y = Ax + B
+                slopeA = Math.Round((Convert.ToDouble(pointData[3]) - Convert.ToDouble(pointData[1])) / (Convert.ToDouble(pointData[2]) - Convert.ToDouble(pointData[0])), 5);
+                //データの有効性判断
+                if (IsInfinityOrNaN(ref slopeA))
+                {
+                    //垂直処理
+                    //InterceptB = Convert.ToDouble(pointData[3]);
+                    //alpha = Math.Atan(slopeA);
+
+                    unKnownX = Convert.ToDouble(pointData[2]);
+                    unKnownY = Convert.ToDouble(pointData[3]) + Convert.ToDouble(pointData[4]);
+                }
+
+                else if (!IsInfinityOrNaN(ref slopeA) && slopeA == 0)
+                {
+                    //平行処理
+                    unKnownX = Convert.ToDouble(pointData[2]) + Convert.ToDouble(pointData[4]);
+                    unKnownY = Convert.ToDouble(pointData[3]);
+                }
+
+                else
+                {
+                    //通常処理
+                    InterceptB = Convert.ToDouble(pointData[3]) - slopeA * Convert.ToDouble(pointData[2]);
+                    alpha = Math.Atan(slopeA);
+
+                    unKnownX = Math.Round(Convert.ToDouble(pointData[2]) + Convert.ToDouble(pointData[4]) * Math.Cos(alpha), 2);
+                    unKnownY = Math.Round(Convert.ToDouble(pointData[3]) + Convert.ToDouble(pointData[4]) * Math.Sin(alpha), 2);
+                }
+
+                ArrayList temp_pointData = new ArrayList();
+                //Pen picPen = new Pen(Color.Black, 0.1F);
+                temp_pointData.Add(pointData[0]); temp_pointData.Add(pointData[1]);
+                temp_pointData.Add(unKnownX); temp_pointData.Add(unKnownY);
+                
+                DrawLine(ref temp_pointData, picPen, true);
+            }
             else
             {
                 tobeRead.SpeakAsync("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
@@ -64,10 +152,10 @@ namespace DV2.Net_Graphics_Application
             float pointAx = 0, pointAy = 0, pointBx = 0, pointBy = 0;
 
             //座標計算
-            pointAx = Convert.ToSingle(pointData[0]) + offset;
-            pointAy = Convert.ToSingle(pointData[1]) + offset;
-            pointBx = Convert.ToSingle(pointData[2]) + offset;
-            pointBy = Convert.ToSingle(pointData[3]) + offset;
+            pointAx = Convert.ToSingle(pointData[0]) + offset + Point_Offset.X;
+            pointAy = Convert.ToSingle(pointData[1]) + offset + Point_Offset.Y;
+            pointBx = Convert.ToSingle(pointData[2]) + offset + Point_Offset.X;
+            pointBy = Convert.ToSingle(pointData[3]) + offset + Point_Offset.Y;
             
             if(dashFlag)
             {
@@ -135,10 +223,10 @@ namespace DV2.Net_Graphics_Application
             float pointAx = 0, pointAy = 0, pointBx = 0, pointBy = 0;
 
             //座標計算
-            pointAx = Convert.ToSingle(pointData[0]) + offset;
-            pointAy = Convert.ToSingle(pointData[1]) + offset;
-            pointBx = Convert.ToSingle(pointData[2]) + offset;
-            pointBy = Convert.ToSingle(pointData[3]) + offset;
+            pointAx = Convert.ToSingle(pointData[0]) + offset + Point_Offset.X;
+            pointAy = Convert.ToSingle(pointData[1]) + offset + Point_Offset.Y;
+            pointBx = Convert.ToSingle(pointData[2]) + offset + Point_Offset.X;
+            pointBy = Convert.ToSingle(pointData[3]) + offset + Point_Offset.Y;
 
             if (dashFlag)
             {

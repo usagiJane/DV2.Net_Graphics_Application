@@ -32,6 +32,8 @@ namespace DV2.Net_Graphics_Application
             bool objPlus_flg = false;
             bool rotation_flg = false;
             bool setPoint_flg = false;
+            bool clear_flg = false;
+            bool cleartar_flg = false;
             #endregion
 
             //Debug
@@ -202,15 +204,25 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region Clear Route
+                    #region Clear Object Route
+                    if (token.kind == TknKind.Ident)
+                    {
+                        if (bef_tok_kind == TknKind.Clear)
+                        {
+                            LogOutput("Clear The graphObj");
+                            cleartar_flg = true;
+                        }
+                    }
+                    #endregion
+
+                    #region Clear ALL Route
                     if (token.kind == TknKind.Clear)
                     {
-                        LogOutput("Clear The graphObj");
-                        graphObj.Dispose();
-                        debug_Image.Dispose();
-                        graphObj = PreparePaper();
-                        picBox.Image = (Image)debug_Image;
-                        picBox.Refresh();
+                        if (dataStorage.Text.Length != 0 && dataStorage.Text.ToLower() == "clear")
+                        {
+                            LogOutput("Clear ALL The graphObj");
+                            clear_flg = true;
+                        }
                     }
                     #endregion
 
@@ -363,7 +375,7 @@ namespace DV2.Net_Graphics_Application
                 objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
 
                 if (Regex.Split(objAnalysisData, @"\|", RegexOptions.IgnoreCase).Count() == 4)
-                { 
+                {
                     GetPointOnObject(objCommandData, objAnalysisData);
                 }
                 else
@@ -460,6 +472,48 @@ namespace DV2.Net_Graphics_Application
                 LogOutput("objCommandData     " + objCommandData);
                 LogOutput("objAnalysisData    " + objAnalysisData);
 
+                TheSetPointMode(objCommandData, objAnalysisData);
+            }
+            #endregion
+
+            #region Clear Route
+            if (clear_flg)
+            {
+                graphObj.Dispose();
+                debug_Image.Dispose();
+                graphObj = PreparePaper();
+                picBox.Image = (Image)debug_Image;
+                picBox.Refresh();
+                DotDataInitialization(ref forDisDots);
+                Dv2Instance.SetDots(forDisDots, BlinkInterval);
+            }
+
+            if (cleartar_flg)
+            {
+                //clear objA
+                //objCommandData   clear|objA
+                //objAnalysisData  Clear|Ident
+                objCommandData = objCommandData.Substring(0, objCommandData.Length - 1);
+                objAnalysisData = objAnalysisData.Substring(0, objAnalysisData.Length - 1);
+                LogOutput("objCommandData     " + objCommandData);
+                LogOutput("objAnalysisData    " + objAnalysisData);
+
+                if (ObjDisplayed.Count == 1 || ObjDisplayed.Count == 0)
+                {
+                    graphObj.Dispose();
+                    debug_Image.Dispose();
+                    graphObj = PreparePaper();
+                    picBox.Image = (Image)debug_Image;
+                    picBox.Refresh();
+                    DotDataInitialization(ref forDisDots);
+                    Dv2Instance.SetDots(forDisDots, BlinkInterval);
+                }
+
+                else
+                {
+                    //Processing
+                    ClearTargetAndCheck(objCommandData, objAnalysisData);
+                }
 
             }
             #endregion
@@ -702,6 +756,9 @@ namespace DV2.Net_Graphics_Application
             //Debug GraphCmd
             LogOutput("@ParameterChecker  ># " + GraphCmd + " #<");
 
+            //Save Displayed Object
+            ObjDisplayed.Add(ObjName[listIndex]);
+
             #region GraphicInstruction
             if (Regex.IsMatch(GraphicInstruction, GraphCmd, RegexOptions.IgnoreCase))
             {
@@ -786,6 +843,7 @@ namespace DV2.Net_Graphics_Application
                         LogOutput("switch GraphCmd Point -- " + temp_ObjCom);
                         LogOutput("switch GraphCmd Point -- " + temp_ObjAna);
 
+                        Draw_PointMode(temp_ObjCom, temp_ObjAna);
                         break;
                     default:
                         codeOutput("Error @ParameterChecker @644");
