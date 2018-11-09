@@ -10,13 +10,17 @@ namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm
     {
+        #region Log4Net
+        private log4net.ILog DV2SysLogger = log4net.LogManager.GetLogger("DV2");
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tobeWirted"></param>
-        public void LogFileWriter(string tobeWirted)
+        public static void LogFileWriter(string tobeWirted)
         {
-            string exportPath = "D:\\Takagi_lab\\Projects\\DV2.Net_Graphics_Application\\logs\\"+ DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            string exportPath = "D:\\Takagi_lab\\Projects\\DV2.Net_Graphics_Application\\Logs\\"+ DateTime.Now.ToString("yyyyMMdd") + ".txt";
             string path2 = Environment.CurrentDirectory;
             try
             {
@@ -121,6 +125,7 @@ namespace DV2.Net_Graphics_Application
                 string tishiMsg = "[" + datetime + "]写入日志出错：" + ex.Message;
             }
         }
+
 
     }
 }

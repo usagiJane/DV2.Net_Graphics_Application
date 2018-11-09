@@ -12,6 +12,10 @@ namespace DV2.Net_Graphics_Application
     //class Graphic_Rotation
     public partial class MainForm
     {
+        #region MarkFlags
+        private bool BeRotated = false;
+        #endregion
+
         public void Graphic_Rotation()
         {
             #region enko

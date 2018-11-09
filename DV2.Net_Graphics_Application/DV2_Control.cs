@@ -14,9 +14,10 @@ namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm
     {
+        #region DV2 Global Parameter
         //private const float pub_offSet = 35f;
         private const float pub_offSet = 0f;
-        private readonly Pen pub_picPen = new Pen(Color.LightBlue, 1F);
+        private readonly Pen pub_picPen = new Pen(Color.Black, 0.1F);
         //表示用の配列を用意する
         private int[,] forDisDots = new int[48, 32];
         private int[,] allDotData;
@@ -24,6 +25,7 @@ namespace DV2.Net_Graphics_Application
         Point movement;
         //静態平行移動量, 
         static Point Point_Offset = new Point(0, 0);
+        #endregion
 
         public void Dv2ConnectFunction(MainForm fm)
         {
@@ -120,7 +122,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 入力した対象名が存在するかどうかを判断する関数
+        /// 入力した対象名が「ObjName」配列の中に存在するかどうかを判断する関数
         /// </summary>
         /// <param name="targetName">入力した対象名</param>
         /// <returns>不存在の場合は　-1</returns>
@@ -131,6 +133,50 @@ namespace DV2.Net_Graphics_Application
             int index = 0;
 
             foreach (string finder in ObjName)
+            {
+                if (finder.ToLower() == targetName.ToLower())
+                {
+                    return index;
+                }
+                index += 1;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// 入力した対象名が「ObjCommand」配列の中に存在するかどうかを判断する関数
+        /// </summary>
+        /// <param name="targetCommand">入力した対象名</param>
+        /// <returns>不存在の場合は　-1</returns>
+        /// <returns>存在する場合は　適当な数字</returns>
+        public int ObjectCommandFinder(string targetCommand)
+        {
+            //Find the targetName in the ArrayList ObjName
+            int index = 0;
+
+            foreach (string finder in ObjCommand)
+            {
+                if (finder.ToLower() == targetCommand.ToLower())
+                {
+                    return index;
+                }
+                index += 1;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// 入力した対象名が「ObjDisplayed」配列の中に存在するかどうかを判断する関数
+        /// </summary>
+        /// <param name="targetName">入力した対象名</param>
+        /// <returns>不存在の場合は　-1</returns>
+        /// <returns>存在する場合は　適当な数字</returns>
+        public int DisplayedObjectFinder(string targetName)
+        {
+            //Find the targetName in the ArrayList ObjName
+            int index = 0;
+
+            foreach (string finder in ObjDisplayed)
             {
                 if (finder.ToLower() == targetName.ToLower())
                 {
@@ -519,8 +565,8 @@ namespace DV2.Net_Graphics_Application
                     }
                 }
                 Dv2Instance.SetDots(forDisDots, BlinkInterval);
-                label6.Text = movement.X.ToString();
-                label8.Text = movement.Y.ToString();
+                label_posX.Text = movement.X.ToString();
+                label_posY.Text = movement.Y.ToString();
             }
         }
 
@@ -697,8 +743,8 @@ namespace DV2.Net_Graphics_Application
                     }
                 }
                 Dv2Instance.SetDots(forDisDots, BlinkInterval);
-                label6.Text = movement.X.ToString();
-                label8.Text = movement.Y.ToString();
+                label_posX.Text = movement.X.ToString();
+                label_posY.Text = movement.Y.ToString();
             }
         }
 
@@ -710,6 +756,8 @@ namespace DV2.Net_Graphics_Application
         /// <returns>処理結果を返し、成功や失敗</returns>
         private bool ClearTargetAndCheck(string targetData, string targetAna)
         {
+            //Define
+            int tobeDisplay = 0;
             bool return_flg = false;
             string CleTarget;
             string[] listTarData = Regex.Split(targetData, @"\|", RegexOptions.IgnoreCase);
@@ -745,6 +793,7 @@ namespace DV2.Net_Graphics_Application
                     if (ObjDisplayed[i].ToString() == CleTarget)
                     {
                         ObjDisplayed.RemoveAt(i);
+                        LogOutput("**********************" + "対象" + CleTarget + "を削除完了!" + "**********************");
                     }
                 }
             }
@@ -756,8 +805,9 @@ namespace DV2.Net_Graphics_Application
             picBox.Refresh();
             DotDataInitialization(ref forDisDots);
             Dv2Instance.SetDots(forDisDots, BlinkInterval);
+            tobeDisplay = ObjDisplayed.Count;
 
-            for (int i = 0; i < ObjDisplayed.Count; i++)
+            for (int i = 0; i < tobeDisplay; i++)
             {
                 int loop = ObjectFinder(ObjDisplayed[i].ToString());
 
@@ -766,6 +816,7 @@ namespace DV2.Net_Graphics_Application
                     ParameterChecker(ObjAnalysis[loop], loop);
                 }
             }
+            picBox.Refresh();
             MakeObjectBraille();
             return_flg = true;
 

@@ -92,6 +92,7 @@ namespace DV2.Net_Graphics_Application
                 //Pen picPen = new Pen(Color.Black, 0.1F);
                 temp_pointData.Add(pointData[0]); temp_pointData.Add(pointData[1]);
                 temp_pointData.Add(unKnownX); temp_pointData.Add(unKnownY);
+
                 DrawLine(ref temp_pointData, picPen);
             }
             else if (commData[0].ToLower() == "dashline" && chkData[0] == "DashLine" && pointData.Count == 5)
@@ -138,8 +139,8 @@ namespace DV2.Net_Graphics_Application
             }
             else
             {
-                tobeRead.SpeakAsync("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
-                codeOutput("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
+                tobeRead.SpeakAsync("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!"); 
+                codeOutput("@Graphic_LinesClass Draw_LineMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!");
             }
         }
 
@@ -209,8 +210,8 @@ namespace DV2.Net_Graphics_Application
             }
             else
             {
-                tobeRead.SpeakAsync("@Graphic_LinesClass Draw_ArrowMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
-                codeOutput("@Graphic_LinesClass Draw_ArrowMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
+                tobeRead.SpeakAsync("@Graphic_LinesClass Draw_ArrowMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!");
+                codeOutput("@Graphic_LinesClass Draw_ArrowMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!");
             }
         }
 

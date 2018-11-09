@@ -1,4 +1,0 @@
-LogOutput >>  LIne new mode debugging
-
-e|Lparen|IntNum|Comma|IntNum|Comma|IntNum|Comma|IntNum|Comma|IntNum|Rparen
-n

@@ -1,4 +1,0 @@
-LogOutput >>  System String Processing Strated!
-
-IntNum|Comma|IntNum|Comma|IntNum|Comma|IntNum|Comma|IntNum|Rparen
-n

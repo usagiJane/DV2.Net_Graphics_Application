@@ -1,2 +1,0 @@
-codeOutput >>  Mouse Position is  ---> 1800,24 <---The Fixed Mouse Position is  ---> 115,0 <---
-

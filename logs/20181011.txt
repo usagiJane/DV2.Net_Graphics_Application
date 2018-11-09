@@ -1,2 +1,0 @@
-LogOutput >>  objAnalysisData    Ident|Colon|SetPoint|Lparen|Left|Comma|Ident|Comma|Right|Comma|IntNum|Comma|IntNum|Rparen
-n

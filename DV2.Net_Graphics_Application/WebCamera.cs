@@ -77,7 +77,7 @@ namespace DV2.Net_Graphics_Application
                         b = (b - 43) / 12.40;
 
                         //For Debug
-                        textBox2.Text = a.ToString() + "," + b.ToString();
+                        textBox_CenterCoordinates.Text = a.ToString() + "," + b.ToString();
                     }
 
                     int keyValue = Cv2.WaitKey(100);
@@ -159,7 +159,7 @@ namespace DV2.Net_Graphics_Application
                         centerY = (int)((centerY - 1) * 2);
 
                         //For Debug
-                        textBox2.Text = centerX.ToString() + " , " + centerY.ToString();
+                        textBox_CenterCoordinates.Text = centerX.ToString() + " , " + centerY.ToString();
                     }
 
                     int keyValue = Cv2.WaitKey(100);
@@ -237,7 +237,7 @@ namespace DV2.Net_Graphics_Application
             { 
                 ObjCommand[index] = "Point|(|" + fingerPoint.X + "|,|" + fingerPoint.Y + "|)";
                 //計算結果を表示する
-                textBox3.Text = fingerPoint.X.ToString() + " , " + fingerPoint.Y.ToString();
+                textBox_FingerGet.Text = fingerPoint.X.ToString() + " , " + fingerPoint.Y.ToString();
                 codeOutput(">" + fingerPoint.X.ToString() + " , " + fingerPoint.Y.ToString());
                 tobeRead.SpeakAsync("座標点は" + fingerPoint.X.ToString() + " , " + fingerPoint.Y.ToString() + "となる.");
 

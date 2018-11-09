@@ -55,8 +55,8 @@ namespace DV2.Net_Graphics_Application
                 }
             }
             Dv2Instance.SetDots(forDisDots, BlinkInterval);
-            label6.Text = movement.X.ToString();
-            label8.Text = movement.Y.ToString();
+            label_posX.Text = movement.X.ToString();
+            label_posY.Text = movement.Y.ToString();
         }
     }
 }

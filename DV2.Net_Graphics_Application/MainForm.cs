@@ -3,6 +3,8 @@ using System.Data;
 using System.Windows.Forms;
 
 #region Personal Addition
+using System.IO;
+using System.Text;
 using System.Drawing;
 using System.Collections;
 using System.Text.RegularExpressions;
@@ -12,7 +14,6 @@ using System.Speech.Synthesis;
 
 #region useless
 using System.Linq;
-using System.Text;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Speech.Recognition;
@@ -132,10 +133,9 @@ namespace DV2.Net_Graphics_Application
             #region Debug Mode Default Value
             //textBox1.Text = "this is text box 1"; be used to storage input data ->dataStorage
             //Debug
-            //textBox2.Text = "this is text box 2";
-            textBox2.ReadOnly = true;
+            textBox_CenterCoordinates.ReadOnly = true;
             //textBox3.Text = "this is text box 3";
-            textBox3.ReadOnly = true;
+            textBox_FingerGet.ReadOnly = true;
 
             //"line(1,1,100,100)||line(30,55,200,255);\r\narc(45,10,170,165,45,45);\r\ncircle(110,150,90,120);\r\narrow(25,25,230,25);\r\ntriangle(90,85,110,125,60,75);";
             //textBox_Input.Text = "obj1=line(0,5,200.0,405.0)";
@@ -148,8 +148,8 @@ namespace DV2.Net_Graphics_Application
 
             //Draw a border style for the picture box
             picBox.BorderStyle = BorderStyle.FixedSingle;
-            label6.BorderStyle = BorderStyle.FixedSingle;
-            label8.BorderStyle = BorderStyle.FixedSingle;
+            label_posX.BorderStyle = BorderStyle.FixedSingle;
+            label_posY.BorderStyle = BorderStyle.FixedSingle;
             //Set the table control values
             tabControl_Graphics.Enabled = true;
             tabControl_Graphics.Visible = false;
@@ -174,7 +174,7 @@ namespace DV2.Net_Graphics_Application
             LogOutput("PrimaryScreen Size is  " + iActulaWidth + " : " + iActulaHeight);
         }
 
-        internal void LogOutput(Object log)
+        internal void LogOutput(object log)
         {
             //FontSizeノーマルは"9"
             int FontSize = 9;
@@ -182,17 +182,27 @@ namespace DV2.Net_Graphics_Application
             textBox_log.AppendText(log + "\r\n");
             //textBox_log.ScrollToCaret(); 
             //Write the log file
-            LogFileWriter("LogOutput >>  " + log.ToString());
+            DV2SysLogger.Info(log);
         }
 
-        internal void codeOutput(Object log)
+        internal void codeOutput(object log)
         {
             //FontSizeノーマルは"9"
             textBox_code.Font = new Font(textBox_code.Font.FontFamily, FontSize);
             textBox_code.AppendText(log + "\r\n");
             textBox_code.ScrollToCaret();
             //Write the log file
-            LogFileWriter("codeOutput >>  " + log.ToString());
+            DV2SysLogger.Info(log);
+        }
+
+        internal void codeOutput(object log, int sub_FontSize)
+        {
+            //FontSizeノーマルは"9"
+            textBox_code.Font = new Font(textBox_code.Font.FontFamily, sub_FontSize);
+            textBox_code.AppendText(log + "\r\n");
+            textBox_code.ScrollToCaret();
+            //Write the log file
+            DV2SysLogger.Info(log);
         }
 
         private void tabControl_code_SelectedIndexChanged(object sender, EventArgs e)
@@ -284,8 +294,12 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[51] = new KeyWord("center", TknKind.Position);
             KeyWdTbl[52] = new KeyWord("bottom", TknKind.Position);
             KeyWdTbl[53] = new KeyWord("top", TknKind.Position);
+            KeyWdTbl[54] = new KeyWord("bottomleft", TknKind.Position);
+            KeyWdTbl[55] = new KeyWord("bottomright", TknKind.Position);
+            KeyWdTbl[56] = new KeyWord("topleft", TknKind.Position);
+            KeyWdTbl[57] = new KeyWord("topright", TknKind.Position);
             //End of the Key Word Table List Mark
-            KeyWdTbl[54] = new KeyWord("", TknKind.END_keylist);
+            KeyWdTbl[58] = new KeyWord("", TknKind.END_keylist);
         }
 
         public void DebugImshow()
@@ -422,7 +436,7 @@ namespace DV2.Net_Graphics_Application
             }
             if ((int)e.KeyChar == 46)
             {
-                if (textBox2.Text.Length <= 0)
+                if (textBox_CenterCoordinates.Text.Length <= 0)
                 {
                     e.Handled = true;
                 }
@@ -444,12 +458,39 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button_FFT_Click(object sender, EventArgs e)
         {
-            // Button Tester
+            // Button For Functional Test
             MakeObjectBraille();
         }
 
+        /// <summary>
+        /// ファイルの選択関数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button_FS_Click(object sender, EventArgs e)
+        {
+            //File Selected
+            if (openFileDialog_CommandFile.ShowDialog() == DialogResult.OK)
+            {
+                textBox_FS.Text = openFileDialog_CommandFile.FileName.ToString();
+                StreamReader sR = new StreamReader(openFileDialog_CommandFile.FileName, Encoding.Default);
+
+                //textBox_log.AppendText(sR.ReadToEnd());
+                string content;
+                content = sR.ReadLine();
+
+                while (null != content)
+                {
+                    textBox_code.AppendText(content);
+                    content = sR.ReadLine();
+                }
+
+                //textBox_code.AppendText(sR.ReadLine());
+                sR.Close();
+            }
+        }
     }
     //End of class MainForm
 }

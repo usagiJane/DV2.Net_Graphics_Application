@@ -61,8 +61,7 @@ namespace DV2.Net_Graphics_Application
                         break;
                     }
 
-                    #region Assign Route
-                    //Command "Assign" Route
+                    #region Command "Assign" Route
                     if (token.kind == TknKind.Assign)
                     {
                         //例:赋值语句 obj1 = line(0,0,20,10)
@@ -98,8 +97,7 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region Show Route
-                    //Command "Show" Route
+                    #region Command "Show" Route
                     if (token.kind == TknKind.Ident)
                     {
                         //表示命令を判別する
@@ -138,8 +136,7 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region Point Define Route
-                    //"Point Define" Route
+                    #region Command "Point Define" Route
                     if (token.kind == TknKind.Point)
                     {
                         //変数ｐをPoint型として宣言
@@ -166,8 +163,7 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region Get P Route
-                    //"Get P" Route
+                    #region Command "Get P" Route
                     if (token.kind == TknKind.Ident)
                     {
                         //To get the finger point on the object
@@ -179,8 +175,7 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region Slove Route
-                    //"Slove" Route
+                    #region Command "Slove" Route
                     if (token.kind == TknKind.Ident)
                     {
                         //Slove the math program
@@ -192,8 +187,7 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region Object Plus Route
-                    //"Object Plus" Route
+                    #region Command "Object Plus" Route
                     if (token.kind == TknKind.Ident)
                     {
                         //obj3=obj1+obj2
@@ -204,7 +198,7 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region Clear Object Route
+                    #region Command "Clear Object" Route
                     if (token.kind == TknKind.Ident)
                     {
                         if (bef_tok_kind == TknKind.Clear)
@@ -215,7 +209,7 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region Clear ALL Route
+                    #region Command "Clear ALL" Route
                     if (token.kind == TknKind.Clear)
                     {
                         if (dataStorage.Text.Length != 0 && dataStorage.Text.ToLower() == "clear")
@@ -226,14 +220,15 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    //"Set" Route
+                    #region Command "Set" Route
                     if (token.kind == TknKind.Set)
                     {
                         //Setting the parameters
 
                     }
+                    #endregion
 
-                    #region "Rotate" Route
+                    #region Command "Rotate" Route
                     if (token.kind == TknKind.Lparen)
                     {
                         if (bef_tok_kind == TknKind.Rotation)
@@ -244,7 +239,7 @@ namespace DV2.Net_Graphics_Application
                     }
                     #endregion
 
-                    #region "SetPoint" Route
+                    #region Command "SetPoint" Route
                     if (token.kind == TknKind.SetPoint)
                     {
                         //相対位置処理入口
@@ -512,7 +507,11 @@ namespace DV2.Net_Graphics_Application
                 else
                 {
                     //Processing
-                    ClearTargetAndCheck(objCommandData, objAnalysisData);
+                    if (!ClearTargetAndCheck(objCommandData, objAnalysisData))
+                    {
+                        //処理失敗の流れ
+
+                    }
                 }
 
             }
@@ -749,7 +748,7 @@ namespace DV2.Net_Graphics_Application
             //DV2_Drawing dv2Draw = new DV2_Drawing();
             var GraphicInstruction = Properties.Settings.Default.GraphicInstruction;
             var SpecialInstruction = Properties.Settings.Default.SpecialInstruction;
-            string GraphCmd = Convert.ToString(GraphIns);
+            string GraphCmd = GraphIns.ToString();
             string temp_ObjCom, temp_ObjAna;
             GraphCmd = Regex.Split(GraphCmd, @"\|", RegexOptions.IgnoreCase)[0];
 
@@ -757,8 +756,12 @@ namespace DV2.Net_Graphics_Application
             LogOutput("@ParameterChecker  ># " + GraphCmd + " #<");
 
             //Save Displayed Object
-            ObjDisplayed.Add(ObjName[listIndex]);
-
+            //二回挿入防止
+            if (DisplayedObjectFinder(ObjName[listIndex].ToString()) == -1)
+            {
+                ObjDisplayed.Add(ObjName[listIndex]);
+            }
+            
             #region GraphicInstruction
             if (Regex.IsMatch(GraphicInstruction, GraphCmd, RegexOptions.IgnoreCase))
             {
@@ -846,7 +849,7 @@ namespace DV2.Net_Graphics_Application
                         Draw_PointMode(temp_ObjCom, temp_ObjAna);
                         break;
                     default:
-                        codeOutput("Error @ParameterChecker @644");
+                        codeOutput("Error @ParameterChecker @852");
                         break;
                 }
             }

@@ -65,9 +65,17 @@ namespace DV2.Net_Graphics_Application
                     index += 1;
                 }
 
+                if (ObjName.Count == index)
+                {
+                    tobeRead.SpeakAsync("中心座標点の定義が存在しない、もう一度確認してください。");
+                    LogOutput("中心座標点の定義が存在しない、もう一度確認してください。");
+                    return;
+                }
+
                 if (ObjName[index].ToString() != subIdent)
                 {
                     tobeRead.SpeakAsync("中心座標点の定義が存在しない、もう一度確認してください。");
+                    LogOutput("中心座標点の定義が存在しない、もう一度確認してください。");
                     return;
                 }
 
@@ -107,7 +115,6 @@ namespace DV2.Net_Graphics_Application
                     }
                     tobeRead.SpeakAsync("Error @Draw_CircleMode");
                 }
-
             }
 
             else if (commData[0].ToLower() == "circle" && chkData[0] == "Circle" && pointData.Count == 3)
@@ -138,10 +145,10 @@ namespace DV2.Net_Graphics_Application
             //pointData[1] 中心座標点 Y
             //pointData[2] 半径
             //LogOutput(DateTime.Now.ToString("HH:mm") + " 画像円を描く");
-            pointCx = Convert.ToInt16(pointData[0]) - Convert.ToInt16(pointData[2]) + offset + Point_Offset.X;
-            pointCy = Convert.ToInt16(pointData[1]) - Convert.ToInt16(pointData[2]) + offset + Point_Offset.Y;
-            width = Convert.ToInt16(pointData[2]) * 2;
-            height = Convert.ToInt16(pointData[2]) * 2;
+            pointCx = Convert.ToInt32(pointData[0]) - Convert.ToInt32(pointData[2]) + offset + Point_Offset.X;
+            pointCy = Convert.ToInt32(pointData[1]) - Convert.ToInt32(pointData[2]) + offset + Point_Offset.Y;
+            width = Convert.ToInt32(pointData[2]) * 2;
+            height = Convert.ToInt32(pointData[2]) * 2;
 
             if (fillFlag)
             {

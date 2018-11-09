@@ -1,4 +1,0 @@
-LogOutput >>  MakeObjectBraille Start!
-
-|Lparen|IntNum|Comma|IntNum|Comma|IntNum|Comma|IntNum|Rparen
-n
