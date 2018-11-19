@@ -40,7 +40,7 @@ namespace DV2.Net_Graphics_Application
             //LogOutput("Resources.Graph_line  :> " + Properties.Resources.Graph_line);
             LogOutput("Formula Analysis Strat at ->   *******  " + currentTime + "  *******");
             //LogOutput("Settings.GraphicInstruction  :> " + DV2.Net_Graphics_Application.Properties.Settings.Default.GraphicInstruction);
-            LogOutput(dataStorage.Text.Length);
+            //LogOutput(dataStorage.Text.Length);
 
             if (dataStorage.Text.Length != 0)
             {
@@ -124,12 +124,20 @@ namespace DV2.Net_Graphics_Application
                                 ParameterChecker(ObjAnalysis[objFinder_index], objFinder_index);
                                 picBox.Refresh();
                             }
+
                             else
                             {
                                 tobeRead.SpeakAsync("表示される " + token.text + " 対象は不存在，もう一度確認してください。");
                                 codeOutput("表示される " + token.text + " 対象は不存在，もう一度確認してください。");
                             }
-                            //debug_Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+                            if(!ROTATIONFLAG)
+                            {
+                                LogOutput("ROTATIONFLAG is " + ROTATIONFLAG);
+                                debug_Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                                picBox.Refresh();
+                                ROTATIONFLAG = true;
+                            }
                             MakeObjectBraille();
                         }
 
@@ -474,12 +482,16 @@ namespace DV2.Net_Graphics_Application
             #region Clear Route
             if (clear_flg)
             {
+                LogOutput("clear_flg" + clear_flg);
                 graphObj.Dispose();
                 debug_Image.Dispose();
                 graphObj = PreparePaper();
                 picBox.Image = (Image)debug_Image;
                 picBox.Refresh();
+
+                ObjDisplayed.Clear();
                 DotDataInitialization(ref forDisDots);
+                DotDataInitialization(ref allDotData);
                 Dv2Instance.SetDots(forDisDots, BlinkInterval);
             }
 
@@ -500,7 +512,10 @@ namespace DV2.Net_Graphics_Application
                     graphObj = PreparePaper();
                     picBox.Image = (Image)debug_Image;
                     picBox.Refresh();
+
+                    ObjDisplayed.Clear();
                     DotDataInitialization(ref forDisDots);
+                    DotDataInitialization(ref allDotData);
                     Dv2Instance.SetDots(forDisDots, BlinkInterval);
                 }
 
@@ -516,6 +531,15 @@ namespace DV2.Net_Graphics_Application
 
             }
             #endregion
+
+            LogOutput("---------------------------------------------");
+            LogOutput("Formula Analysis End at ->   *******  " + System.DateTime.Now + "  *******");
+            if (ROTATIONFLAG)
+            {
+                LogOutput("ROTATIONFLAG is " + ROTATIONFLAG);
+                debug_Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                ROTATIONFLAG = false;
+            }
         }
 
         #region ToKen Analysis
@@ -596,8 +620,18 @@ namespace DV2.Net_Graphics_Application
                         txtStr += txtChar;
                         txtChar = nextCh();
                     }
-                    tokenInfo.text = txtStr;
-                    tokenInfo.dblVal = Convert.ToDouble(txtStr);
+                    if (txtStr == "-")
+                    {
+                        tobeRead.SpeakAsync("減数の形は数字のみです、文字列と引数はサポートされていません。");
+                        tokenInfo.kind = TknKind.Minus;
+                        tokenInfo.text = txtStr;
+                        return tokenInfo;
+                    }
+                    else
+                    {
+                        tokenInfo.text = txtStr;
+                        tokenInfo.dblVal = Convert.ToDouble(txtStr);
+                    }
                     return tokenInfo;
                 /* 文字列定数 */
                 case TknKind.DblQ:
@@ -821,6 +855,15 @@ namespace DV2.Net_Graphics_Application
 
                         Draw_ArrowMode(temp_ObjCom, temp_ObjAna);
                         break;
+                    case "ExArrow":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd Arrow -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd Arrow -- " + temp_ObjAna);
+
+                        Draw_ExArrowMode(temp_ObjCom, temp_ObjAna);
+                        break;
                     case "Triangle":
                         temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
                         temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
@@ -869,7 +912,16 @@ namespace DV2.Net_Graphics_Application
                     {
                         if (Regex.Split(GraphIns.ToString(), @"\|", RegexOptions.IgnoreCase)[i] == "Ident")
                         {
-                            ParameterChecker(ObjAnalysis[ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i])], ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i]));
+                            if (ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i]) != -1)
+                            {
+                                ParameterChecker(ObjAnalysis[ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i])], ObjectFinder(Regex.Split(temp_ObjCom, @"\|", RegexOptions.IgnoreCase)[i]));
+                            }
+
+                            else
+                            {
+                                tobeRead.SpeakAsync("Errorになっております、入力内容を確認してください。詳しい内容はlogに表示します。");
+                                LogOutput("Error @ParameterChecker -> SpecialInstruction @882 line");
+                            }
                         }
                     }
                 }
@@ -878,7 +930,7 @@ namespace DV2.Net_Graphics_Application
 
             else
             {
-                codeOutput("Error @ParameterChecker @587");
+                codeOutput("Error @ParameterChecker @892 line");
             }
         }
 

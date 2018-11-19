@@ -98,12 +98,36 @@ namespace DV2.Net_Graphics_Application.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Dv2_DEBUG {
+        public bool Dv2_CONNECTED {
             get {
-                return ((bool)(this["Dv2_DEBUG"]));
+                return ((bool)(this["Dv2_CONNECTED"]));
             }
             set {
-                this["Dv2_DEBUG"] = value;
+                this["Dv2_CONNECTED"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool NEEDINPUTREADER {
+            get {
+                return ((bool)(this["NEEDINPUTREADER"]));
+            }
+            set {
+                this["NEEDINPUTREADER"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ReadOnce {
+            get {
+                return ((bool)(this["ReadOnce"]));
+            }
+            set {
+                this["ReadOnce"] = value;
             }
         }
     }

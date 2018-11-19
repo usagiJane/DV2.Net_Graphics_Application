@@ -744,7 +744,13 @@ namespace DV2.Net_Graphics_Application
                     DrawCircleMode(ref redrawPointData, pub_picPen);
 
                     //Rewrite the Data
-
+                    identPosition = ObjectFinder(targetIdent[0]);
+                    //円形の命令データを書き直し
+                    ObjCommand.RemoveAt(identPosition);
+                    ObjCommand.Insert(identPosition, targetIdent[0] + "|=|" + identA + "|(|" + redrawPointData[0] + "|,|" + redrawPointData[1] + "|,|" + redrawPointData[2] + "|)");
+                    //円形の解析データを書き直し
+                    ObjAnalysis.RemoveAt(identPosition);
+                    ObjAnalysis.Insert(identPosition, "Circle|Lparen|IntNum|Comma|IntNum|Comma|IntNum|Rparen");
                     #endregion
                     break;
                 default:

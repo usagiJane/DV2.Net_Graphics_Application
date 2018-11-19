@@ -34,6 +34,8 @@ namespace DV2.Net_Graphics_Application
         private static SpeechSynthesizer tobeRead = new SpeechSynthesizer();
         //FontSizeノーマルは"9"
         private static int FontSize = 24;
+        //回転Flag
+        bool ROTATIONFLAG = false;
         #endregion
 
         #region About DV2
@@ -55,7 +57,7 @@ namespace DV2.Net_Graphics_Application
             Ident, IntNum, DblNum, String, Letter, Doll, Digit,
             Gvar, Lvar, Fcall, EofProg, EofLine, Others, EofTkn, None, END_keylist, END_line,
             /* 図形命令 */
-            Line, DashLine, Arrow, DashArrow, Arc, Circle, Triangle, Rectangle, 
+            Line, DashLine, Arrow, DashArrow, ExArrow, Arc, Circle, Triangle, Rectangle, 
             /* 処理関数 */
             Solve, Get, Contact, Show, Clear, Rotation, SetPoint,
             /* 特別関数 */
@@ -95,7 +97,11 @@ namespace DV2.Net_Graphics_Application
             InitializeComponent();
             //紙を用意する
             graphObj = PreparePaper();
-
+            //読み上げる
+            if (Properties.Settings.Default.NEEDINPUTREADER)
+            {
+                tobeRead.SpeakAsync("入力した内容を読み上げます。");
+            }
             //イベントを宣言する
             this.textBox_Input.KeyDown += new KeyEventHandler(EnterKeyPress);
             this.tabControl_code.SelectedIndexChanged += new EventHandler(tabControl_code_SelectedIndexChanged);
@@ -113,7 +119,7 @@ namespace DV2.Net_Graphics_Application
 
             Dv2ConnectFunction(this);
             Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(this.Dv2KeyEventHandle);
-            if (DV2.Net_Graphics_Application.Properties.Settings.Default.Dv2_DEBUG)
+            if (DV2.Net_Graphics_Application.Properties.Settings.Default.Dv2_CONNECTED)
             {
                 Dv2Instance.Connect();
             }
@@ -273,33 +279,34 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[32] = new KeyWord("rectangle", TknKind.Rectangle);
             KeyWdTbl[33] = new KeyWord("dashline", TknKind.DashLine);
             KeyWdTbl[34] = new KeyWord("dasharrow", TknKind.DashArrow);
+            KeyWdTbl[35] = new KeyWord("exarrow", TknKind.ExArrow);
             /* 処理関数 */
-            KeyWdTbl[35] = new KeyWord("solve", TknKind.Solve); //算出
-            KeyWdTbl[36] = new KeyWord("get", TknKind.Get); //指先入力点を取る
-            KeyWdTbl[37] = new KeyWord("contact", TknKind.Contact); //連結
-            KeyWdTbl[38] = new KeyWord("show", TknKind.Show); //表示
-            KeyWdTbl[39] = new KeyWord("clear", TknKind.Clear); //削除
-            KeyWdTbl[47] = new KeyWord("rotation", TknKind.Rotation); //回転
-            KeyWdTbl[48] = new KeyWord("setpoint", TknKind.SetPoint); //相対位置
+            KeyWdTbl[36] = new KeyWord("solve", TknKind.Solve); //算出
+            KeyWdTbl[37] = new KeyWord("get", TknKind.Get); //指先入力点を取る
+            KeyWdTbl[38] = new KeyWord("contact", TknKind.Contact); //連結
+            KeyWdTbl[39] = new KeyWord("show", TknKind.Show); //表示
+            KeyWdTbl[40] = new KeyWord("clear", TknKind.Clear); //削除
+            KeyWdTbl[41] = new KeyWord("rotation", TknKind.Rotation); //回転
+            KeyWdTbl[42] = new KeyWord("setpoint", TknKind.SetPoint); //相対位置
             /* 特別関数 */
-            KeyWdTbl[40] = new KeyWord("var", TknKind.Var);
-            KeyWdTbl[41] = new KeyWord(":", TknKind.Colon);
-            KeyWdTbl[42] = new KeyWord("with", TknKind.With);
-            KeyWdTbl[43] = new KeyWord("point", TknKind.Point);
-            KeyWdTbl[44] = new KeyWord("set", TknKind.Set);
-            KeyWdTbl[45] = new KeyWord("on", TknKind.On);
-            KeyWdTbl[46] = new KeyWord("in", TknKind.In);
-            KeyWdTbl[49] = new KeyWord("right", TknKind.Position);
-            KeyWdTbl[50] = new KeyWord("left", TknKind.Position);
-            KeyWdTbl[51] = new KeyWord("center", TknKind.Position);
-            KeyWdTbl[52] = new KeyWord("bottom", TknKind.Position);
-            KeyWdTbl[53] = new KeyWord("top", TknKind.Position);
-            KeyWdTbl[54] = new KeyWord("bottomleft", TknKind.Position);
-            KeyWdTbl[55] = new KeyWord("bottomright", TknKind.Position);
-            KeyWdTbl[56] = new KeyWord("topleft", TknKind.Position);
-            KeyWdTbl[57] = new KeyWord("topright", TknKind.Position);
+            KeyWdTbl[43] = new KeyWord("var", TknKind.Var);
+            KeyWdTbl[44] = new KeyWord(":", TknKind.Colon);
+            KeyWdTbl[45] = new KeyWord("with", TknKind.With);
+            KeyWdTbl[46] = new KeyWord("point", TknKind.Point);
+            KeyWdTbl[47] = new KeyWord("set", TknKind.Set);
+            KeyWdTbl[48] = new KeyWord("on", TknKind.On);
+            KeyWdTbl[49] = new KeyWord("in", TknKind.In);
+            KeyWdTbl[50] = new KeyWord("right", TknKind.Position);
+            KeyWdTbl[51] = new KeyWord("left", TknKind.Position);
+            KeyWdTbl[52] = new KeyWord("center", TknKind.Position);
+            KeyWdTbl[53] = new KeyWord("bottom", TknKind.Position);
+            KeyWdTbl[54] = new KeyWord("top", TknKind.Position);
+            KeyWdTbl[55] = new KeyWord("bottomleft", TknKind.Position);
+            KeyWdTbl[56] = new KeyWord("bottomright", TknKind.Position);
+            KeyWdTbl[57] = new KeyWord("topleft", TknKind.Position);
+            KeyWdTbl[58] = new KeyWord("topright", TknKind.Position);
             //End of the Key Word Table List Mark
-            KeyWdTbl[58] = new KeyWord("", TknKind.END_keylist);
+            KeyWdTbl[59] = new KeyWord("", TknKind.END_keylist);
         }
 
         public void DebugImshow()
@@ -338,6 +345,12 @@ namespace DV2.Net_Graphics_Application
                 codeOutput(">" + textBox_Input.Text);
                 //input dataをbackupする
                 dataStorage.Text = textBox_Input.Text;
+
+                if (Properties.Settings.Default.NEEDINPUTREADER)
+                {
+                    tobeRead.SpeakAsync(dataStorage.Text);
+                }
+
                 //input dataを削除する
                 textBox_Input.Clear();
                 //jump to the sub page
@@ -465,32 +478,43 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// ファイルの選択関数
+        /// ファイルを読み込み関数
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void button_FS_Click(object sender, EventArgs e)
         {
             //File Selected
             if (openFileDialog_CommandFile.ShowDialog() == DialogResult.OK)
             {
+                string content;
                 textBox_FS.Text = openFileDialog_CommandFile.FileName.ToString();
                 StreamReader sR = new StreamReader(openFileDialog_CommandFile.FileName, Encoding.Default);
 
                 //textBox_log.AppendText(sR.ReadToEnd());
-                string content;
                 content = sR.ReadLine();
 
                 while (null != content)
                 {
-                    textBox_code.AppendText(content);
+                    //Debug
+                    LogOutput(content);
+                    if (content.Contains("//"))
+                    {
+                        content = content.Replace("//", "");
+                        tobeRead.SpeakAsync("注釈内容 " + content);
+                    }
+                    else
+                    {
+                        dataStorage.Text = content;
+                        FormulaAnalysis();
+                    }
+
                     content = sR.ReadLine();
                 }
 
-                //textBox_code.AppendText(sR.ReadLine());
                 sR.Close();
             }
         }
+
+
     }
     //End of class MainForm
 }

@@ -26,7 +26,7 @@ namespace DV2.Net_Graphics_Application
             string[] chkData, commData, poiCom, poiAna;
             string backObjComm = ObjComm, tmpCom;
             ArrayList pointData = new ArrayList();
-            Pen picPen = new Pen(Color.Black, 1F);
+            Pen picPen = new Pen(Color.Black, 0.1F);
             bool isIdent = false;
             int loopCount = 0;
 
@@ -151,8 +151,8 @@ namespace DV2.Net_Graphics_Application
             }
             else
             {
-                codeOutput("");
-                tobeRead.SpeakAsync("");
+                codeOutput("FocusPoint マッチング失敗.");
+                tobeRead.SpeakAsync("FocusPoint マッチング失敗.");
                 return;
             }
 

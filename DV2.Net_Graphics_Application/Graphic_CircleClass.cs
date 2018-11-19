@@ -15,9 +15,11 @@ namespace DV2.Net_Graphics_Application
     {
         public void Draw_CircleMode(string ObjComm, string ObjAna)
         {
+            //ObjComm	"circle|(|c|,|37|)"
+            //ObjAna	"Circle|Lparen|Ident|Comma|IntNum|Rparen"
             LogOutput("Draw_CircleMode");
             //Define
-            string[] chkData, commData;
+            string[] anaData, commData;
             string backObjComm = ObjComm;
             ArrayList pointData = new ArrayList();
             Pen picPen = new Pen(Color.Black, 0.1F);
@@ -25,11 +27,11 @@ namespace DV2.Net_Graphics_Application
             //Processing
             AssignRemover(ref ObjComm);
             commData = Regex.Split(ObjComm, @"\|", RegexOptions.IgnoreCase);
-            chkData = Regex.Split(ObjAna, @"\|", RegexOptions.IgnoreCase);
+            anaData = Regex.Split(ObjAna, @"\|", RegexOptions.IgnoreCase);
 
-            for (int i = 0; i < chkData.Length; i++)
+            for (int i = 0; i < anaData.Length; i++)
             {
-                if (chkData[i] == "IntNum" || chkData[i] == "DblNum")
+                if (anaData[i] == "IntNum" || anaData[i] == "DblNum")
                 {
                     pointData.Add(commData[i]);
                 }
@@ -40,12 +42,12 @@ namespace DV2.Net_Graphics_Application
                 //Define
                 int index;
                 string subIdent, subComm, subAna;
-                string[] subCommData, subChkData;
+                string[] subCommData, subAnaData;
                 ArrayList subPointData = new ArrayList();
 
                 //Processing
-                //chkData   "["circle", "(", "c", ",", "5", ")"]"
-                index = IdentFinder(ref chkData);
+                //anaData   "["circle", "(", "c", ",", "5", ")"]"
+                index = IdentFinder(ref anaData);
 
                 if (index == -1)
                 {
@@ -83,25 +85,25 @@ namespace DV2.Net_Graphics_Application
                 subAna = ObjAnalysis[index].ToString();
                 AssignRemover(ref subComm);
                 subCommData = Regex.Split(subComm, @"\|", RegexOptions.IgnoreCase);
-                subChkData = Regex.Split(subAna, @"\|", RegexOptions.IgnoreCase);
+                subAnaData = Regex.Split(subAna, @"\|", RegexOptions.IgnoreCase);
 
-                for (int i = 0; i < subChkData.Length; i++)
+                for (int i = 0; i < subAnaData.Length; i++)
                 {
-                    if (subChkData[i] == "IntNum" || subChkData[i] == "DblNum")
+                    if (subAnaData[i] == "IntNum" || subAnaData[i] == "DblNum")
                     {
                         subPointData.Add(subCommData[i]);
                     }
                 }
 
-                if(subCommData[0].ToLower() == "point" && subChkData[0] == "Point" && subPointData.Count == 2)
+                if(subCommData[0].ToLower() == "point" && subAnaData[0] == "Point" && subPointData.Count == 2)
                 {
                     
-                    if (commData[0].ToLower() == "circle" && chkData[0] == "Circle")
+                    if (commData[0].ToLower() == "circle" && anaData[0] == "Circle")
                     {
                         subPointData.Add(pointData[pointData.Count - 1]);
                         DrawCircleMode(ref subPointData, picPen);
                     }
-                    else if (commData[0].ToLower() == "fillcircle" && chkData[0] == "FillCircle")
+                    else if (commData[0].ToLower() == "fillcircle" && anaData[0] == "FillCircle")
                     {
                         subPointData.Add(pointData[pointData.Count - 1]);
                         DrawCircleMode(ref subPointData, picPen, true);
@@ -117,11 +119,11 @@ namespace DV2.Net_Graphics_Application
                 }
             }
 
-            else if (commData[0].ToLower() == "circle" && chkData[0] == "Circle" && pointData.Count == 3)
+            else if (commData[0].ToLower() == "circle" && anaData[0] == "Circle" && pointData.Count == 3)
             {
                 DrawCircleMode(ref pointData, picPen);
             }
-            else if (commData[0].ToLower() == "fillcircle" && chkData[0] == "FillCircle" && pointData.Count == 3)
+            else if (commData[0].ToLower() == "fillcircle" && anaData[0] == "FillCircle" && pointData.Count == 3)
             {
                 DrawCircleMode(ref pointData, picPen, true);
             }
@@ -196,18 +198,18 @@ namespace DV2.Net_Graphics_Application
         {
             LogOutput("Draw_PointMode");
             //Define
-            string[] chkData, commData;
+            string[] anaData, commData;
             string backObjComm = ObjComm;
             ArrayList pointData = new ArrayList();
 
             //Processing
             AssignRemover(ref ObjComm);
             commData = Regex.Split(ObjComm, @"\|", RegexOptions.IgnoreCase);
-            chkData = Regex.Split(ObjAna, @"\|", RegexOptions.IgnoreCase);
+            anaData = Regex.Split(ObjAna, @"\|", RegexOptions.IgnoreCase);
 
-            for (int i = 0; i < chkData.Length; i++)
+            for (int i = 0; i < anaData.Length; i++)
             {
-                if (chkData[i] == "IntNum" || chkData[i] == "DblNum")
+                if (anaData[i] == "IntNum" || anaData[i] == "DblNum")
                 {
                     pointData.Add(commData[i]);
                 }

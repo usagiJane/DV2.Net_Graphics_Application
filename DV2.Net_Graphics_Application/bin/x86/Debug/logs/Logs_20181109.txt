@@ -1,8 +1,0 @@
-2018-11-09 17:22:24,432 [7] INFO  ValuesController - picSize.Width: 144
-2018-11-09 17:22:24,442 [7] INFO  ValuesController - picSize.Height: 96
-2018-11-09 17:22:24,445 [7] INFO  ValuesController - System String Processing Strated!
-2018-11-09 17:22:24,660 [7] INFO  ValuesController - PrimaryScreen Size is  1920 : 1080
-2018-11-09 17:26:36,247 [9] INFO  ValuesController - picSize.Width: 144
-2018-11-09 17:26:36,256 [9] INFO  ValuesController - picSize.Height: 96
-2018-11-09 17:26:36,258 [9] INFO  ValuesController - System String Processing Strated!
-2018-11-09 17:26:36,359 [9] INFO  ValuesController - PrimaryScreen Size is  1920 : 1080
