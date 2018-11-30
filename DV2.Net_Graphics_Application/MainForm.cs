@@ -171,6 +171,7 @@ namespace DV2.Net_Graphics_Application
 
             #region Speaker Setting
             //tobeRead.SelectVoice("Microsoft Anna");
+            tobeRead.Volume = 100;
             tobeRead.SpeakAsync("キーワードについて、大文字と小文字は区別されていません。");
             #endregion
 
@@ -178,6 +179,10 @@ namespace DV2.Net_Graphics_Application
             int iActulaWidth = Screen.PrimaryScreen.Bounds.Width;
             int iActulaHeight = Screen.PrimaryScreen.Bounds.Height;
             LogOutput("PrimaryScreen Size is  " + iActulaWidth + " : " + iActulaHeight);
+
+            DriveInfo[] allDirves = DriveInfo.GetDrives();
+            Properties.Settings.Default.NEEDINPUTREADER = true;
+            
         }
 
         internal void LogOutput(object log)

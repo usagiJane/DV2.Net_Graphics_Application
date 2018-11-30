@@ -24,7 +24,7 @@ namespace DV2.Net_Graphics_Application
             string[] chkData, commData;
             string backObjComm = ObjComm;
             ArrayList pointData = new ArrayList();
-            Pen picPen = new Pen(Color.Black, 1F);
+            Pen picPen = new Pen(Color.Black, 0.1F);
 
             //Processing
             AssignRemover(ref ObjComm);

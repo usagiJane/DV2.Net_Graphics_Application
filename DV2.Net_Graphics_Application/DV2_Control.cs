@@ -194,12 +194,11 @@ namespace DV2.Net_Graphics_Application
             int index;
             double slope;
             string targetComm;
-            string[] targetCommLis;
-            string[] targetAnaLis;
+            string[] targetCommLis, targetAnaLis;
             Point theMaxX = new Point();
             Point theMinX = new Point();
             List<double> pointData = new List<double>();
-            List<int> subLinePoints = new List<int>();
+            List<int> tempLinePoints = new List<int>();
 
             index = ObjectFinder(lineName);
 
@@ -247,19 +246,20 @@ namespace DV2.Net_Graphics_Application
 
                 if (0.001 > temp && temp > -0.001)
                 {
-                    subLinePoints.Add(i);
-                    subLinePoints.Add(Convert.ToInt32(y));
+                    tempLinePoints.Add(i);
+                    tempLinePoints.Add(Convert.ToInt32(y));
                 }
             }
 
             //return;
-            if (subLinePoints.Count() % 2 == 0)
+            if (tempLinePoints.Count() % 2 == 0)
             {
-                linePoints = subLinePoints;
+                linePoints = tempLinePoints;
             }
             else
             {
                 //Error
+                LogOutput("計算結果の中にミスが発生した、計算結果はペアにならない。");
                 return;
             }
         }
@@ -271,17 +271,17 @@ namespace DV2.Net_Graphics_Application
             int index;
             int radius;
             string targetComm;
-            string[] targetCommLis;
-            string[] targetAnaLis;
+            string[] targetCommLis, targetAnaLis;
             Point theCenter = new Point();
             List<double> pointData = new List<double>();
-            List<int> subCirPoints = new List<int>();
+            List<int> tempCirPoints = new List<int>();
 
             index = ObjectFinder(cirName);
 
             if (index == -1)
             {
                 //Error
+                LogOutput("操作対象" + cirName + "不存在、もう一度確認してください。");
                 return;
             }
 
@@ -302,6 +302,7 @@ namespace DV2.Net_Graphics_Application
             if (pointData.Count != 3)
             {
                 //Error
+                LogOutput("操作対象" + cirName + "の形がサポートされていない。");
                 return;
             }
             theCenter.X = Convert.ToInt32(pointData[0]);
@@ -313,19 +314,20 @@ namespace DV2.Net_Graphics_Application
                 for (int degree = 0; degree < 360; degree++)
                 {
                     
-                    subCirPoints.Add(theCenter.X + radius * Convert.ToInt32(Math.Round(Math.Cos(degree * (Math.PI / 180)))));
-                    subCirPoints.Add(theCenter.Y + radius * Convert.ToInt32(Math.Round(Math.Sin(degree * (Math.PI / 180)))));
+                    tempCirPoints.Add(theCenter.X + radius * Convert.ToInt32(Math.Round(Math.Cos(degree * (Math.PI / 180)))));
+                    tempCirPoints.Add(theCenter.Y + radius * Convert.ToInt32(Math.Round(Math.Sin(degree * (Math.PI / 180)))));
                 }
             }
 
             //return;
-            if (subCirPoints.Count() % 2 == 0)
+            if (tempCirPoints.Count() % 2 == 0)
             {
-                cirPoints = subCirPoints;
+                cirPoints = tempCirPoints;
             }
             else
             {
                 //Error
+                LogOutput("計算結果の中にミスが発生した、計算結果はペアにならない。");
                 return;
             }
         }
@@ -336,14 +338,14 @@ namespace DV2.Net_Graphics_Application
             //oninSwitchは[ture]の場合は円の線分の座標点集合を返す、[false]の場合は円の線分と中身の座標点集合を返す。
 
             //Define
-            List<int> subCirPoints = new List<int>();
+            List<int> tempCirPoints = new List<int>();
             if (oninSwitch)
             {
                 for (int degree = 0; degree < 360; degree++)
                 {
 
-                    subCirPoints.Add(theCenter.X + radius * Convert.ToInt32(Math.Round(Math.Cos(degree * (Math.PI / 180)))));
-                    subCirPoints.Add(theCenter.Y + radius * Convert.ToInt32(Math.Round(Math.Sin(degree * (Math.PI / 180)))));
+                    tempCirPoints.Add(theCenter.X + radius * Convert.ToInt32(Math.Round(Math.Cos(degree * (Math.PI / 180)))));
+                    tempCirPoints.Add(theCenter.Y + radius * Convert.ToInt32(Math.Round(Math.Sin(degree * (Math.PI / 180)))));
                 }
             }
 
@@ -354,20 +356,144 @@ namespace DV2.Net_Graphics_Application
                     for (int degree = 0; degree < 360; degree++)
                     {
 
-                        subCirPoints.Add(theCenter.X + loop_r * Convert.ToInt32(Math.Round(Math.Cos(degree * (Math.PI / 180)))));
-                        subCirPoints.Add(theCenter.Y + loop_r * Convert.ToInt32(Math.Round(Math.Sin(degree * (Math.PI / 180)))));
+                        tempCirPoints.Add(theCenter.X + loop_r * Convert.ToInt32(Math.Round(Math.Cos(degree * (Math.PI / 180)))));
+                        tempCirPoints.Add(theCenter.Y + loop_r * Convert.ToInt32(Math.Round(Math.Sin(degree * (Math.PI / 180)))));
                     }
                 }
             }
 
             //return;
-            if (subCirPoints.Count() % 2 == 0)
+            if (tempCirPoints.Count() % 2 == 0)
             {
-                cirPoints = subCirPoints;
+                cirPoints = tempCirPoints;
             }
             else
             {
                 //Error
+                LogOutput("計算結果の中にミスが発生した、計算結果はペアにならない。");
+                return;
+            }
+        }
+
+        public void GetRectanglePoints(string rectName, ref List<int> rectPoints)
+        {
+            //Define
+            int index, subIndex = 0, poiX = 0, poiY = 0;
+            string targetComm, tmpCom;
+            bool isIdent = false;
+            string[] targetCommLis, targetAnaLis, poiCom, poiAna;
+            List<double> pointData = new List<double>();
+            List<int> tempRectPoints = new List<int>();
+
+            index = ObjectFinder(rectName);
+
+            if (index == -1)
+            {
+                //Error
+                LogOutput("操作対象" + rectName + "不存在、もう一度確認してください。");
+                return;
+            }
+
+            //座標点を取り出す
+            targetComm = ObjCommand[index].ToString();
+            AssignRemover(ref targetComm);
+            targetCommLis = Regex.Split(targetComm, @"\|", RegexOptions.IgnoreCase);
+            targetAnaLis = Regex.Split(ObjAnalysis[index].ToString(), @"\|", RegexOptions.IgnoreCase);
+
+            for (int i = 0; i < targetAnaLis.Length; i++)
+            {
+                if (targetAnaLis[i] == "IntNum" || targetAnaLis[i] == "DblNum")
+                {
+                    pointData.Add(Convert.ToDouble(targetCommLis[i]));
+                }
+
+                if (targetAnaLis[i] == "Ident")
+                {
+                    isIdent = true;
+                    subIndex = i;
+                }
+            }
+
+            if (pointData.Count == 2 && isIdent)
+            {
+                //座標点を補充する
+                if (ObjectFinder(targetAnaLis[subIndex]) != -1)
+                {
+                    tmpCom = ObjCommand[ObjectFinder(targetAnaLis[subIndex])].ToString();
+                    AssignRemover(ref tmpCom);
+                    poiCom = Regex.Split(tmpCom, @"\|", RegexOptions.IgnoreCase);
+                    poiAna = Regex.Split(ObjAnalysis[ObjectFinder(targetAnaLis[subIndex])].ToString(), @"\|", RegexOptions.IgnoreCase);
+
+                    for (int i = poiAna.Length - 1; i > 0; i--)
+                    {
+                        if (poiAna[i] == "IntNum" || poiAna[i] == "DblNum")
+                        {
+                            pointData.Insert(0, Convert.ToDouble(poiCom[i]));
+                        }
+                    }
+                }
+
+                else
+                {
+                    tobeRead.SpeakAsync("座標点は見つからない、もう一度やり直してください。");
+                    LogOutput("座標点は見つからない、もう一度やり直してください。");
+                    return;
+                }
+            }
+
+            else if (pointData.Count == 0 && !isIdent)
+            {
+                //未完成、予想は四角形の対角点を記入する時の処理流れです。
+            }
+
+            else
+            {
+                LogOutput("操作対象" + rectName + "の形がサポートされていない。");
+                return;
+            }
+
+            poiX = Convert.ToInt32(pointData[0]);
+            poiY = Convert.ToInt32(pointData[1]);
+            tempRectPoints.Add(poiX);
+            tempRectPoints.Add(poiY);
+
+            //for Ⅰ
+            for (int loop = 1; loop < pointData[2]; loop++)
+            {
+                tempRectPoints.Add(poiX + loop);
+                tempRectPoints.Add(poiY);
+            }
+
+            //for Ⅱ
+            for (int loop = 1; loop < pointData[3]; loop++)
+            {
+                tempRectPoints.Add(poiX);
+                tempRectPoints.Add(poiY + loop);
+            }
+
+            //for Ⅲ
+            for (int loop = 0; loop < pointData[3]; loop++)
+            {
+                tempRectPoints.Add(poiX + Convert.ToInt32(pointData[2]));
+                tempRectPoints.Add(poiY + loop);
+            }
+
+            //for Ⅳ
+            for (int loop = 0; loop < pointData[2]; loop++)
+            {
+                tempRectPoints.Add(poiX + loop);
+                tempRectPoints.Add(poiY + Convert.ToInt32(pointData[3]));
+            }
+
+            //return;
+            if (tempRectPoints.Count() % 2 == 0)
+            {
+                rectPoints = tempRectPoints;
+            }
+            else
+            {
+                //Error
+                LogOutput("計算結果の中にミスが発生した、計算結果はペアにならない。");
                 return;
             }
         }

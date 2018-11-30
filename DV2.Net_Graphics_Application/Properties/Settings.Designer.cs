@@ -37,7 +37,7 @@ namespace DV2.Net_Graphics_Application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LineDashLineArcCircleArrowDashArrowTriangleRectanglePoint")]
+        [global::System.Configuration.DefaultSettingValueAttribute("LineDashLineArcCircleArrowDashArrowTriangleRectanglePointExArrow")]
         public string GraphicInstruction {
             get {
                 return ((string)(this["GraphicInstruction"]));
@@ -109,7 +109,7 @@ namespace DV2.Net_Graphics_Application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool NEEDINPUTREADER {
             get {
                 return ((bool)(this["NEEDINPUTREADER"]));
@@ -121,13 +121,13 @@ namespace DV2.Net_Graphics_Application.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ReadOnce {
+        [global::System.Configuration.DefaultSettingValueAttribute("\"D:\\\\Project Logs\\\\\"")]
+        public string TheLogsPath {
             get {
-                return ((bool)(this["ReadOnce"]));
+                return ((string)(this["TheLogsPath"]));
             }
             set {
-                this["ReadOnce"] = value;
+                this["TheLogsPath"] = value;
             }
         }
     }

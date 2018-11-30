@@ -384,7 +384,7 @@ namespace DV2.Net_Graphics_Application
                 else
                 {
                     //Error
-                    codeOutput("Error @FormulaAnalysis 256");
+                    LogOutput("Error @FormulaAnalysis PointGet Route");
                     tobeRead.SpeakAsync("入力ミスが発生していた。");
                 }
             }
@@ -920,7 +920,7 @@ namespace DV2.Net_Graphics_Application
                             else
                             {
                                 tobeRead.SpeakAsync("Errorになっております、入力内容を確認してください。詳しい内容はlogに表示します。");
-                                LogOutput("Error @ParameterChecker -> SpecialInstruction @882 line");
+                                LogOutput("Error @ParameterChecker -> SpecialInstruction @923");
                             }
                         }
                     }
@@ -930,7 +930,7 @@ namespace DV2.Net_Graphics_Application
 
             else
             {
-                codeOutput("Error @ParameterChecker @892 line");
+                codeOutput("Error @ParameterChecker @933");
             }
         }
 

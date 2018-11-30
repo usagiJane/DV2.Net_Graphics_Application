@@ -14,12 +14,11 @@ namespace DV2.Net_Graphics_Application
         public void Draw_LineMode(string ObjComm, string ObjAna)
         {
             //Debug
-            LogOutput("\r\n@Graphic_LinesClass  -> Draw_LineMode");
-            LogOutput("Parameter 1  -> " + ObjComm);
-            LogOutput("Parameter 2  -> " + ObjAna + "\r\n");
+            //LogOutput("\r\n@Graphic_LinesClass  -> Draw_LineMode");
+            //LogOutput("Parameter 1  -> " + ObjComm);
+            //LogOutput("Parameter 2  -> " + ObjAna + "\r\n");
             //Parameter 1->obj1 |=| line | (| 0 |,| 5 |,| 200.0 |,| 405.0 |)
             //Parameter 2->Line | Lparen | IntNum | Comma | IntNum | Comma | DblNum | Comma | DblNum | Rparen
-            //System.Windows.Forms.MessageBox.Show("Draw_LineMode");
 
             //Define
             double distance = 0.0;
@@ -600,6 +599,118 @@ namespace DV2.Net_Graphics_Application
         public void Draw_ExArrowMode(string ObjComm, string ObjAna)
         {
             LogOutput("Draw_ExArrowMode Debugging Start.");
+            //LogOutput("Parameter 1  -> " + ObjComm);
+            //LogOutput("Parameter 2  -> " + ObjAna + "\r\n");
+            //Parameter 1->
+            //Parameter 2->
+
+            //Define
+            double distance = 0.0;
+            #region 伸ばすモード 用パラメーター
+            double unKnownX = 0, unKnownY = 0, alpha = 0;
+            //double slopeA = 0, InterceptB = 0;
+            #endregion
+            string[] anaData, commData;
+            string backObjComm = ObjComm;
+            ArrayList pointData = new ArrayList();
+            Pen picPen = new Pen(Color.Black, 0.1F);
+
+            //Processing
+            AssignRemover(ref ObjComm);
+            commData = Regex.Split(ObjComm, @"\|", RegexOptions.IgnoreCase);
+            anaData = Regex.Split(ObjAna, @"\|", RegexOptions.IgnoreCase);
+
+            for (int i = 0; i < anaData.Length; i++)
+            {
+                if (anaData[i] == "IntNum" || anaData[i] == "DblNum")
+                {
+                    pointData.Add(commData[i]);
+                }
+            }
+
+            //例: obj = exarrow(Q, 11, 45)[100]
+            if (commData[0].ToLower() == "exarrow" && anaData[0] == "ExArrow" && pointData.Count == 2)
+            {
+                int subIndex;
+                string subComm, subAna;
+                string[] subCommData, subAnaData;
+                string checker = "", subIdent = "";
+                ArrayList subPointData = new ArrayList();
+
+                for (int i = 0; i < anaData.Length; i++)
+                {
+                    if (anaData[i] == "IntNum" || anaData[i] == "DblNum")
+                    {
+                        checker += 0;
+                        subPointData.Add(commData[i]);
+                    }
+
+                    if (anaData[i] == "Ident")
+                    {
+                        checker += 1;
+                        subIdent = commData[i];
+                    }
+                }
+
+                if (ObjectFinder(subIdent) == -1)
+                {
+                    //LogOutput("Error");
+                    tobeRead.SpeakAsync(subIdent + "Error");
+                    return;
+                }
+
+                subIndex = ObjectFinder(subIdent);
+
+                if (checker == "100")
+                {
+                    subComm = ObjCommand[subIndex].ToString();
+                    subAna = ObjAnalysis[subIndex].ToString();
+                    AssignRemover(ref subComm);
+                    subCommData = Regex.Split(subComm, @"\|", RegexOptions.IgnoreCase);
+                    subAnaData = Regex.Split(subAna, @"\|", RegexOptions.IgnoreCase);
+
+                    for (int i = subAnaData.Length - 1; i > 0; i--)
+                    {
+                        if (subAnaData[i] == "IntNum" || subAnaData[i] == "DblNum")
+                        {
+                            subPointData.Insert(0, subCommData[i]);
+                        }
+                    }
+                }
+
+                else
+                {
+                    LogOutput("サポートされていない形です。");
+                    LogOutput("checker : " + checker);
+                    LogOutput("入力内容 : \r\n" + "ノーマルデータ: " + ObjComm + "\r\n解析データ: " + ObjAna);
+                    return;
+                }
+
+                //終点を計算する
+                alpha = Convert.ToDouble(subPointData[3].ToString());
+                subPointData.RemoveAt(3);
+                distance = Convert.ToDouble(subPointData[2].ToString());
+                subPointData.RemoveAt(2);
+
+                if (alpha > 0 && alpha < 90)
+                { 
+                    unKnownX = Math.Round(Math.Cos(alpha) * distance + Convert.ToDouble(subPointData[0].ToString()), 2);
+                    unKnownY = Math.Round(Math.Sin(alpha) * distance + Convert.ToDouble(subPointData[1].ToString()), 2);
+
+                    subPointData.Add(unKnownX);
+                    subPointData.Add(unKnownY);
+                    LogOutput("unKnownX-" + unKnownX + "unKnownY-" + unKnownY);
+
+                    DrawArrow(ref subPointData, picPen);
+                }
+
+                else
+                {
+                    LogOutput("");
+
+
+                }
+            }
         }
 
         private void DrawArrow(ref ArrayList pointData, Pen picPen = null, bool dashFlag = false, float offset = pub_offSet)

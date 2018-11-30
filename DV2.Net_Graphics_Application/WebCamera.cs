@@ -224,6 +224,10 @@ namespace DV2.Net_Graphics_Application
                         {
                             targetName = identList[m];
                         }
+                        if (Regex.Split(ObjAnalysis[n].ToString(), @"\|", RegexOptions.IgnoreCase)[0] == "Rectangle")
+                        {
+                            targetName = identList[m];
+                        }
                     }
                 }
             }
@@ -287,6 +291,9 @@ namespace DV2.Net_Graphics_Application
                     break;
                 case "circle":
                     GetCirclePoints(targetName, ref points);
+                    break;
+                case "rectangle":
+                    GetRectanglePoints(targetName, ref points);
                     break;
                 //To be continued
                 default:
@@ -381,6 +388,7 @@ namespace DV2.Net_Graphics_Application
             {
                 //Error 識別失敗
                 tobeRead.SpeakAsync("Error,@WebCamera PointOnObject関数,指先座標が識別失敗しました.");
+                LogOutput("Error, @WebCamera PointOnObject関数, 指先座標が識別失敗しました.");
                 return;
             }
         }

@@ -129,8 +129,8 @@ namespace DV2.Net_Graphics_Application
             }
             else
             {
-                tobeRead.SpeakAsync("@Graphic_CircleClass Draw_CircleMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
-                codeOutput("@Graphic_CircleClass Draw_CircleMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
+                tobeRead.SpeakAsync("@Graphic_CircleClass Draw_CircleMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!");
+                codeOutput("@Graphic_CircleClass Draw_CircleMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!");
             }
         }
         
@@ -177,6 +177,7 @@ namespace DV2.Net_Graphics_Application
             //pointData[1] 中心座標点 Y
             //pointData[2] 半径
             //LogOutput(DateTime.Now.ToString("HH:mm") + " 画像円を描く");
+            //Point_Offset はグローバル変数、
             pointCx = Convert.ToInt16(pointData[0]) - Convert.ToInt16(pointData[2]) + offset + Point_Offset.X;
             pointCy = Convert.ToInt16(pointData[1]) - Convert.ToInt16(pointData[2]) + offset + Point_Offset.Y;
             width = Convert.ToInt16(pointData[2]) * 2;

@@ -106,8 +106,8 @@ namespace DV2.Net_Graphics_Application
             }
             else
             {
-                tobeRead.SpeakAsync("@Graphic_QuadrilateralClass Draw_QuadrilateralMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
-                codeOutput("@Graphic_QuadrilateralClass Draw_QuadrilateralMode関数" + ObjName[ObjCommand.BinarySearch(backObjComm)] + "対象定義識別失敗!");
+                tobeRead.SpeakAsync("@Graphic_QuadrilateralClass Draw_QuadrilateralMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!");
+                codeOutput("@Graphic_QuadrilateralClass Draw_QuadrilateralMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!");
             }
         }
 
@@ -120,42 +120,44 @@ namespace DV2.Net_Graphics_Application
             picPen = picPen ?? pub_picPen;
             float pointAx = 0, pointAy = 0, width = 0, height = 0;
 
-            //座標計算
+            #region アンカー座標計算
             if ("upperleft左上".Contains(Properties.Settings.Default.FocusPoint))
             {
-                pointAx = Convert.ToSingle(pointData[0]) + offset;
-                pointAy = Convert.ToSingle(pointData[1]) + offset;
+                pointAx = Convert.ToSingle(pointData[0]) + offset + Point_Offset.X;
+                pointAy = Convert.ToSingle(pointData[1]) + offset + Point_Offset.Y;
                 width = Convert.ToSingle(pointData[2]) + offset;
                 height = Convert.ToSingle(pointData[3]) + offset;
             }
             else if ("bottomleft左下".Contains(Properties.Settings.Default.FocusPoint))
             {
-                pointAx = Convert.ToSingle(pointData[0]) + offset;
-                pointAy = Convert.ToSingle(pointData[1]) - Convert.ToSingle(pointData[3]) + offset;
+                pointAx = Convert.ToSingle(pointData[0]) + offset + Point_Offset.X;
+                pointAy = Convert.ToSingle(pointData[1]) - Convert.ToSingle(pointData[3]) + offset + Point_Offset.Y;
                 width = Convert.ToSingle(pointData[2]) + offset;
                 height = Convert.ToSingle(pointData[3]) + offset;
             }
             else if ("upperright右上".Contains(Properties.Settings.Default.FocusPoint))
             {
-                pointAx = Convert.ToSingle(pointData[0]) - Convert.ToSingle(pointData[2]) + offset;
-                pointAy = Convert.ToSingle(pointData[1]) + offset;
+                pointAx = Convert.ToSingle(pointData[0]) - Convert.ToSingle(pointData[2]) + offset + Point_Offset.X;
+                pointAy = Convert.ToSingle(pointData[1]) + offset + Point_Offset.Y;
                 width = Convert.ToSingle(pointData[2]) + offset;
                 height = Convert.ToSingle(pointData[3]) + offset;
             }
             else if ("bottomright右下".Contains(Properties.Settings.Default.FocusPoint))
             {
-                pointAx = Convert.ToSingle(pointData[0]) - Convert.ToSingle(pointData[2]) + offset;
-                pointAy = Convert.ToSingle(pointData[1]) - Convert.ToSingle(pointData[3]) + offset;
+                pointAx = Convert.ToSingle(pointData[0]) - Convert.ToSingle(pointData[2]) + offset + Point_Offset.X;
+                pointAy = Convert.ToSingle(pointData[1]) - Convert.ToSingle(pointData[3]) + offset + Point_Offset.Y;
                 width = Convert.ToSingle(pointData[2]) + offset;
                 height = Convert.ToSingle(pointData[3]) + offset;
             }
             else
             {
-                codeOutput("FocusPoint マッチング失敗.");
-                tobeRead.SpeakAsync("FocusPoint マッチング失敗.");
+                codeOutput("アンカー マッチング失敗.");
+                tobeRead.SpeakAsync("アンカー マッチング失敗.");
                 return;
             }
+            #endregion
 
+            #region 図形を書く
             if (dashFlag)
             {
                 picPen.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
@@ -180,6 +182,7 @@ namespace DV2.Net_Graphics_Application
             {
                 graphObj.DrawRectangle(picPen, pointAx, pointAy, width, height);
             }
+            #endregion
 
         }
     }
