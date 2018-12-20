@@ -192,7 +192,7 @@ namespace DV2.Net_Graphics_Application
             //直線座標点の集合を計算する
             //Define
             int index;
-            double slope;
+            double slope = 0;
             string targetComm;
             string[] targetCommLis, targetAnaLis;
             Point theMaxX = new Point();
@@ -229,6 +229,7 @@ namespace DV2.Net_Graphics_Application
                 theMinX.X = Convert.ToInt32(Math.Round(pointData[2]));
                 theMinX.Y = Convert.ToInt32(Math.Round(pointData[3]));
             }
+
             else
             {
                 theMaxX.X = Convert.ToInt32(Math.Round(pointData[2]));
@@ -239,15 +240,60 @@ namespace DV2.Net_Graphics_Application
 
             slope = ((double)(theMinX.Y - theMaxX.Y)) / (theMinX.X - theMaxX.X);
 
-            for (int i = theMinX.X + 1; i < theMaxX.X; i++)
+            if (slope == 0)
             {
-                double y = slope * (i - theMinX.X) + theMinX.Y;
-                double temp = y - Convert.ToInt32(y);
-
-                if (0.001 > temp && temp > -0.001)
+                if (theMaxX.X > theMinX.X)
                 {
-                    tempLinePoints.Add(i);
-                    tempLinePoints.Add(Convert.ToInt32(y));
+                    for (int i = theMinX.X + 1; i < theMaxX.X; i++)
+                    {
+                        tempLinePoints.Add(i);
+                        tempLinePoints.Add(theMaxX.Y);
+                    }
+                }
+
+                else
+                {
+                    for (int i = theMaxX.X + 1; i < theMinX.X; i++)
+                    {
+                        tempLinePoints.Add(i);
+                        tempLinePoints.Add(theMinX.Y);
+                    }
+                }
+            }
+
+            else if (slope == 1)
+            {
+                if (theMaxX.Y > theMinX.Y)
+                {
+                    for (int i = theMinX.Y + 1; i < theMaxX.Y; i++)
+                    {
+                        tempLinePoints.Add(theMaxX.X);
+                        tempLinePoints.Add(i);
+                    }
+                }
+
+                else
+                {
+                    for (int i = theMaxX.Y + 1; i < theMinX.Y; i++)
+                    {
+                        tempLinePoints.Add(theMinX.X);
+                        tempLinePoints.Add(i);
+                    }
+                }
+            }
+
+            else
+            { 
+                for (int i = theMinX.X + 1; i < theMaxX.X; i++)
+                {
+                    double y = slope * (i - theMinX.X) + theMinX.Y;
+                    //double temp = y - Convert.ToInt32(y);
+
+                    //if (0.001 > temp && temp > -0.001)
+                    {
+                        tempLinePoints.Add(i);
+                        tempLinePoints.Add(Convert.ToInt32(y));
+                    }
                 }
             }
 
@@ -417,12 +463,12 @@ namespace DV2.Net_Graphics_Application
             if (pointData.Count == 2 && isIdent)
             {
                 //座標点を補充する
-                if (ObjectFinder(targetAnaLis[subIndex]) != -1)
+                if (ObjectFinder(targetCommLis[subIndex]) != -1)
                 {
-                    tmpCom = ObjCommand[ObjectFinder(targetAnaLis[subIndex])].ToString();
+                    tmpCom = ObjCommand[ObjectFinder(targetCommLis[subIndex])].ToString();
                     AssignRemover(ref tmpCom);
                     poiCom = Regex.Split(tmpCom, @"\|", RegexOptions.IgnoreCase);
-                    poiAna = Regex.Split(ObjAnalysis[ObjectFinder(targetAnaLis[subIndex])].ToString(), @"\|", RegexOptions.IgnoreCase);
+                    poiAna = Regex.Split(ObjAnalysis[ObjectFinder(targetCommLis[subIndex])].ToString(), @"\|", RegexOptions.IgnoreCase);
 
                     for (int i = poiAna.Length - 1; i > 0; i--)
                     {
@@ -460,15 +506,15 @@ namespace DV2.Net_Graphics_Application
             //for Ⅰ
             for (int loop = 1; loop < pointData[2]; loop++)
             {
-                tempRectPoints.Add(poiX + loop);
-                tempRectPoints.Add(poiY);
+                //tempRectPoints.Add(poiX + loop);
+                //tempRectPoints.Add(poiY);
             }
 
             //for Ⅱ
-            for (int loop = 1; loop < pointData[3]; loop++)
+            for (int loop = 1; loop <= pointData[3]; loop++)
             {
-                tempRectPoints.Add(poiX);
-                tempRectPoints.Add(poiY + loop);
+                //tempRectPoints.Add(poiX);
+                //tempRectPoints.Add(poiY + loop);
             }
 
             //for Ⅲ
@@ -481,8 +527,8 @@ namespace DV2.Net_Graphics_Application
             //for Ⅳ
             for (int loop = 0; loop < pointData[2]; loop++)
             {
-                tempRectPoints.Add(poiX + loop);
-                tempRectPoints.Add(poiY + Convert.ToInt32(pointData[3]));
+                //tempRectPoints.Add(poiX + loop);
+                //tempRectPoints.Add(poiY + Convert.ToInt32(pointData[3]));
             }
 
             //return;
@@ -942,8 +988,17 @@ namespace DV2.Net_Graphics_Application
                     ParameterChecker(ObjAnalysis[loop], loop);
                 }
             }
+
             picBox.Refresh();
             MakeObjectBraille();
+
+            if (!ROTATIONFLAG)
+            {
+                LogOutput("ROTATIONFLAG is " + ROTATIONFLAG);
+                debug_Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                picBox.Refresh();
+                ROTATIONFLAG = true;
+            }
             return_flg = true;
 
             return return_flg;

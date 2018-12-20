@@ -157,6 +157,13 @@ namespace DV2.Net_Graphics_Application
 
             //Reflush
             picBox.Refresh();
+            if (!ROTATIONFLAG)
+            {
+                LogOutput("ROTATIONFLAG is " + ROTATIONFLAG);
+                debug_Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                picBox.Refresh();
+                ROTATIONFLAG = true;
+            }
             MakeObjectBraille();
 
             LogOutput("Debug TheSolveMode Secound Touch.");
@@ -166,9 +173,13 @@ namespace DV2.Net_Graphics_Application
             double distanceCir1, distanceCir2 = 0.0;
 
             fingerPoint = FingerFinder();
+            fingerPoint.X = fingerPoint.X - Point_Offset.X;
+            fingerPoint.Y = fingerPoint.Y - Point_Offset.Y;
             LogOutput("The Secound Touch Point :  " + fingerPoint);
-            distanceCir1 = Math.Sqrt(Math.Abs(C1x - fingerPoint.X) * Math.Abs(C1x - fingerPoint.X) + Math.Abs(C1y - fingerPoint.Y) * Math.Abs(C1y - fingerPoint.Y));
-            distanceCir2 = Math.Sqrt(Math.Abs(C2x - fingerPoint.X) * Math.Abs(C2x - fingerPoint.X) + Math.Abs(C2y - fingerPoint.Y) * Math.Abs(C2y - fingerPoint.Y));
+            //distanceCir1 = Math.Sqrt(Math.Abs(C1x - fingerPoint.X) * Math.Abs(C1x - fingerPoint.X) + Math.Abs(C1y - fingerPoint.Y) * Math.Abs(C1y - fingerPoint.Y));
+            distanceCir1 = Math.Abs(C1x - fingerPoint.X);
+            //distanceCir2 = Math.Sqrt(Math.Abs(C2x - fingerPoint.X) * Math.Abs(C2x - fingerPoint.X) + Math.Abs(C2y - fingerPoint.Y) * Math.Abs(C2y - fingerPoint.Y));
+            distanceCir2 = Math.Abs(C2x - fingerPoint.X);
             LogOutput("");
 
             if (distanceCir1 > distanceCir2)

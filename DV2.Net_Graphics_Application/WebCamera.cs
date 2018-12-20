@@ -224,6 +224,10 @@ namespace DV2.Net_Graphics_Application
                         {
                             targetName = identList[m];
                         }
+                        if (Regex.Split(ObjAnalysis[n].ToString(), @"\|", RegexOptions.IgnoreCase)[0] == "Arrow")
+                        {
+                            targetName = identList[m];
+                        }
                         if (Regex.Split(ObjAnalysis[n].ToString(), @"\|", RegexOptions.IgnoreCase)[0] == "Rectangle")
                         {
                             targetName = identList[m];
@@ -286,7 +290,12 @@ namespace DV2.Net_Graphics_Application
 
             switch (targetComm.ToLower())
             {
+                
                 case "line":
+                    GetLinePoints(targetName, ref points);
+                    break;
+                case "arrow":
+                    //一応線分と同じ処理方法、将来的にlineのやり方を参考して
                     GetLinePoints(targetName, ref points);
                     break;
                 case "circle":
@@ -299,6 +308,12 @@ namespace DV2.Net_Graphics_Application
                 default:
                     codeOutput("Error @WebCamera.cs PointOnObject関数 switch部分");
                     return;
+            }
+
+            if (points.Count == 0)
+            {
+                LogOutput("");
+                tobeRead.SpeakAsync("");
             }
 
             //座標点集合を回す、OpenCVのPoint型Listを作る
@@ -315,7 +330,15 @@ namespace DV2.Net_Graphics_Application
                 LinePoints.Add(new Point(temp_X, temp_Y));
             }
 
-            fingerPoint.X = fingerPoint.X - movement.X;
+            //fingerPoint.X = fingerPoint.X - movement.X;
+            fingerPoint.X = fingerPoint.X - Point_Offset.X;
+
+            if (targetComm.ToLower() == "rectangle")
+            {
+                fingerPoint.X = LinePoints[5].X;
+                fingerPoint.Y = fingerPoint.Y - Point_Offset.Y;
+            }
+
             //マーカーの中心座標に似ている、座標点数を数える、X座標を基準として。
             foreach (Point loop in LinePoints)
             {

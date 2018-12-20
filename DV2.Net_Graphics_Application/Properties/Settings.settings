@@ -6,7 +6,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="GraphicInstruction" Type="System.String" Scope="User">
-      <Value Profile="(Default)">LineDashLineArcCircleArrowDashArrowTriangleRectanglePointExArrow</Value>
+      <Value Profile="(Default)">Line|DashLine|ExLine|Arc|Circle|Arrow|DashArrow|ExArrow|Triangle|Rectangle|Point</Value>
     </Setting>
     <Setting Name="SpecialInstruction" Type="System.String" Scope="User">
       <Value Profile="(Default)">Ident</Value>

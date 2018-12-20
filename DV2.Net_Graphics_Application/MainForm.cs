@@ -57,7 +57,7 @@ namespace DV2.Net_Graphics_Application
             Ident, IntNum, DblNum, String, Letter, Doll, Digit,
             Gvar, Lvar, Fcall, EofProg, EofLine, Others, EofTkn, None, END_keylist, END_line,
             /* 図形命令 */
-            Line, DashLine, Arrow, DashArrow, ExArrow, Arc, Circle, Triangle, Rectangle, 
+            Line, DashLine, ExLine, Arrow, DashArrow, ExArrow, Arc, Circle, Triangle, Rectangle, 
             /* 処理関数 */
             Solve, Get, Contact, Show, Clear, Rotation, SetPoint,
             /* 特別関数 */
@@ -182,7 +182,6 @@ namespace DV2.Net_Graphics_Application
 
             DriveInfo[] allDirves = DriveInfo.GetDrives();
             Properties.Settings.Default.NEEDINPUTREADER = true;
-            
         }
 
         internal void LogOutput(object log)
@@ -285,33 +284,34 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[33] = new KeyWord("dashline", TknKind.DashLine);
             KeyWdTbl[34] = new KeyWord("dasharrow", TknKind.DashArrow);
             KeyWdTbl[35] = new KeyWord("exarrow", TknKind.ExArrow);
+            KeyWdTbl[36] = new KeyWord("exline", TknKind.ExLine);
             /* 処理関数 */
-            KeyWdTbl[36] = new KeyWord("solve", TknKind.Solve); //算出
-            KeyWdTbl[37] = new KeyWord("get", TknKind.Get); //指先入力点を取る
-            KeyWdTbl[38] = new KeyWord("contact", TknKind.Contact); //連結
-            KeyWdTbl[39] = new KeyWord("show", TknKind.Show); //表示
-            KeyWdTbl[40] = new KeyWord("clear", TknKind.Clear); //削除
-            KeyWdTbl[41] = new KeyWord("rotation", TknKind.Rotation); //回転
-            KeyWdTbl[42] = new KeyWord("setpoint", TknKind.SetPoint); //相対位置
+            KeyWdTbl[37] = new KeyWord("solve", TknKind.Solve); //算出
+            KeyWdTbl[38] = new KeyWord("get", TknKind.Get); //指先入力点を取る
+            KeyWdTbl[39] = new KeyWord("contact", TknKind.Contact); //連結
+            KeyWdTbl[40] = new KeyWord("show", TknKind.Show); //表示
+            KeyWdTbl[41] = new KeyWord("clear", TknKind.Clear); //削除
+            KeyWdTbl[42] = new KeyWord("rotation", TknKind.Rotation); //回転
+            KeyWdTbl[43] = new KeyWord("setpoint", TknKind.SetPoint); //相対位置
             /* 特別関数 */
-            KeyWdTbl[43] = new KeyWord("var", TknKind.Var);
-            KeyWdTbl[44] = new KeyWord(":", TknKind.Colon);
-            KeyWdTbl[45] = new KeyWord("with", TknKind.With);
-            KeyWdTbl[46] = new KeyWord("point", TknKind.Point);
-            KeyWdTbl[47] = new KeyWord("set", TknKind.Set);
-            KeyWdTbl[48] = new KeyWord("on", TknKind.On);
-            KeyWdTbl[49] = new KeyWord("in", TknKind.In);
-            KeyWdTbl[50] = new KeyWord("right", TknKind.Position);
-            KeyWdTbl[51] = new KeyWord("left", TknKind.Position);
-            KeyWdTbl[52] = new KeyWord("center", TknKind.Position);
-            KeyWdTbl[53] = new KeyWord("bottom", TknKind.Position);
-            KeyWdTbl[54] = new KeyWord("top", TknKind.Position);
-            KeyWdTbl[55] = new KeyWord("bottomleft", TknKind.Position);
-            KeyWdTbl[56] = new KeyWord("bottomright", TknKind.Position);
-            KeyWdTbl[57] = new KeyWord("topleft", TknKind.Position);
-            KeyWdTbl[58] = new KeyWord("topright", TknKind.Position);
+            KeyWdTbl[44] = new KeyWord("var", TknKind.Var);
+            KeyWdTbl[45] = new KeyWord(":", TknKind.Colon);
+            KeyWdTbl[46] = new KeyWord("with", TknKind.With);
+            KeyWdTbl[47] = new KeyWord("point", TknKind.Point);
+            KeyWdTbl[48] = new KeyWord("set", TknKind.Set);
+            KeyWdTbl[49] = new KeyWord("on", TknKind.On);
+            KeyWdTbl[50] = new KeyWord("in", TknKind.In);
+            KeyWdTbl[51] = new KeyWord("right", TknKind.Position);
+            KeyWdTbl[52] = new KeyWord("left", TknKind.Position);
+            KeyWdTbl[53] = new KeyWord("center", TknKind.Position);
+            KeyWdTbl[54] = new KeyWord("bottom", TknKind.Position);
+            KeyWdTbl[55] = new KeyWord("top", TknKind.Position);
+            KeyWdTbl[56] = new KeyWord("bottomleft", TknKind.Position);
+            KeyWdTbl[57] = new KeyWord("bottomright", TknKind.Position);
+            KeyWdTbl[58] = new KeyWord("topleft", TknKind.Position);
+            KeyWdTbl[59] = new KeyWord("topright", TknKind.Position);
             //End of the Key Word Table List Mark
-            KeyWdTbl[59] = new KeyWord("", TknKind.END_keylist);
+            KeyWdTbl[60] = new KeyWord("", TknKind.END_keylist);
         }
 
         public void DebugImshow()

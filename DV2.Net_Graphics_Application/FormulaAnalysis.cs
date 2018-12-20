@@ -493,6 +493,14 @@ namespace DV2.Net_Graphics_Application
                 DotDataInitialization(ref forDisDots);
                 DotDataInitialization(ref allDotData);
                 Dv2Instance.SetDots(forDisDots, BlinkInterval);
+
+                if (!ROTATIONFLAG)
+                {
+                    LogOutput("ROTATIONFLAG is " + ROTATIONFLAG);
+                    debug_Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                    picBox.Refresh();
+                    ROTATIONFLAG = true;
+                }
             }
 
             if (cleartar_flg)
@@ -528,7 +536,6 @@ namespace DV2.Net_Graphics_Application
 
                     }
                 }
-
             }
             #endregion
 
@@ -780,7 +787,7 @@ namespace DV2.Net_Graphics_Application
             LogOutput("***object GraphIns is!###  " + GraphIns);
             //Define
             //DV2_Drawing dv2Draw = new DV2_Drawing();
-            var GraphicInstruction = Properties.Settings.Default.GraphicInstruction;
+            string[] GraphicInstruction = Regex.Split(Properties.Settings.Default.GraphicInstruction, @"\|", RegexOptions.IgnoreCase);
             var SpecialInstruction = Properties.Settings.Default.SpecialInstruction;
             string GraphCmd = GraphIns.ToString();
             string temp_ObjCom, temp_ObjAna;
@@ -797,7 +804,7 @@ namespace DV2.Net_Graphics_Application
             }
             
             #region GraphicInstruction
-            if (Regex.IsMatch(GraphicInstruction, GraphCmd, RegexOptions.IgnoreCase))
+            if (GraphicInstruction.Contains(GraphCmd) )
             {
                 switch (GraphCmd)
                 {
@@ -819,12 +826,21 @@ namespace DV2.Net_Graphics_Application
 
                         Draw_LineMode(temp_ObjCom, temp_ObjAna);
                         break;
+                    case "ExLine":
+                        temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
+                        temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
+                        //Debug
+                        LogOutput("switch GraphCmd ExLine -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd ExLine -- " + temp_ObjAna);
+
+                        Draw_ExLineMode(temp_ObjCom, temp_ObjAna);
+                        break;
                     case "Arc":
                         temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
                         temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
                         //Debug
-                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd DashLine -- " + temp_ObjAna);
+                        LogOutput("switch GraphCmd Arc -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd Arc -- " + temp_ObjAna);
 
                         Draw_CurveMode(temp_ObjCom, temp_ObjAna);
                         break;
@@ -859,8 +875,8 @@ namespace DV2.Net_Graphics_Application
                         temp_ObjCom = Convert.ToString(ObjCommand[listIndex]);
                         temp_ObjAna = Convert.ToString(ObjAnalysis[listIndex]);
                         //Debug
-                        LogOutput("switch GraphCmd Arrow -- " + temp_ObjCom);
-                        LogOutput("switch GraphCmd Arrow -- " + temp_ObjAna);
+                        LogOutput("switch GraphCmd ExArrow -- " + temp_ObjCom);
+                        LogOutput("switch GraphCmd ExArrow -- " + temp_ObjAna);
 
                         Draw_ExArrowMode(temp_ObjCom, temp_ObjAna);
                         break;
@@ -920,6 +936,7 @@ namespace DV2.Net_Graphics_Application
                             else
                             {
                                 tobeRead.SpeakAsync("Errorになっております、入力内容を確認してください。詳しい内容はlogに表示します。");
+                                LogOutput("Errorになっております、入力内容を確認してください。詳しい内容はlogに表示します。");
                                 LogOutput("Error @ParameterChecker -> SpecialInstruction @923");
                             }
                         }
