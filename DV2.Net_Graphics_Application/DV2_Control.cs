@@ -27,6 +27,10 @@ namespace DV2.Net_Graphics_Application
         static Point Point_Offset = new Point(0, 0);
         #endregion
 
+        /// <summary>
+        /// DV-2と接続する時に
+        /// </summary>
+        /// <param name="fm"></param>
         public void Dv2ConnectFunction(MainForm fm)
         {
             //ConsoleKeyInfo cki;
@@ -75,6 +79,11 @@ namespace DV2.Net_Graphics_Application
 
         }
 
+        /// <summary>
+        /// 定義命令文のイコール記号までに削除する
+        /// 例：ObjComm  "obj1|=|line|(|0|,|0|,|20|,|10|)" -> "line|(|0|,|0|,|20|,|10|)"
+        /// </summary>
+        /// <param name="ObjComm">定義命令文データ</param>
         public void AssignRemover(ref string ObjComm)
         {
             //イコール記号までのデータを削除する
@@ -107,6 +116,11 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// Identの位置を探す関数，定義文が間違いがとうかを確認するため
+        /// </summary>
+        /// <param name="chkData"></param>
+        /// <returns>位置</returns>
         public int IdentFinder(ref string[] chkData)
         {
             //chkData   "["circle", "(", "c", ",", "5", ")"]"
@@ -187,12 +201,17 @@ namespace DV2.Net_Graphics_Application
             return -1;
         }
 
+        /// <summary>
+        /// 直線座標点集合を計算する
+        /// </summary>
+        /// <param name="lineName">対象名</param>
+        /// <param name="linePoints">座標点集合を返す用データ群</param>
         public void GetLinePoints(string lineName, ref List<int> linePoints)
         {
             //直線座標点の集合を計算する
             //Define
             int index;
-            double slope = 0;
+            double slope = 0, value_y;
             string targetComm;
             string[] targetCommLis, targetAnaLis;
             Point theMaxX = new Point();
@@ -238,7 +257,7 @@ namespace DV2.Net_Graphics_Application
                 theMinX.Y = Convert.ToInt32(Math.Round(pointData[1]));
             }
 
-            slope = ((double)(theMinX.Y - theMaxX.Y)) / (theMinX.X - theMaxX.X);
+            slope = Math.Round(((double)(theMinX.Y - theMaxX.Y)) / (theMinX.X - theMaxX.X), 2);
 
             if (slope == 0)
             {
@@ -261,7 +280,7 @@ namespace DV2.Net_Graphics_Application
                 }
             }
 
-            else if (slope == 1)
+            else if (slope == 1 && false)
             {
                 if (theMaxX.Y > theMinX.Y)
                 {
@@ -286,13 +305,14 @@ namespace DV2.Net_Graphics_Application
             { 
                 for (int i = theMinX.X + 1; i < theMaxX.X; i++)
                 {
-                    double y = slope * (i - theMinX.X) + theMinX.Y;
+                    value_y = 0;
+                    value_y = slope * (i - theMinX.X) + theMinX.Y;
                     //double temp = y - Convert.ToInt32(y);
 
                     //if (0.001 > temp && temp > -0.001)
                     {
                         tempLinePoints.Add(i);
-                        tempLinePoints.Add(Convert.ToInt32(y));
+                        tempLinePoints.Add(Convert.ToInt32(value_y));
                     }
                 }
             }
@@ -310,6 +330,11 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 円座標点の集合を計算する
+        /// </summary>
+        /// <param name="cirName">対象名</param>
+        /// <param name="cirPoints">座標点集合を返す用データ群</param>
         public void GetCirclePoints(string cirName, ref List<int> cirPoints)
         {
             //円座標点の集合を計算する
@@ -378,6 +403,14 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 円座標点の集合を計算する
+        /// oninSwitchは[ture]の場合は円の線分の座標点集合を返す、[false]の場合は円の線分と中身の座標点集合を返す
+        /// </summary>
+        /// <param name="theCenter">円の中心座標点</param>
+        /// <param name="radius">円の半径</param>
+        /// <param name="cirPoints">座標点集合を返す用データ群</param>
+        /// <param name="oninSwitch">[ture/false]</param>
         public void GetCirclePoints(Point theCenter, int radius, ref List<int> cirPoints, bool oninSwitch = false)
         {
             //円座標点の集合を計算する
@@ -421,6 +454,11 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 四角形座標点の集合を計算する
+        /// </summary>
+        /// <param name="rectName">対象名</param>
+        /// <param name="rectPoints">座標点集合を返す用データ群</param>
         public void GetRectanglePoints(string rectName, ref List<int> rectPoints)
         {
             //Define
@@ -544,6 +582,12 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// DV-2のボタンを動作イベント関数
+        /// このイベントを宣言すると，DV-2のボタンが押された時に，処理できる
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Dv2KeyEventHandle(object sender, DV.KeyEventArgs e)
         {
             bool moved_flg = false;
@@ -742,6 +786,11 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// マウス移動イベント関数，現在未使用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MouseMoveEvent(object sender, MouseEventArgs e)
         {
             /*
@@ -773,6 +822,9 @@ namespace DV2.Net_Graphics_Application
             */
         }
 
+        /// <summary>
+        /// 画像から点図化になるを処理する関数
+        /// </summary>
         private void MakeObjectBraille()
         {
             //この関数はDV2出力データを準備する
@@ -823,6 +875,10 @@ namespace DV2.Net_Graphics_Application
             tabControl_Graphics.Enabled = false;
         }
 
+        /// <summary>
+        /// 点データ群を初期化する関数
+        /// </summary>
+        /// <param name="dotDatas">点データ群名Ref宣言必要</param>
         private void DotDataInitialization(ref int[,] dotDatas)
         {
             int rows = dotDatas.GetLength(0);
@@ -837,6 +893,11 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// キーボード動作イベント関数，このイベントを宣言すると，キーボードのキーが押された時に，処理できる
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void KeyMovement(object sender, KeyEventArgs e)
         {
             bool moved_flg = false;

@@ -11,6 +11,11 @@ namespace DV2.Net_Graphics_Application
     //class Graphic_LinesClass
     public partial class MainForm
     {
+        /// <summary>
+        /// 直線を描く関数の入口，命令文と解析データを入力すれば，直線を描く
+        /// </summary>
+        /// <param name="ObjComm">命令文</param>
+        /// <param name="ObjAna">解析データ</param>
         public void Draw_LineMode(string ObjComm, string ObjAna)
         {
             //Debug
@@ -566,6 +571,12 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 直線を描く関数の入口，命令文と解析データを入力すれば，直線を描く
+        /// この関数は，今まで
+        /// </summary>
+        /// <param name="ObjComm"></param>
+        /// <param name="ObjAna"></param>
         public void Draw_ExLineMode(string ObjComm, string ObjAna)
         {
             LogOutput("Draw_ExLineMode Debugging Start.");
@@ -741,6 +752,7 @@ namespace DV2.Net_Graphics_Application
                 return;
             }
         }
+
 
         private void DrawLine(ref ArrayList pointData, Pen picPen = null, bool dashFlag = false, float offset = pub_offSet)
         {

@@ -13,6 +13,11 @@ namespace DV2.Net_Graphics_Application
     //class Graphic_CurveClass 曲線
     public partial class MainForm
     {
+        /// <summary>
+        /// 曲線を描く関数の入口，命令文と解析データを入力すれば，曲線を描く
+        /// </summary>
+        /// <param name="ObjComm"></param>
+        /// <param name="ObjAna"></param>
         public void Draw_CurveMode(string ObjComm, string ObjAna)
         {
             //Debug
@@ -33,6 +38,13 @@ namespace DV2.Net_Graphics_Application
 
         }
 
+        /// <summary>
+        /// 実際に曲線を描く関数
+        /// </summary>
+        /// <param name="pointData"></param>
+        /// <param name="picPen"></param>
+        /// <param name="dashFlag"></param>
+        /// <param name="offset"></param>
         private void DrawCurve(ref ArrayList pointData, Pen picPen = null, bool dashFlag = false, float offset = pub_offSet)
         {
             LogOutput("DrawCurve (" + pointData[0] + "," + pointData[1] + ") -> (" + pointData[2] + "," + pointData[3] + ")");

@@ -44,70 +44,27 @@ namespace DV2.Net_Graphics_Application
         private int BlinkInterval = 0;
         #endregion
 
-        #region About Define ToKen
-        public enum TknKind
-        {                             /* トークンの種類 */
-            Lparen = '(', Rparen = ')', Lbracket = '[', Rbracket = ']', Plus = '+', Minus = '-',
-            Multi = '*', Divi = '/', Mod = '%', Not = '!', Ifsub = '?', Assign = '=',
-            IntDivi = '\\', Comma = ',', DblQ = '"', Colon = ':',
-            Func = 150, Var, If, Elif, Else, For, To, Step, While,
-            End, Break, Return, Option, Print, Println, Input, Toint,
-            Exit, Equal, NotEq, Less, LessEq, Great, GreatEq, And, Or,
-            END_KeyList, 
-            Ident, IntNum, DblNum, String, Letter, Doll, Digit,
-            Gvar, Lvar, Fcall, EofProg, EofLine, Others, EofTkn, None, END_keylist, END_line,
-            /* 図形命令 */
-            Line, DashLine, ExLine, Arrow, DashArrow, ExArrow, Arc, Circle, Triangle, Rectangle, 
-            /* 処理関数 */
-            Solve, Get, Contact, Show, Clear, Rotation, SetPoint,
-            /* 特別関数 */
-            With, Point, Set, On, In,
-            /* Position 位置*/
-            Position, Left, Right, Center, Bottom, Top
-        }
-
-        public struct ToKen
-        {
-            public TknKind kind;                          /* トークンの種類 */
-            public string text;
-            public double dblVal;                            /* 定数値や変数番号 */
-
-            public ToKen(TknKind tk) { kind = tk; text = ""; dblVal = 0.0; }
-            public ToKen(TknKind tk, double d) { kind = tk; text = ""; dblVal = d; }
-            public ToKen(TknKind tk, string s) { kind = tk; text = s; dblVal = 0.0; }
-            public ToKen(TknKind tk, string s, double d) { kind = tk; text = s; dblVal = d; }
-        }
-
-        public struct KeyWord
-        {                            /* 字句 */
-            public string keyName;
-            public TknKind keyKind;         /* 種別 */
-
-            public KeyWord(string keyname, TknKind tknkind) { keyName = keyname; keyKind = tknkind; }
-        };
-
-        /* ジャグ配列 */
-        KeyWord[] KeyWdTbl = new KeyWord[65];      //要約語と記号の種別対応表
-        TknKind[] ctyp = new TknKind[256];         //文字種表定義
-        private int loopInfo = 0;
-        #endregion
-
+        /// <summary>
+        /// Main関数
+        /// </summary>
         public MainForm()
         {
+            //システム基礎的な関数
             InitializeComponent();
             //紙を用意する
             graphObj = PreparePaper();
-            //読み上げる
+            //読み上げる判断
             if (Properties.Settings.Default.NEEDINPUTREADER)
             {
                 tobeRead.SpeakAsync("入力した内容を読み上げます。");
             }
-            //イベントを宣言する
+            //キーボードイベント関数
             this.textBox_Input.KeyDown += new KeyEventHandler(EnterKeyPress);
             this.tabControl_code.SelectedIndexChanged += new EventHandler(tabControl_code_SelectedIndexChanged);
             this.KeyDown += new KeyEventHandler(KeyMovement);
 
             #region About the Tablet Event
+            //ペンタブレット移動量に関するイベント関数
             MouseMove += new MouseEventHandler(this.TabletMouseMove);
             #endregion
 
@@ -124,9 +81,13 @@ namespace DV2.Net_Graphics_Application
                 Dv2Instance.Connect();
             }
             #endregion
-
         }
 
+        /// <summary>
+        /// Formを起動する時に，呼び出し関数，一部の初期値が設定可能
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void formloader(object sender, EventArgs e)
         {
             DataTable dataTable = new DataTable("GraphicsDataType");
@@ -184,6 +145,10 @@ namespace DV2.Net_Graphics_Application
             Properties.Settings.Default.NEEDINPUTREADER = true;
         }
 
+        /// <summary>
+        /// logを出力関数，Log4Netを利用してハードディスクに出力する
+        /// </summary>
+        /// <param name="log"></param>
         internal void LogOutput(object log)
         {
             //FontSizeノーマルは"9"
@@ -195,6 +160,10 @@ namespace DV2.Net_Graphics_Application
             DV2SysLogger.Info(log);
         }
 
+        /// <summary>
+        /// 入力した内容とユーザー向きに情報を出力関数，Log4Netを利用してハードディスクに出力する
+        /// </summary>
+        /// <param name="log"></param>
         internal void codeOutput(object log)
         {
             //FontSizeノーマルは"9"
@@ -205,6 +174,11 @@ namespace DV2.Net_Graphics_Application
             DV2SysLogger.Info(log);
         }
 
+        /// <summary>
+        /// 入力した内容とユーザー向きに情報を出力関数，フォントサイズが指定可能，Log4Netを利用してハードディスクに出力する
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="sub_FontSize"></param>
         internal void codeOutput(object log, int sub_FontSize)
         {
             //FontSizeノーマルは"9"
@@ -215,6 +189,11 @@ namespace DV2.Net_Graphics_Application
             DV2SysLogger.Info(log);
         }
 
+        /// <summary>
+        /// tabControlが変換する際に，ログ画面を自動的にスクロール関数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tabControl_code_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Debug 
@@ -224,96 +203,8 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 
+        /// シュミレーターディスプレイを起動する関数
         /// </summary>
-        private void InitializationBaseDatas()
-        {
-            //LogOutput("Progress in Initialization Base Datas...");
-            int loop_i = 0; //文字種表設定用
-
-            for (loop_i = 0; loop_i < 256; loop_i++) { ctyp[loop_i] = TknKind.Others; }
-            for (loop_i = '0'; loop_i <= '9'; loop_i++) { ctyp[loop_i] = TknKind.Digit; }
-            for (loop_i = 'A'; loop_i <= 'Z'; loop_i++) { ctyp[loop_i] = TknKind.Letter; }
-            for (loop_i = 'a'; loop_i <= 'z'; loop_i++) { ctyp[loop_i] = TknKind.Letter; }
-            ctyp['('] = TknKind.Lparen; ctyp[')'] = TknKind.Rparen;
-            ctyp['['] = TknKind.Lbracket; ctyp[']'] = TknKind.Rbracket;
-            ctyp['<'] = TknKind.Less; ctyp['>'] = TknKind.Great;
-            ctyp['+'] = TknKind.Plus; ctyp['-'] = TknKind.Minus;
-            ctyp['*'] = TknKind.Multi; ctyp['/'] = TknKind.Divi;
-            ctyp['_'] = TknKind.Letter; ctyp['='] = TknKind.Assign;
-            ctyp[','] = TknKind.Comma; ctyp['"'] = TknKind.DblQ;
-            ctyp['%'] = TknKind.Mod; ctyp['$'] = TknKind.Doll;
-            ctyp['!'] = TknKind.Not; ctyp['?'] = TknKind.Ifsub;
-            ctyp['\\'] = TknKind.IntDivi; ctyp[':'] = TknKind.Colon;
-
-            KeyWdTbl[0] = new KeyWord("if", TknKind.If);
-            KeyWdTbl[1] = new KeyWord("else", TknKind.Else);
-            KeyWdTbl[2] = new KeyWord("end", TknKind.End);
-            KeyWdTbl[3] = new KeyWord("print", TknKind.Print);
-            KeyWdTbl[4] = new KeyWord("(", TknKind.Lparen);
-            KeyWdTbl[5] = new KeyWord(")", TknKind.Rparen);
-            KeyWdTbl[6] = new KeyWord("+", TknKind.Plus);
-            KeyWdTbl[7] = new KeyWord("-", TknKind.Minus);
-            KeyWdTbl[8] = new KeyWord("*", TknKind.Multi);
-            KeyWdTbl[9] = new KeyWord("/", TknKind.Divi);
-            KeyWdTbl[10] = new KeyWord("=", TknKind.Assign);
-            KeyWdTbl[11] = new KeyWord(",", TknKind.Comma);
-            KeyWdTbl[12] = new KeyWord("==", TknKind.Equal);
-            KeyWdTbl[13] = new KeyWord("!=", TknKind.NotEq);
-            KeyWdTbl[14] = new KeyWord("<", TknKind.Less);
-            KeyWdTbl[15] = new KeyWord("<=", TknKind.LessEq);
-            KeyWdTbl[16] = new KeyWord(">", TknKind.Great);
-            KeyWdTbl[17] = new KeyWord(">=", TknKind.GreatEq);
-            KeyWdTbl[18] = new KeyWord(";", TknKind.END_line);
-            //New Define
-            KeyWdTbl[19] = new KeyWord("[", TknKind.Lbracket);
-            KeyWdTbl[20] = new KeyWord("]", TknKind.Rbracket);
-            KeyWdTbl[21] = new KeyWord("!", TknKind.Not);
-            KeyWdTbl[22] = new KeyWord("?", TknKind.Ifsub);
-            KeyWdTbl[23] = new KeyWord("||", TknKind.Or);
-            KeyWdTbl[24] = new KeyWord("&&", TknKind.And);
-            KeyWdTbl[25] = new KeyWord("<-", TknKind.Assign);
-            KeyWdTbl[26] = new KeyWord("to", TknKind.To);
-            /* 図形命令 */
-            KeyWdTbl[27] = new KeyWord("line", TknKind.Line);
-            KeyWdTbl[28] = new KeyWord("arc", TknKind.Arc);
-            KeyWdTbl[29] = new KeyWord("circle", TknKind.Circle);
-            KeyWdTbl[30] = new KeyWord("arrow", TknKind.Arrow);
-            KeyWdTbl[31] = new KeyWord("triangle", TknKind.Triangle);
-            KeyWdTbl[32] = new KeyWord("rectangle", TknKind.Rectangle);
-            KeyWdTbl[33] = new KeyWord("dashline", TknKind.DashLine);
-            KeyWdTbl[34] = new KeyWord("dasharrow", TknKind.DashArrow);
-            KeyWdTbl[35] = new KeyWord("exarrow", TknKind.ExArrow);
-            KeyWdTbl[36] = new KeyWord("exline", TknKind.ExLine);
-            /* 処理関数 */
-            KeyWdTbl[37] = new KeyWord("solve", TknKind.Solve); //算出
-            KeyWdTbl[38] = new KeyWord("get", TknKind.Get); //指先入力点を取る
-            KeyWdTbl[39] = new KeyWord("contact", TknKind.Contact); //連結
-            KeyWdTbl[40] = new KeyWord("show", TknKind.Show); //表示
-            KeyWdTbl[41] = new KeyWord("clear", TknKind.Clear); //削除
-            KeyWdTbl[42] = new KeyWord("rotation", TknKind.Rotation); //回転
-            KeyWdTbl[43] = new KeyWord("setpoint", TknKind.SetPoint); //相対位置
-            /* 特別関数 */
-            KeyWdTbl[44] = new KeyWord("var", TknKind.Var);
-            KeyWdTbl[45] = new KeyWord(":", TknKind.Colon);
-            KeyWdTbl[46] = new KeyWord("with", TknKind.With);
-            KeyWdTbl[47] = new KeyWord("point", TknKind.Point);
-            KeyWdTbl[48] = new KeyWord("set", TknKind.Set);
-            KeyWdTbl[49] = new KeyWord("on", TknKind.On);
-            KeyWdTbl[50] = new KeyWord("in", TknKind.In);
-            KeyWdTbl[51] = new KeyWord("right", TknKind.Position);
-            KeyWdTbl[52] = new KeyWord("left", TknKind.Position);
-            KeyWdTbl[53] = new KeyWord("center", TknKind.Position);
-            KeyWdTbl[54] = new KeyWord("bottom", TknKind.Position);
-            KeyWdTbl[55] = new KeyWord("top", TknKind.Position);
-            KeyWdTbl[56] = new KeyWord("bottomleft", TknKind.Position);
-            KeyWdTbl[57] = new KeyWord("bottomright", TknKind.Position);
-            KeyWdTbl[58] = new KeyWord("topleft", TknKind.Position);
-            KeyWdTbl[59] = new KeyWord("topright", TknKind.Position);
-            //End of the Key Word Table List Mark
-            KeyWdTbl[60] = new KeyWord("", TknKind.END_keylist);
-        }
-
         public void DebugImshow()
         {
             tabControl_Graphics.Visible = true;
@@ -325,7 +216,7 @@ namespace DV2.Net_Graphics_Application
                 if (tabPage_camera.Parent != tabControl_Graphics)
                     tabPage_camera.Parent = tabControl_Graphics;
                 //カメラ出力処理
-                CameraStart();
+                //CameraStart();
             }
             else
             {
@@ -338,6 +229,12 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 入力画面，エンターキーのイベント関数
+        /// エンターキーを押しすればこの関数が呼び出す
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EnterKeyPress(object sender, KeyEventArgs e)
         {
             //DV2_Drawing GraphicDraw = new DV2_Drawing();
@@ -369,6 +266,10 @@ namespace DV2.Net_Graphics_Application
             #endregion
         }
 
+        /// <summary>
+        /// 描画データを初期化する
+        /// </summary>
+        /// <returns>Graphics対象データを返す</returns>
         private Graphics PreparePaper()
         {
             //この関数は出力画像データを準備する
@@ -390,6 +291,11 @@ namespace DV2.Net_Graphics_Application
             return graphObj;
         }
 
+        /// <summary>
+        /// xとy座標軸を描く関数，現段階では利用していない
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="graphObj"></param>
         public void drawAxis(ref Bitmap image, ref Graphics graphObj)
         {
             //この関数は座標軸を描く
@@ -410,6 +316,16 @@ namespace DV2.Net_Graphics_Application
             image.RotateFlip(RotateFlipType.RotateNoneFlipY);
         }
 
+        /// <summary>
+        /// xとy座標軸のx軸とy軸の文字を描くため関数，現段階では利用していない
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="graphObj"></param>
+        /// <param name="minX"></param>
+        /// <param name="maxX"></param>
+        /// <param name="minY"></param>
+        /// <param name="maxY"></param>
+        /// <param name="partNums"></param>
         public void drawAxisXYpart(ref Bitmap image, ref Graphics graphObj, float minX, float maxX, float minY, float maxY, int partNums)
         {
             //この関数は座標軸の文字を表示する
@@ -441,6 +357,11 @@ namespace DV2.Net_Graphics_Application
             graphObj.DrawString("Y軸", new Font("游明朝 ", 11f), Brushes.Black, new PointF(offset / 3.5f, offset / 2.7f));
         }
         
+        /// <summary>
+        /// この関数は入力イベントの動作関数である，入力内容をフィルタリング機能を持っている．
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textboxKeyPress(object sender, KeyPressEventArgs e)
         {
             //この関数は入力キーをチェックする
@@ -476,6 +397,11 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// この関数は「機能テスト用」ボタンから呼び出し関数，色々な新機能を試する時に利用する．
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button_FFT_Click(object sender, EventArgs e)
         {
             // Button For Functional Test

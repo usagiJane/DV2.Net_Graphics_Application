@@ -438,6 +438,85 @@ namespace DV2.Net_Graphics_Application
         */
         #endregion
 
+        #region CameraStart
+        /*-
+        internal void CameraStart()
+        {
+            //カメラのパラメタ
+            bool capFlag = true;
+            Mat tempImg, flipImg;
+            Mat grayImg, renderImg;
+            Mat srcImgbyCam = new Mat();
+            ColorRecognition iRo = new ColorRecognition();
+
+            var capture = new VideoCapture(CaptureDevice.Any)
+            {
+                //キャプチャする画像のサイズフレームレートの指定
+                FrameHeight = 480,
+                FrameWidth = 320,
+                //FrameHeight = 640, FrameWidth = 480,
+            };
+
+            using (capture)
+            {
+                while (capFlag)
+                {
+                    //カメラから画像をキャプチャする
+                    capFlag = capture.Read(srcImgbyCam);
+
+                    if (srcImgbyCam.Empty())
+                    { break; }
+
+                    //Camera Test window
+                    Cv2.ImShow("srcImgbyCam", srcImgbyCam);
+                    flipImg = srcImgbyCam.Clone();
+                    flipImg = flipImg.Flip(FlipMode.XY);
+
+                    tempImg = Mat.Zeros(srcImgbyCam.Size(), srcImgbyCam.Type());
+                    grayImg = new Mat(srcImgbyCam.Size(), MatType.CV_8UC1);
+                    //指検出方法
+                    //FindColor(ref flipImg, ref tempImg);
+                    iRo.FindColor(ref flipImg, ref tempImg);
+
+                    Cv2.CvtColor(tempImg, grayImg, ColorConversionCodes.BGR2GRAY);
+                    Cv2.Threshold(grayImg, grayImg, 100, 255, ThresholdTypes.Binary);
+                    //ラベリング処理
+                    CvBlobs blobs = new CvBlobs(grayImg);
+                    renderImg = new Mat(srcImgbyCam.Size(), MatType.CV_8UC3);
+                    //ラベリング結果の描画
+                    blobs.RenderBlobs(srcImgbyCam, renderImg);
+                    //緑最大面積を返す
+                    CvBlob maxblob = blobs.LargestBlob();
+
+                    if (maxblob != null)
+                    {
+                        double a = Math.Round(maxblob.Centroid.X, 2);
+                        double b = Math.Round(maxblob.Centroid.Y, 2);
+
+                        //手動のキャリブレーション
+                        a = (a - 12) / 12.87;
+                        b = (b - 43) / 12.40;
+
+                        //For Debug
+                        textBox_CenterCoordinates.Text = a.ToString() + "," + b.ToString();
+                    }
+
+                    int keyValue = Cv2.WaitKey(100);
+                    if (keyValue == 27)
+                    {
+                        Cv2.DestroyAllWindows();
+                        //対象Release
+                        tempImg.Release(); flipImg.Release();
+                        grayImg.Release(); renderImg.Release();
+                        srcImgbyCam.Release();
+                        capFlag = false;
+                        break;   //ESC キーで閉じる
+                    }
+                }
+            }
+        }
+        -*/
+        #endregion
     }
     //End of class Backup_Programs
 }

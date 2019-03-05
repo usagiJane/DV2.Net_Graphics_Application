@@ -13,6 +13,12 @@ namespace DV2.Net_Graphics_Application
     //class Graphic_CircleClass
     public partial class MainForm
     {
+        /// <summary>
+        /// 円を描く関数の入口，命令文と解析データを入力すれば，円を描く
+        /// この関数は円に関するデータをまとめる
+        /// </summary>
+        /// <param name="ObjComm">命令文</param>
+        /// <param name="ObjAna">解析データ</param>
         public void Draw_CircleMode(string ObjComm, string ObjAna)
         {
             //ObjComm	"circle|(|c|,|37|)"
@@ -134,6 +140,12 @@ namespace DV2.Net_Graphics_Application
             }
         }
         
+        /// <summary>
+        /// 実際に円を描く関数
+        /// </summary>
+        /// <param name="pointData">点データ</param>
+        /// <param name="fillFlag">塗りつぶし</param>
+        /// <param name="offset">変位量</param>
         private void DrawCircleMode(ref ArrayList pointData, bool fillFlag = false, float offset = pub_offSet)
         {
             LogOutput("DrawCircle (" + pointData[0] + "," + pointData[1] + ") -> (" + pointData[2] + ")");
@@ -164,6 +176,13 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 実際に円を描く関数
+        /// </summary>
+        /// <param name="pointData">点データ</param>
+        /// <param name="picPen">描画ツール，色と線分の太さを変更する時用</param>
+        /// <param name="fillFlag">塗りつぶし</param>
+        /// <param name="offset">変位量</param>
         private void DrawCircleMode(ref ArrayList pointData, Pen picPen = null, bool fillFlag = false, float offset = pub_offSet)
         {
             LogOutput("DrawCircle (" + pointData[0] + "," + pointData[1] + ") -> (" + pointData[2] + ")");
@@ -195,6 +214,12 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 点を描く関数
+        /// 点を円に拡大し，円の中身を塗りつぶす，点を触察するため
+        /// </summary>
+        /// <param name="ObjComm"></param>
+        /// <param name="ObjAna"></param>
         public void Draw_PointMode(string ObjComm, string ObjAna)
         {
             LogOutput("Draw_PointMode");

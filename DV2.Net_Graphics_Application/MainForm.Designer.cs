@@ -79,6 +79,7 @@
             // 
             // tabControl_code
             // 
+            this.tabControl_code.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl_code.CausesValidation = false;
             this.tabControl_code.Controls.Add(this.tabPage_code);
             this.tabControl_code.Controls.Add(this.tabPage_log);
@@ -186,7 +187,7 @@
             this.button_FFT.UseVisualStyleBackColor = true;
             this.button_FFT.Click += new System.EventHandler(this.button_FFT_Click);
             // 
-            // button_FileSelected
+            // button_FS
             // 
             this.button_FS.Location = new System.Drawing.Point(336, 237);
             this.button_FS.Name = "button_FS";
@@ -196,13 +197,13 @@
             this.button_FS.UseVisualStyleBackColor = true;
             this.button_FS.Click += new System.EventHandler(this.button_FS_Click);
             // 
-            // textBox_FileSelected
+            // textBox_FS
             // 
             this.textBox_FS.Location = new System.Drawing.Point(26, 239);
             this.textBox_FS.Name = "textBox_FS";
+            this.textBox_FS.ReadOnly = true;
             this.textBox_FS.Size = new System.Drawing.Size(304, 19);
             this.textBox_FS.TabIndex = 14;
-            textBox_FS.ReadOnly = true;
             // 
             // label_Type
             // 
@@ -254,7 +255,7 @@
             this.picBox.BackColor = System.Drawing.Color.Transparent;
             this.picBox.Location = new System.Drawing.Point(119, 83);
             this.picBox.Name = "picBox";
-            this.picBox.Size = new System.Drawing.Size(144, 96);
+            this.picBox.Size = new System.Drawing.Size(96, 64);
             this.picBox.TabIndex = 4;
             this.picBox.TabStop = false;
             // 
@@ -401,6 +402,7 @@
             // 
             // tabControl_Graphics
             // 
+            this.tabControl_Graphics.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl_Graphics.Controls.Add(this.tabPage_outPut);
             this.tabControl_Graphics.Controls.Add(this.tabPage_camera);
             this.tabControl_Graphics.Controls.Add(this.tabPage_dataGridView);
@@ -412,10 +414,10 @@
             // 
             // openFileDialog_CommandFile
             // 
-            openFileDialog_CommandFile.Filter = "All files(*.*)|*.*|txt files(*.txt)|*.txt";
-            openFileDialog_CommandFile.FilterIndex = 2;
-            openFileDialog_CommandFile.RestoreDirectory = true;
-            openFileDialog_CommandFile.InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+            this.openFileDialog_CommandFile.Filter = "All files(*.*)|*.*|txt files(*.txt)|*.txt";
+            this.openFileDialog_CommandFile.FilterIndex = 2;
+            this.openFileDialog_CommandFile.InitialDirectory = "C:\\Users\\zfbin\\OneDrive\\桌面";
+            this.openFileDialog_CommandFile.RestoreDirectory = true;
             // 
             // MainForm
             // 

@@ -14,7 +14,11 @@ namespace DV2.Net_Graphics_Application
 {
     class ColorRecognition
     {
-        //指先のマーカーを検出する
+        /// <summary>
+        /// HSV色空間モデルを利用して、指先のマーカーを検出する
+        /// </summary>
+        /// <param name="srcImg">入力画像</param>
+        /// <param name="dstImg">出力画像</param>
         public void FindColor(ref Mat srcImg, ref Mat dstImg)
         {
             //Define

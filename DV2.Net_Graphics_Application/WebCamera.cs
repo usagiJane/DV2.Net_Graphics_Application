@@ -19,82 +19,11 @@ namespace DV2.Net_Graphics_Application
     {
         bool capFlag = false;
 
-        internal void CameraStart()
-        {
-            //カメラのパラメタ
-            bool capFlag = true;
-            Mat tempImg, flipImg;
-            Mat grayImg, renderImg;
-            Mat srcImgbyCam = new Mat();
-            ColorRecognition iRo = new ColorRecognition();
-
-            var capture = new VideoCapture(CaptureDevice.Any)
-            {
-                //キャプチャする画像のサイズフレームレートの指定
-                FrameHeight = 480,
-                FrameWidth = 320,
-                //FrameHeight = 640, FrameWidth = 480,
-            };
-
-            using (capture)
-            {
-                while (capFlag)
-                {
-                    //カメラから画像をキャプチャする
-                    capFlag = capture.Read(srcImgbyCam);
-
-                    if (srcImgbyCam.Empty())
-                    { break; }
-
-                    //Camera Test window
-                    Cv2.ImShow("srcImgbyCam", srcImgbyCam);
-                    flipImg = srcImgbyCam.Clone();
-                    flipImg = flipImg.Flip(FlipMode.XY);
-
-                    tempImg = Mat.Zeros(srcImgbyCam.Size(), srcImgbyCam.Type());
-                    grayImg = new Mat(srcImgbyCam.Size(), MatType.CV_8UC1);
-                    //指検出方法
-                    //FindColor(ref flipImg, ref tempImg);
-                    iRo.FindColor(ref flipImg, ref tempImg);
-                    
-                    Cv2.CvtColor(tempImg, grayImg, ColorConversionCodes.BGR2GRAY);
-                    Cv2.Threshold(grayImg, grayImg, 100, 255, ThresholdTypes.Binary);
-                    //ラベリング処理
-                    CvBlobs blobs = new CvBlobs(grayImg);
-                    renderImg = new Mat(srcImgbyCam.Size(), MatType.CV_8UC3);
-                    //ラベリング結果の描画
-                    blobs.RenderBlobs(srcImgbyCam, renderImg);
-                    //緑最大面積を返す
-                    CvBlob maxblob = blobs.LargestBlob();
-
-                    if (maxblob != null)
-                    {
-                        double a = Math.Round(maxblob.Centroid.X, 2);
-                        double b = Math.Round(maxblob.Centroid.Y, 2);
-
-                        //手動のキャリブレーション
-                        a = (a - 12) / 12.87;
-                        b = (b - 43) / 12.40;
-
-                        //For Debug
-                        textBox_CenterCoordinates.Text = a.ToString() + "," + b.ToString();
-                    }
-
-                    int keyValue = Cv2.WaitKey(100);
-                    if (keyValue == 27)
-                    {
-                        Cv2.DestroyAllWindows();
-                        //対象Release
-                        tempImg.Release(); flipImg.Release();
-                        grayImg.Release(); renderImg.Release();
-                        srcImgbyCam.Release();
-                        capFlag = false;
-                        break;   //ESC キーで閉じる
-                    }
-                }
-            }
-        }
-
+        /// <summary>
+        /// 指先の位置を探す
+        /// </summary>
+        /// <param name="targetName"></param>
+        /// <returns></returns>
         public System.Drawing.Point FingerFinder(string targetName = "")
         {
             //To find the finger point which on the Graphics
@@ -178,6 +107,12 @@ namespace DV2.Net_Graphics_Application
             return new System.Drawing.Point(Convert.ToInt32(centerX + movement.X), Convert.ToInt32(centerY + movement.Y));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="targetName"></param>
+        /// <param name="dashFlag"></param>
+        /// <returns></returns>
         public System.Drawing.Point FingerFinder(string targetName, bool dashFlag = false)
         {
             //未完成
@@ -185,6 +120,11 @@ namespace DV2.Net_Graphics_Application
             return new System.Drawing.Point(0, 0);
         }
 
+        /// <summary>
+        /// "Get p on obj1",命令の入口
+        /// </summary>
+        /// <param name="objCommandData">入力した命令文</param>
+        /// <param name="objAnalysisData">命令文の解析結果</param>
         public void GetPointOnObject(string objCommandData, string objAnalysisData)
         {
             //"Get p on obj1",命令の入口
@@ -261,6 +201,11 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// ウェブカメラが取った指先座標点と対象物の座標点集合をマーチング関数
+        /// </summary>
+        /// <param name="fingerPoint">指先座標点</param>
+        /// <param name="targetName">対象名</param>
         public void PointOnObject(ref System.Drawing.Point fingerPoint, string targetName)
         {
             //Define
@@ -416,6 +361,12 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 未使用、予定機能
+        /// </summary>
+        /// <param name="hei"></param>
+        /// <param name="wid"></param>
+        /// <returns></returns>
         public int GetPixelData(int hei, int wid)
         {
             
