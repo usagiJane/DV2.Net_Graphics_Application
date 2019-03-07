@@ -13,6 +13,11 @@ namespace DV2.Net_Graphics_Application
     //class Graphic_QuadrilateralClass　四辺形
     public partial class MainForm
     {
+        /// <summary>
+        /// 四角形を描く関数の入口，命令文と解析データを入力すれば，四角形を描く
+        /// </summary>
+        /// <param name="ObjComm"></param>
+        /// <param name="ObjAna"></param>
         public void Draw_QuadrilateralMode(string ObjComm, string ObjAna)
         {
             //Debug
@@ -111,6 +116,14 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 実際に直線を描く関数
+        /// </summary>
+        /// <param name="pointData">線分データ群</param>
+        /// <param name="picPen">線分の色と太さ</param>
+        /// <param name="dashFlag">破線フラグ</param>
+        /// <param name="fillFlag">塗りつぶしフラグ</param>
+        /// <param name="offset">変位量</param>
         private void DrawQuadrilateral(ref ArrayList pointData, Pen picPen = null, bool dashFlag = false, bool fillFlag = false, float offset = pub_offSet)
         {
             LogOutput("DrawQuadrilateral (" + pointData[0] + "," + pointData[1] + ") -> (" + pointData[2] + "," + pointData[3] + ")");

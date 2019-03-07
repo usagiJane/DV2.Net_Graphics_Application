@@ -21,8 +21,8 @@ namespace DV2.Net_Graphics_Application
 {
     class MyDotView
     {
-		// DotViewハード制御関連の変数(我々はいじらない)
-		private MainForm mainform;
+        // DotViewハードウェア制御関連の変数
+        private MainForm mainform;
 		private const int GnHardIdx = 2;
 		private const int gnPortIdx = 5;
 		private System.Windows.Forms.IWin32Window _WindowHandle;

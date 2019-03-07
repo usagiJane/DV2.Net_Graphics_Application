@@ -8,6 +8,11 @@ namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm
     {
+        /// <summary>
+        /// ペンタブレット移動動作イベント関数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TabletMouseMove(object sender, MouseEventArgs e)
         {
             int mouseX, mouseY;

@@ -13,6 +13,13 @@ namespace DV2.Net_Graphics_Application
 {
     public partial class MainForm
     {
+        /// <summary>
+        /// Solve命令文の処理関数
+        /// </summary>
+        /// <param name="objCommData"></param>
+        /// <param name="lisCommData"></param>
+        /// <param name="objAnaData"></param>
+        /// <param name="lisAnaData"></param>
         public void TheSolveMode(string objCommData, string[] lisCommData, string objAnaData, string[] lisAnaData)
         {
             //solve c by contact(obj1,ojb2,p)

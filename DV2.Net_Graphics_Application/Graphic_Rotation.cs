@@ -16,6 +16,9 @@ namespace DV2.Net_Graphics_Application
         private bool BeRotated = false;
         #endregion
 
+        /// <summary>
+        /// 画像を個別回転用関数，現在未使用
+        /// </summary>
         public void Graphic_Rotation()
         {
             #region enko
@@ -282,6 +285,11 @@ namespace DV2.Net_Graphics_Application
 
         }
 
+        /// <summary>
+        /// 画像回転用関数，
+        /// </summary>
+        /// <param name="ObjComm"></param>
+        /// <param name="ObjAna"></param>
         private void Rotation(string ObjComm, string ObjAna)
         {
             //bool fk;
@@ -296,6 +304,9 @@ namespace DV2.Net_Graphics_Application
             picBox.Image = (Image)outputImage;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void oldkaiten()
         {
             /*

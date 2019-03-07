@@ -573,7 +573,7 @@ namespace DV2.Net_Graphics_Application
 
         /// <summary>
         /// 直線を描く関数の入口，命令文と解析データを入力すれば，直線を描く
-        /// この関数は，今まで
+        /// この関数は，exline命令文を対応する
         /// </summary>
         /// <param name="ObjComm"></param>
         /// <param name="ObjAna"></param>
@@ -753,7 +753,13 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
-
+        /// <summary>
+        /// 実際に直線を描く関数
+        /// </summary>
+        /// <param name="pointData">線分データ群</param>
+        /// <param name="picPen">線分の色と太さ</param>
+        /// <param name="dashFlag">破線フラグ</param>
+        /// <param name="offset">変位量</param>
         private void DrawLine(ref ArrayList pointData, Pen picPen = null, bool dashFlag = false, float offset = pub_offSet)
         {
             LogOutput("DrawLine (" + pointData[0] + "," + pointData[1] + ") -> (" + pointData[2] + "," + pointData[3] + ")");
@@ -783,6 +789,11 @@ namespace DV2.Net_Graphics_Application
             graphObj.DrawLine(picPen, pointAx, pointAy, pointBx, pointBy);
         }
 
+        /// <summary>
+        /// 直線矢印を描く関数の入口，命令文と解析データを入力すれば，直線矢印を描く
+        /// </summary>
+        /// <param name="ObjComm">命令文</param>
+        /// <param name="ObjAna">解析データ</param>
         public void Draw_ArrowMode(string ObjComm, string ObjAna)
         {
             //Debug
@@ -1026,6 +1037,12 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 直線矢印を描く関数の入口，命令文と解析データを入力すれば，直線矢印を描く
+        /// exarrow命令文を対応する
+        /// </summary>
+        /// <param name="ObjComm"></param>
+        /// <param name="ObjAna"></param>
         public void Draw_ExArrowMode(string ObjComm, string ObjAna)
         {
             LogOutput("Draw_ExArrowMode Debugging Start.");
@@ -1199,6 +1216,13 @@ namespace DV2.Net_Graphics_Application
             }
         }
 
+        /// <summary>
+        /// 実際に直線矢印を描く関数
+        /// </summary>
+        /// <param name="pointData">点群データ</param>
+        /// <param name="picPen">色と太さを指定する</param>
+        /// <param name="dashFlag">破線フラグ</param>
+        /// <param name="offset">変位量</param>
         private void DrawArrow(ref ArrayList pointData, Pen picPen = null, bool dashFlag = false, float offset = pub_offSet)
         {
             LogOutput("DrawArrow (" + pointData[0] + "," + pointData[1] + ") -> (" + pointData[2] + "," + pointData[3] + ")");
