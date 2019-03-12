@@ -19,8 +19,12 @@ namespace DV2.Net_Graphics_Application
         private const float pub_offSet = 0f;
         private readonly Pen pub_picPen = new Pen(Color.Black, 0.1F);
         //表示用の配列を用意する
+        //forDisDots -> DV-2に表示している点データ
         private int[,] forDisDots = new int[48, 32];
+        //allDotData -> 外枠以外，全て点データ
         private int[,] allDotData;
+        //arroundDotData -> 外枠の点滅保存
+        private int[,] arroundDotData;
         //movementのlocationは左上
         Point movement;
         //静態平行移動量, 
@@ -28,7 +32,7 @@ namespace DV2.Net_Graphics_Application
         #endregion
 
         /// <summary>
-        /// DV-2と接続する時に
+        /// DV-2と接続する時に利用する
         /// </summary>
         /// <param name="fm"></param>
         public void Dv2ConnectFunction(MainForm fm)
@@ -39,7 +43,9 @@ namespace DV2.Net_Graphics_Application
 
             DotDataInitialization(ref forDisDots);
             DotDataInitialization(ref allDotData);
-
+            //外枠の点滅データ，一回のみ初期化
+            DotDataInitialization(ref arroundDotData, true);
+            
             #region Useless
             /*
             for (int i = 24; i < 48; i++)
@@ -80,7 +86,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 定義命令文のイコール記号までに削除する
+        /// 定義命令文のイコール記号までを削除する
         /// 例：ObjComm  "obj1|=|line|(|0|,|0|,|20|,|10|)" -> "line|(|0|,|0|,|20|,|10|)"
         /// </summary>
         /// <param name="ObjComm">定義命令文データ</param>
@@ -117,7 +123,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// Identの位置を探す関数，定義文が間違いがとうかを確認するため
+        /// Identの位置を探す関数，定義命令文が間違いがとうかを確認するため
         /// </summary>
         /// <param name="chkData"></param>
         /// <returns>位置</returns>
@@ -405,7 +411,7 @@ namespace DV2.Net_Graphics_Application
 
         /// <summary>
         /// 円座標点の集合を計算する
-        /// oninSwitchは[ture]の場合は円の線分の座標点集合を返す、[false]の場合は円の線分と中身の座標点集合を返す
+        /// oninSwitchは[ture]の場合は円周の座標点集合を返す、[false]の場合は円周と円の内部の座標点集合を返す
         /// </summary>
         /// <param name="theCenter">円の中心座標点</param>
         /// <param name="radius">円の半径</param>
@@ -455,7 +461,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 四角形座標点の集合を計算する
+        /// 矩形座標点の集合を計算する
         /// </summary>
         /// <param name="rectName">対象名</param>
         /// <param name="rectPoints">座標点集合を返す用データ群</param>
@@ -823,7 +829,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 画像から点図化になるを処理する関数
+        /// ビットマップ画像からDV-2表示用の点図に変換する関数
         /// </summary>
         private void MakeObjectBraille()
         {
@@ -876,19 +882,39 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 点データ群を初期化する関数
+        /// 配列を初期化する関数（eg:forDisDotsとallDotData）
+        /// 非表示する場合，点データは「0」
+        /// 表示する場合，点データは「1」
+        /// 点滅表示する場合，点データは「2」
         /// </summary>
         /// <param name="dotDatas">点データ群名Ref宣言必要</param>
-        private void DotDataInitialization(ref int[,] dotDatas)
+        /// <param name="aroundFlag">外側線を引くフラグ</param>
+        private void DotDataInitialization(ref int[,] dotDatas, bool aroundFlag = false)
         {
             int rows = dotDatas.GetLength(0);
             int columns = dotDatas.GetLength(1);
 
-            for (int m = 0; m < rows; m++)
+            if (aroundFlag)
             {
-                for (int n = 0; n < columns; n++)
+                for (int i = 0; i < rows; i++)
                 {
-                    dotDatas[m, n] = 0;
+                    for (int j = 0; j < columns; j++)
+                    {
+                        if ((i == 0 || i == rows - 1) || (j == 0 || j == columns - 1))
+                            dotDatas[i, j] = 2;
+                        else dotDatas[i, j] = 0;
+                    }
+                }
+            }
+
+            else
+            { 
+                for (int m = 0; m < rows; m++)
+                {
+                    for (int n = 0; n < columns; n++)
+                    {
+                        dotDatas[m, n] = 0;
+                    }
                 }
             }
         }

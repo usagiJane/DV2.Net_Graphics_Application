@@ -226,7 +226,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 数字がInfinityとNaNの場合は0に変換する。
+        /// 数字がInfinityとNaNの場合は0に変換する
         /// </summary>
         /// <param name="num"></param>
         /// <returns>True データが0に変換した</returns>

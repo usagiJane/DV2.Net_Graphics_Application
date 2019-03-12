@@ -11,8 +11,12 @@ namespace DV2.Net_Graphics_Application
     public partial class MainForm
     {
         #region About Define ToKen
+        /// <summary>
+        /// トークン要素の集合
+        /// enumは列挙型
+        /// </summary>
         public enum TknKind
-        {                             /* トークンの種類 */
+        {                             /* トークン要素 */
             Lparen = '(', Rparen = ')', Lbracket = '[', Rbracket = ']', Plus = '+', Minus = '-',
             Multi = '*', Divi = '/', Mod = '%', Not = '!', Ifsub = '?', Assign = '=',
             IntDivi = '\\', Comma = ',', DblQ = '"', Colon = ':',
@@ -122,7 +126,7 @@ namespace DV2.Net_Graphics_Application
             KeyWdTbl[36] = new KeyWord("exline", TknKind.ExLine);
             /* 処理関数 */
             KeyWdTbl[37] = new KeyWord("solve", TknKind.Solve); //算出
-            KeyWdTbl[38] = new KeyWord("get", TknKind.Get); //指先入力点を取る
+            KeyWdTbl[38] = new KeyWord("get", TknKind.Get); //指先座標点を取る
             KeyWdTbl[39] = new KeyWord("contact", TknKind.Contact); //連結
             KeyWdTbl[40] = new KeyWord("show", TknKind.Show); //表示
             KeyWdTbl[41] = new KeyWord("clear", TknKind.Clear); //削除
@@ -906,7 +910,7 @@ namespace DV2.Net_Graphics_Application
         #endregion
 
         /// <summary>
-        /// 重複チェック
+        /// 重複チェック，現在未使用
         /// </summary>
         /// <param name="ObjName">対象名</param>
         public void DuplicateChecking(string ObjName)

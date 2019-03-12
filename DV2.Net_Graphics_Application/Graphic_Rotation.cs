@@ -668,6 +668,12 @@ namespace DV2.Net_Graphics_Application
             return dsImage;
         }
 
+        /// <summary>
+        /// 画像のピクセルをアクセスすると，画像を回転する
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
         public Bitmap rotateImage(Bitmap b, int angle)
         {
             //create a new empty bitmap to hold rotated image

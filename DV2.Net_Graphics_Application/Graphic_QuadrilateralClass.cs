@@ -14,7 +14,7 @@ namespace DV2.Net_Graphics_Application
     public partial class MainForm
     {
         /// <summary>
-        /// 四角形を描く関数の入口，命令文と解析データを入力すれば，四角形を描く
+        /// 矩形を描く関数の入口，命令文と字句解析結果を入力すれば，矩形を描く
         /// </summary>
         /// <param name="ObjComm"></param>
         /// <param name="ObjAna"></param>
@@ -117,7 +117,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 実際に直線を描く関数
+        /// 実際に矩形を描く関数
         /// </summary>
         /// <param name="pointData">線分データ群</param>
         /// <param name="picPen">線分の色と太さ</param>

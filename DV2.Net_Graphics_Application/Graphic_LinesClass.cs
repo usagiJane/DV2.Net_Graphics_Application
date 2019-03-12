@@ -677,6 +677,9 @@ namespace DV2.Net_Graphics_Application
 
                 if (alpha > 0 && alpha < 90)
                 {
+                    //角度データを再処理，小数点
+                    alpha = Math.Round(alpha / Math.PI, 2);
+
                     unKnownX = Math.Round(Math.Cos(alpha) * distance + Convert.ToDouble(subPointData[0].ToString()), 2);
                     unKnownY = Math.Round(Math.Sin(alpha) * distance + Convert.ToDouble(subPointData[1].ToString()), 2);
 

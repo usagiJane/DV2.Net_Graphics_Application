@@ -24,11 +24,24 @@ namespace DV2.Net_Graphics_Application
     public partial class MainForm : Form
     {
         #region ObjStorage
+        /// <summary>
+        /// グローバル配列
+        /// ObjNameは対象名を保存する
+        /// ObjCommandは対象命令文を保存する
+        /// ObjAnalysisは対象命令文の解析結果を保存する
+        /// ObjDisplayedはDV-2に表示した対象名を保存する
+        /// </summary>
         ArrayList ObjName = new ArrayList();
         ArrayList ObjCommand = new ArrayList();
         ArrayList ObjAnalysis = new ArrayList();
         ArrayList ObjDisplayed = new ArrayList();
 
+        /// <summary>
+        /// グローバル変数
+        /// graphObjは描画ツール対象
+        /// debug_Imageは画像
+        /// tobeReadは音声出力用対象
+        /// </summary>
         static Graphics graphObj;
         static Bitmap debug_Image;
         private static SpeechSynthesizer tobeRead = new SpeechSynthesizer();
@@ -39,7 +52,11 @@ namespace DV2.Net_Graphics_Application
         #endregion
 
         #region About DV2
-        //DV2 Global Parameter
+        //DV-2 Global Parameter
+        /// <summary>
+        /// Dv2InstanceはDV-2を繋がる対象
+        /// BlinkIntervalはDV-2ピンの振動頻度
+        /// </summary>
         MyDotView Dv2Instance;
         private int BlinkInterval = 0;
         #endregion
@@ -69,7 +86,10 @@ namespace DV2.Net_Graphics_Application
             #endregion
 
             #region DV2 Key Event
-            allDotData = new int[picBox.Width + 48, picBox.Height + 32];
+            //点群データサイズ自動化処理
+            allDotData = new int[picBox.Width, picBox.Height];
+            arroundDotData = new int[picBox.Width, picBox.Height];
+
             CheckForIllegalCrossThreadCalls = false;
             Point_Offset.X = picBox.Width / 2;
             Point_Offset.Y = picBox.Height / 2;
@@ -161,7 +181,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 入力した内容とユーザー向きに情報を出力関数，Log4Netを利用してハードディスクに出力する
+        /// 入力した内容とユーザー向き情報を出力関数，Log4Netを利用してハードディスクに出力する
         /// </summary>
         /// <param name="log"></param>
         internal void codeOutput(object log)
@@ -175,7 +195,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 入力した内容とユーザー向きに情報を出力関数，フォントサイズが指定可能，Log4Netを利用してハードディスクに出力する
+        /// 入力した内容とユーザー向き情報を出力関数，フォントサイズを指定可能，Log4Netを利用してハードディスクに出力する
         /// </summary>
         /// <param name="log"></param>
         /// <param name="sub_FontSize"></param>
@@ -190,7 +210,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// tabControlが変換する際に，ログ画面を自動的にスクロール関数
+        /// tabControlが変更する際に，ログ画面を自動的にスクロール関数
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -230,8 +250,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// 入力画面，エンターキーのイベント関数
-        /// エンターキーを押しすればこの関数が呼び出す
+        /// 入力画面にコマンドを入力後，エンターキーを押せばエンターキーのイベント関数が呼び出される
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -356,9 +375,9 @@ namespace DV2.Net_Graphics_Application
             }
             graphObj.DrawString("Y軸", new Font("游明朝 ", 11f), Brushes.Black, new PointF(offset / 3.5f, offset / 2.7f));
         }
-        
+
         /// <summary>
-        /// この関数は入力イベントの動作関数である，入力内容をフィルタリング機能を持っている．
+        /// この関数は入力イベントの動作関数である，入力内容をフィルタリング機能を持っている，現在未使用
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -398,7 +417,7 @@ namespace DV2.Net_Graphics_Application
         }
 
         /// <summary>
-        /// この関数は「機能テスト用」ボタンから呼び出し関数，色々な新機能を試する時に利用する．
+        /// この関数は「機能テスト用」ボタンから呼び出し関数，色々な新機能を試する時に利用する
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
