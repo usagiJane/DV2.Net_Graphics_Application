@@ -34,6 +34,7 @@ namespace DV2.Net_Graphics_Application
             List<string> targetIdent = new List<string>();
 
             //Processing
+            //キーワードContactを探す
             foreach (var temp in lisAnaData)
             {
                 if (temp != "Contact")
@@ -46,6 +47,7 @@ namespace DV2.Net_Graphics_Application
             unknownAna = lisAnaData.Skip(index + 1).ToArray();
             index = 0;
 
+            //Contact位置が分かり上に，対象名配列を作る
             foreach (var temp in unknownAna)
             {
                 if (temp == "Ident")
@@ -73,7 +75,7 @@ namespace DV2.Net_Graphics_Application
             #region Contents 1
             //line   aを計算する
             //cir   求める
-            //p    円の中心座標
+            //p    接点p座標
             string lineObj = targetIdent[0];
             string cirObj = targetIdent[1];
             string pCont = targetIdent[2];

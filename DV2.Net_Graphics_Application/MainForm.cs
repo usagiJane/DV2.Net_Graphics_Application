@@ -96,6 +96,7 @@ namespace DV2.Net_Graphics_Application
 
             Dv2ConnectFunction(this);
             Dv2Instance.DvCtl.KeyUp += new DV.KeyEventHandler(this.Dv2KeyEventHandle);
+            //DV-2繋がる判断
             if (DV2.Net_Graphics_Application.Properties.Settings.Default.Dv2_CONNECTED)
             {
                 Dv2Instance.Connect();

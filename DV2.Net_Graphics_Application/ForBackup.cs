@@ -517,6 +517,281 @@ namespace DV2.Net_Graphics_Application
         }
         -*/
         #endregion
+
+        #region kaiten
+        /*
+        public void kaiten()
+        {
+            zukei tmp;
+            int range_x, range_y;
+            int value;
+
+            tmp.kind = inf_zukei[obj_num].kind;
+            tmp.x_max = inf_zukei[obj_num].x_max;
+            tmp.x_min = inf_zukei[obj_num].x_min;
+            tmp.x_mid = inf_zukei[obj_num].x_mid;
+            tmp.y_max = inf_zukei[obj_num].y_max;
+            tmp.y_min = inf_zukei[obj_num].y_min;
+            tmp.y_mid = inf_zukei[obj_num].y_mid;
+
+            range_x = tmp.x_max - tmp.x_min;
+            range_y = tmp.y_max - tmp.y_min;
+            value = range_x - range_y;
+
+            tmp.sx_center = inf_zukei[obj_num].sx_center;
+            tmp.sy_center = inf_zukei[obj_num].sy_center;
+            tmp.ssita_max = inf_zukei[obj_num].ssita_max;
+            tmp.ssita_min = inf_zukei[obj_num].ssita_min;
+            tmp.ssita_third = inf_zukei[obj_num].ssita_third;
+            tmp.sr = inf_zukei[obj_num].sr;
+            tmp.straight_kind = inf_zukei[obj_num].straight_kind;
+            tmp.sdegree = inf_zukei[obj_num].sdegree;
+            tmp.arrow_kind = inf_zukei[obj_num].arrow_kind;
+            tmp.sita_last = inf_zukei[obj_num].sita_last;
+            tmp.parameta_niji = inf_zukei[obj_num].parameta_niji;
+            tmp.fx_max = inf_zukei[obj_num].fx_max;
+            tmp.fx_min = inf_zukei[obj_num].fx_min;
+            tmp.fx_mid = inf_zukei[obj_num].fx_mid;
+            tmp.fy_max = inf_zukei[obj_num].fy_max;
+            tmp.fy_min = inf_zukei[obj_num].fy_min;
+            tmp.fy_mid = inf_zukei[obj_num].fy_mid;
+            tmp.comment = inf_zukei[obj_num].comment;
+
+            switch (tmp.kind)
+            {
+                case 0:// 四角形
+                    tmp.ssita_third += (Math.PI) / 36.0;
+                    if (tmp.ssita_third >= (Math.PI / 2.0))
+                        tmp.ssita_third = 0.0;
+
+                    tmp.x_max = 0;
+                    tmp.x_min = 95;
+                    tmp.y_max = 0;
+                    tmp.y_min = 63;
+
+                    double x2, x3;
+                    double y2, y3;
+                    for (int i = tmp.fx_min; i <= tmp.fx_max; i++)
+                    {
+                        x2 = (i - tmp.fx_mid) * Math.Cos(tmp.ssita_third) - (tmp.fy_min - tmp.fy_mid) * Math.Sin(tmp.ssita_third) + tmp.fx_mid;
+                        y2 = (i - tmp.fx_mid) * Math.Sin(tmp.ssita_third) + (tmp.fy_min - tmp.fy_mid) * Math.Cos(tmp.ssita_third) + tmp.fy_mid;
+                        x3 = (i - tmp.fx_mid) * Math.Cos(tmp.ssita_third) - (tmp.fy_max - tmp.fy_mid) * Math.Sin(tmp.ssita_third) + tmp.fx_mid;
+                        y3 = (i - tmp.fx_mid) * Math.Sin(tmp.ssita_third) + (tmp.fy_max - tmp.fy_mid) * Math.Cos(tmp.ssita_third) + tmp.fy_mid;
+                        if (tmp.x_max < (int)x2)
+                            tmp.x_max = (int)x2;
+                        if (tmp.x_max < (int)x3)
+                            tmp.x_max = (int)x3;
+                        if (tmp.x_min > (int)x2)
+                            tmp.x_min = (int)x2;
+                        if (tmp.x_min > (int)x3)
+                            tmp.x_min = (int)x3;
+
+                        if (tmp.y_max < (int)y2)
+                            tmp.y_max = (int)y2;
+                        if (tmp.y_max < (int)y3)
+                            tmp.y_max = (int)y3;
+                        if (tmp.y_min > (int)y2)
+                            tmp.y_min = (int)y2;
+                        if (tmp.y_min > (int)y3)
+                            tmp.y_min = (int)y3;
+                    }
+                    for (int j = tmp.fy_min + 1; j < tmp.fy_max; j++)
+                    {
+                        x2 = (tmp.fx_min - tmp.fx_mid) * Math.Cos(tmp.ssita_third) - (j - tmp.fy_mid) * Math.Sin(tmp.ssita_third) + tmp.fx_mid;
+                        y2 = (tmp.fx_min - tmp.fx_mid) * Math.Sin(tmp.ssita_third) + (j - tmp.fy_mid) * Math.Cos(tmp.ssita_third) + tmp.fy_mid;
+                        x3 = (tmp.fx_max - tmp.fx_mid) * Math.Cos(tmp.ssita_third) - (j - tmp.fy_mid) * Math.Sin(tmp.ssita_third) + tmp.fx_mid;
+                        y3 = (tmp.fx_max - tmp.fx_mid) * Math.Sin(tmp.ssita_third) + (j - tmp.fy_mid) * Math.Cos(tmp.ssita_third) + tmp.fy_mid;
+
+                        if (tmp.x_max < (int)x2)
+                            tmp.x_max = (int)x2;
+                        if (tmp.x_max < (int)x3)
+                            tmp.x_max = (int)x3;
+                        if (tmp.x_min > (int)x2)
+                            tmp.x_min = (int)x2;
+                        if (tmp.x_min > (int)x3)
+                            tmp.x_min = (int)x3;
+
+                        if (tmp.y_max < (int)y2)
+                            tmp.y_max = (int)y2;
+                        if (tmp.y_max < (int)y3)
+                            tmp.y_max = (int)y3;
+                        if (tmp.y_min > (int)y2)
+                            tmp.y_min = (int)y2;
+                        if (tmp.y_min > (int)y3)
+                            tmp.y_min = (int)y3;
+                    }
+                    if (tmp.x_max <= 95 && tmp.y_max <= 63 && tmp.x_min >= 1 && tmp.y_min >= 1)
+                    {
+                        seikei_w(ref seikei_all_DotData, obj_num, 0);
+                        inf_zukei[obj_num] = tmp;
+                        seikei_w(ref seikei_all_DotData, obj_num, 2);
+                    }
+                    break;
+                case 1:// ひし形
+                    break;
+                case 8:// 直線
+                    tmp.ssita_third += (Math.PI) / 36.0;
+                    //if (tmp.ssita_third == (Math.PI / 2.0))
+                    //    tmp.ssita_third = (Math.PI / 2.0) * 3.0 + (Math.PI) / 36.0;
+                    if (tmp.ssita_third >= (Math.PI / 2.0) && tmp.ssita_third < (Math.PI * 3.0 / 2.0))
+                        tmp.ssita_third = (Math.PI * (3.0 / 2.0));
+                    if (tmp.ssita_third >= (Math.PI * 2.0))
+                        tmp.ssita_third = 0.0;
+                    if (tmp.ssita_third >= ((Math.PI / 2.0) - (Math.PI) / 36.0) && tmp.ssita_third < (Math.PI / 2.0))
+                        tmp.ssita_third = (Math.PI / 2.0);
+
+                    int s_x_max = 0;
+                    int s_x_min = 95;
+                    int s_y_max = 0;
+                    int s_y_min = 63;
+                    for (double i = 0.0; i <= tmp.sr * 2.0; i += 1.0)
+                    {
+                        x2 = (tmp.x_mid - tmp.sr - tmp.x_mid + i) * Math.Cos(tmp.ssita_third) - (tmp.y_mid - tmp.y_mid) * Math.Sin(tmp.ssita_third) + tmp.x_mid;
+                        y2 = (tmp.x_mid - tmp.sr - tmp.x_mid + i) * Math.Sin(tmp.ssita_third) + (tmp.y_mid - tmp.y_mid) * Math.Cos(tmp.ssita_third) + tmp.y_mid;
+                        x2 = Math.Round(x2, 5);
+                        y2 = Math.Round(y2, 5);
+                        if (s_x_max <= x2)
+                            s_x_max = (int)x2;
+                        if (s_x_min >= x2)
+                            s_x_min = (int)x2;
+                        if (s_y_max <= (int)y2)
+                            s_y_max = (int)y2;
+                        if (s_y_min >= (int)y2)
+                            s_y_min = (int)y2;
+                    }
+                    tmp.x_max = s_x_max;
+                    tmp.x_min = s_x_min;
+                    tmp.y_max = s_y_max;
+                    tmp.y_min = s_y_min;
+                    if (tmp.x_max <= 95 && tmp.x_min >= 1 && tmp.y_max <= 63 && tmp.y_min >= 1)
+                    {
+                        seikei_w(ref seikei_all_DotData, obj_num, 0);
+                        inf_zukei[obj_num] = tmp;
+                        seikei_w(ref seikei_all_DotData, obj_num, 2);
+                    }
+                    break;
+                case 15://2次関数
+                    tmp.parameta_niji = -tmp.parameta_niji;
+                    if (tmp.y_min >= 0 && tmp.y_max <= 63)
+                    {
+                        seikei_w(ref seikei_all_DotData, obj_num, 0);
+                        inf_zukei[obj_num] = tmp;
+                        seikei_w(ref seikei_all_DotData, obj_num, 2);
+                    }
+                    break;
+                case 12://直線矢印
+                    tmp.ssita_third += (Math.PI) / 36.0;
+                    if (tmp.ssita_third > ((Math.PI / 2.0) - (Math.PI) / 36.0) && tmp.ssita_third < Math.PI / 2.0)
+                        tmp.ssita_third = Math.PI / 2.0;
+                    if (tmp.ssita_third > Math.PI - (Math.PI) / 36.0 && tmp.ssita_third < Math.PI)
+                        tmp.ssita_third = Math.PI;
+                    if (tmp.ssita_third > (Math.PI * 3.0 / 2.0) - (Math.PI) / 36.0 && tmp.ssita_third < Math.PI * 3.0 / 2.0)
+                        tmp.ssita_third = Math.PI * 3.0 / 2.0;
+                    if (tmp.ssita_third >= Math.PI * 2.0)
+                        tmp.ssita_third = 0.0;
+
+                    s_x_max = 0;
+                    s_x_min = 95;
+                    s_y_max = 0;
+                    s_y_min = 63;
+                    for (double i = 0.0; i <= tmp.sr * 2.0; i += 1.0)
+                    {
+                        x2 = (tmp.x_mid - tmp.sr - tmp.x_mid + i) * Math.Cos(tmp.ssita_third) - (tmp.y_mid - tmp.y_mid) * Math.Sin(tmp.ssita_third) + tmp.x_mid;
+                        y2 = (tmp.x_mid - tmp.sr - tmp.x_mid + i) * Math.Sin(tmp.ssita_third) + (tmp.y_mid - tmp.y_mid) * Math.Cos(tmp.ssita_third) + tmp.y_mid;
+                        x2 = Math.Round(x2, 5);
+                        y2 = Math.Round(y2, 5);
+                        if (s_x_max <= x2)
+                            s_x_max = (int)x2;
+                        if (s_x_min >= x2)
+                            s_x_min = (int)x2;
+                        if (s_y_max <= (int)y2)
+                            s_y_max = (int)y2;
+                        if (s_y_min >= (int)y2)
+                            s_y_min = (int)y2;
+                    }
+                    tmp.x_max = s_x_max;
+                    tmp.x_min = s_x_min;
+                    tmp.y_max = s_y_max;
+                    tmp.y_min = s_y_min;
+                    if (tmp.x_max <= 95 && tmp.x_min >= 1 && tmp.y_max <= 63 && tmp.y_min >= 1)
+                    {
+                        seikei_w(ref seikei_all_DotData, obj_num, 0);
+                        inf_zukei[obj_num] = tmp;
+                        seikei_w(ref seikei_all_DotData, obj_num, 2);
+                    }
+                    break;
+                case 16://長方形
+
+                    tmp.ssita_third += (Math.PI) / 36.0;
+                    if (tmp.ssita_third >= Math.PI)
+                        tmp.ssita_third = 0.0;
+
+                    tmp.x_max = 0;
+                    tmp.x_min = 95;
+                    tmp.y_max = 0;
+                    tmp.y_min = 63;
+
+                    for (int i = tmp.fx_min; i <= tmp.fx_max; i++)
+                    {
+                        x2 = (i - tmp.fx_mid) * Math.Cos(tmp.ssita_third) - (tmp.fy_min - tmp.fy_mid) * Math.Sin(tmp.ssita_third) + tmp.fx_mid;
+                        y2 = (i - tmp.fx_mid) * Math.Sin(tmp.ssita_third) + (tmp.fy_min - tmp.fy_mid) * Math.Cos(tmp.ssita_third) + tmp.fy_mid;
+                        x3 = (i - tmp.fx_mid) * Math.Cos(tmp.ssita_third) - (tmp.fy_max - tmp.fy_mid) * Math.Sin(tmp.ssita_third) + tmp.fx_mid;
+                        y3 = (i - tmp.fx_mid) * Math.Sin(tmp.ssita_third) + (tmp.fy_max - tmp.fy_mid) * Math.Cos(tmp.ssita_third) + tmp.fy_mid;
+                        if (tmp.x_max < (int)x2)
+                            tmp.x_max = (int)x2;
+                        if (tmp.x_max < (int)x3)
+                            tmp.x_max = (int)x3;
+                        if (tmp.x_min > (int)x2)
+                            tmp.x_min = (int)x2;
+                        if (tmp.x_min > (int)x3)
+                            tmp.x_min = (int)x3;
+
+                        if (tmp.y_max < (int)y2)
+                            tmp.y_max = (int)y2;
+                        if (tmp.y_max < (int)y3)
+                            tmp.y_max = (int)y3;
+                        if (tmp.y_min > (int)y2)
+                            tmp.y_min = (int)y2;
+                        if (tmp.y_min > (int)y3)
+                            tmp.y_min = (int)y3;
+                    }
+                    for (int j = tmp.fy_min + 1; j < tmp.fy_max; j++)
+                    {
+                        x2 = (tmp.fx_min - tmp.fx_mid) * Math.Cos(tmp.ssita_third) - (j - tmp.fy_mid) * Math.Sin(tmp.ssita_third) + tmp.fx_mid;
+                        y2 = (tmp.fx_min - tmp.fx_mid) * Math.Sin(tmp.ssita_third) + (j - tmp.fy_mid) * Math.Cos(tmp.ssita_third) + tmp.fy_mid;
+                        x3 = (tmp.fx_max - tmp.fx_mid) * Math.Cos(tmp.ssita_third) - (j - tmp.fy_mid) * Math.Sin(tmp.ssita_third) + tmp.fx_mid;
+                        y3 = (tmp.fx_max - tmp.fx_mid) * Math.Sin(tmp.ssita_third) + (j - tmp.fy_mid) * Math.Cos(tmp.ssita_third) + tmp.fy_mid;
+
+                        if (tmp.x_max < (int)x2)
+                            tmp.x_max = (int)x2;
+                        if (tmp.x_max < (int)x3)
+                            tmp.x_max = (int)x3;
+                        if (tmp.x_min > (int)x2)
+                            tmp.x_min = (int)x2;
+                        if (tmp.x_min > (int)x3)
+                            tmp.x_min = (int)x3;
+
+                        if (tmp.y_max < (int)y2)
+                            tmp.y_max = (int)y2;
+                        if (tmp.y_max < (int)y3)
+                            tmp.y_max = (int)y3;
+                        if (tmp.y_min > (int)y2)
+                            tmp.y_min = (int)y2;
+                        if (tmp.y_min > (int)y3)
+                            tmp.y_min = (int)y3;
+                    }
+                    if (tmp.x_max <= 95 && tmp.y_max <= 63 && tmp.x_min >= 1 && tmp.y_min >= 1)
+                    {
+                        seikei_w(ref seikei_all_DotData, obj_num, 0);
+                        inf_zukei[obj_num] = tmp;
+                        seikei_w(ref seikei_all_DotData, obj_num, 2);
+                    }
+                    break;
+            }
+        }
+        */
+        #endregion
+
     }
     //End of class Backup_Programs
 }

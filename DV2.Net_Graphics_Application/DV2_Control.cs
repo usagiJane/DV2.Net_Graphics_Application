@@ -1021,7 +1021,8 @@ namespace DV2.Net_Graphics_Application
             string CleTarget;
             string[] listTarData = Regex.Split(targetData, @"\|", RegexOptions.IgnoreCase);
             string[] listTarAnaData = Regex.Split(targetAna, @"\|", RegexOptions.IgnoreCase);
-            
+
+            //削除コマンドの違法性を確認する
             if (listTarData.Length == 2 && listTarAnaData.Length == 2 && listTarAnaData[listTarAnaData.Length - 1] == "Ident")
             {
                 CleTarget = listTarData[listTarData.Length - 1];

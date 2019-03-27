@@ -139,9 +139,10 @@ namespace DV2.Net_Graphics_Application
                 codeOutput("@Graphic_CircleClass Draw_CircleMode関数" + ObjName[ObjectCommandFinder(backObjComm)] + "対象定義識別失敗!");
             }
         }
-        
+
         /// <summary>
         /// 実際に円を描く関数
+        /// 現在利用方法は点が円にとして，点を描く関数
         /// </summary>
         /// <param name="pointData">点データ</param>
         /// <param name="fillFlag">塗りつぶし</param>

@@ -14,6 +14,7 @@ namespace DV2.Net_Graphics_Application
         /// <summary>
         /// トークン要素の集合
         /// enumは列挙型
+        /// 
         /// </summary>
         public enum TknKind
         {                             /* トークン要素 */
@@ -194,6 +195,7 @@ namespace DV2.Net_Graphics_Application
                 LogOutput(String.Format("{0, -15}", "Text") + String.Format("{0, -15}", "Kind") + String.Format("{0, -15}", "numVal"));
                 LogOutput("---------------------------------------------");
 
+                #region コマンド内容はチャ－の単位として循環処理
                 for (char txtChar = ' '; loopInfo < dataStorage.Text.Length;)
                 {
 
@@ -202,15 +204,17 @@ namespace DV2.Net_Graphics_Application
                     LogOutput(">>>token.kind iS -> " + String.Format("{0, -15}", token.kind));
                     //LogOutput(">>bef_tok_kind iS -> " + String.Format("{0, -15}", bef_tok_kind));
 
+                    #region コマンド終わり判断
                     if (token.kind == TknKind.END_line)
                     {
                         break;
                     }
+                    #endregion
 
                     #region Command "Assign" Route
                     if (token.kind == TknKind.Assign)
                     {
-                        //例:赋值语句 obj1 = line(0,0,20,10)
+                        //例:対象を定義する　obj1 = line(0,0,20,10)
                         if (bef_tok_kind == TknKind.Ident)
                         {
                             //dataStorage
@@ -229,7 +233,7 @@ namespace DV2.Net_Graphics_Application
                                     objName = storageData[0].Replace(" ", "");
                                     ObjCommand[ObjectFinder(storageData[0].Replace(" ", ""))] = storageData[1].Replace(" ", "");
                                 }
-                                //データ監視器
+                                //データ監視器--データ導入
                                 dataGridView_index = this.dataGridView_monitor.Rows.Add();
                                 this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = storageData[0].Replace(" ", "");
                                 this.dataGridView_monitor.Rows[dataGridView_index].Cells[1].Value = storageData[1].Replace(" ", "");
@@ -250,7 +254,7 @@ namespace DV2.Net_Graphics_Application
                         if (bef_tok_kind == TknKind.Show)
                         {
                             //tabControl_Graphics.SelectTab(1);
-
+                            //表示したい対象名が存在するかどうかを判断する
                             if (ObjectFinder(token.text) != -1)
                             {
                                 objFinder_index = ObjectFinder(token.text);
@@ -262,6 +266,7 @@ namespace DV2.Net_Graphics_Application
                                 return;
                             }
 
+                            //表示したい対象名が存在する場合は，その同じ順番配列データの有効性を判断する
                             if (ObjName[objFinder_index] != null && ObjAnalysis[objFinder_index] != null)
                             {
                                 //LogOutput(ObjCommand[objFinder_index]);
@@ -296,7 +301,7 @@ namespace DV2.Net_Graphics_Application
                         //変数ｐをPoint型として宣言
                         if (bef_tok_kind == TknKind.Colon)
                         {
-                            //Ex:"var p : Point" -> "p = Point(0,0)" 
+                            //Ex:"var p : Point" -> "p = Point(0,0)"  -- このコマンドは点pを原点に初期値(0,0)に設定する
                             storageData = Regex.Split(dataStorage.Text, ":", RegexOptions.IgnoreCase);
                             if (ObjectFinder(storageData[0].Replace(" ", "")) == -1)
                             {
@@ -308,10 +313,12 @@ namespace DV2.Net_Graphics_Application
                                 objName = storageData[0].Replace(" ", "");
                                 ObjCommand[ObjectFinder(storageData[0].Replace(" ", ""))] = storageData[1].Replace(" ", "");
                             }
-                            //データ監視器
+
+                            //データ監視器--データ導入
                             dataGridView_index = this.dataGridView_monitor.Rows.Add();
                             this.dataGridView_monitor.Rows[dataGridView_index].Cells[0].Value = storageData[0];
                             this.dataGridView_monitor.Rows[dataGridView_index].Cells[1].Value = storageData[1].Replace(" ", "");
+                            //pointDef_flgフラグをtrueに設定する
                             pointDef_flg = true;
                         }
                     }
@@ -324,6 +331,7 @@ namespace DV2.Net_Graphics_Application
                         //Ex:get p on obj1
                         if (bef_tok_kind == TknKind.Get)
                         {
+                            //pointGet_flgフラグをtrueに設定する
                             pointGet_flg = true;
                         }
                     }
@@ -336,6 +344,7 @@ namespace DV2.Net_Graphics_Application
                         //Ex:solve c by contact(obj1,obj2,p)
                         if (bef_tok_kind == TknKind.Solve)
                         {
+                            //pointSol_flgフラグをtrueに設定する
                             pointSol_flg = true;
                         }
                     }
@@ -344,9 +353,10 @@ namespace DV2.Net_Graphics_Application
                     #region Command "Object Plus" Route
                     if (token.kind == TknKind.Ident)
                     {
-                        //obj3=obj1+obj2
+                        //Ex:obj3=obj1+obj2
                         if (bef_tok_kind == TknKind.Plus)
                         {
+                            //objPlus_flgフラグをtrueに設定する
                             objPlus_flg = true;
                         }
                     }
@@ -355,9 +365,11 @@ namespace DV2.Net_Graphics_Application
                     #region Command "Clear Object" Route
                     if (token.kind == TknKind.Ident)
                     {
+                        //Ex:clear obj
                         if (bef_tok_kind == TknKind.Clear)
                         {
                             LogOutput("Clear The graphObj");
+                            //cleartar_flgフラグをtrueに設定する
                             cleartar_flg = true;
                         }
                     }
@@ -366,9 +378,11 @@ namespace DV2.Net_Graphics_Application
                     #region Command "Clear ALL" Route
                     if (token.kind == TknKind.Clear)
                     {
+                        //Ex:clear
                         if (dataStorage.Text.Length != 0 && dataStorage.Text.ToLower() == "clear")
                         {
                             LogOutput("Clear ALL The graphObj");
+                            //clear_flgフラグをtrueに設定する
                             clear_flg = true;
                         }
                     }
@@ -406,7 +420,9 @@ namespace DV2.Net_Graphics_Application
                     objCommandData += token.text + "|";
                     //LogOutput(String.Format("{0, -15}", token.text) + String.Format("{0, -15}", token.kind) + String.Format("{0, -15}", token.dblVal));
                 }
+                #endregion
 
+                #region 上書き処理
                 //Modify old data
                 if (ObjAnalysis.Count == ObjName.Count && objName != "" && ObjectFinder(objName) != -1)
                 {
@@ -440,7 +456,9 @@ namespace DV2.Net_Graphics_Application
                     ObjCommand[ObjectFinder(objName)] = objCommandData.Substring(0, objCommandData.Length - 1);
                     LogOutput("Modify Debug Point");
                 }
+                #endregion
 
+                #region 解析結果
                 //New data appended!
                 if (ObjAnalysis.Count < ObjName.Count)
                 {
@@ -477,6 +495,7 @@ namespace DV2.Net_Graphics_Application
                         ObjCommand.Add(objCommandData.Substring(0, objCommandData.Length - 1));
                     }
                 }
+                #endregion
             }
 
             else
@@ -487,7 +506,8 @@ namespace DV2.Net_Graphics_Application
             //此処から処理するのデータは自動保存されていない。
             if (dataStorage.Text.Length != 0 && ObjName.Count != 0)
             {
-                //未完成、この部分は対象名の重複データをチェックする
+                //未完成
+                //予定機能は対象名の重複データをチェックする
                 //DuplicateChecking();
             }
 
